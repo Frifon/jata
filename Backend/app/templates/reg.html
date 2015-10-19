@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+	<link href="../static/reg.css" rel="stylesheet" />
+	<div class="container">
+	    {% if g.user.is_authenticated %}
+	    	
+		{% else %}
+			<form action="reg" method="post" id="signup" name="reg">
+				{{reg_form.hidden_tag()}}
+		        <div class="header" align="center">
+		        
+		            <h3>Регистрация</h3>
+		            		            
+		        </div>
+		        
+		        <div class="sep"></div>
+
+		        <div class="inputs">
+		        
+		        	{{ render_field(reg_form.email, type="email", placeholder="Email:") }}
+		            <!-- <input type="email" placeholder="e-mail" autofocus /> -->
+		        
+		            <!-- <input type="password" placeholder="Password" /> -->
+		        	{{ render_field(reg_form.password, type="password", placeholder="Password:") }}
+		            
+		            <button id="submit" type="submit" name="submit">Продолжить</button>
+		            <!-- <a id="submit" type="submit">Войти</a> -->
+		        
+		        </div>
+		    </form>
+		{% endif %}
+	</div>
+{% endblock %}
