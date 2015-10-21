@@ -1,0 +1,78 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700&subset=latin,cyrillic);
+@import url(bootstrap.css);
+
+
+* {
+    font-size: 16px;
+    margin: 0px;
+    outline: none 0px;
+    padding: 0px;
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+
+
+.block-center {
+    margin: 0px auto;
+    width: 980px;
+	}
+.clear {
+	clear: both;
+	}
+
+.btn {
+    display: inline-block;
+    padding: 5px 20px;
+    margin: 0px 7px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    text-align: center;
+    background: rgb(0, 51, 102);
+    border-radius: 3px;
+	}
+	.btn:hover {
+		color: #069;
+		background: transparent;
+		}
+
+.upprcs {
+    text-transform: uppercase;
+}
+
+.text-center {
+	text-align: center;
+	}
+
+label {
+	font-weight: normal;
+	margin-top: 14px;
+}
+input {
+	font-size: 16px;
+	border: 1px solid #ccc;
+}
+
+
+.welcome {
+	height: 300px;
+	text-align: center;
+	}
+	.welcome:after {
+		display: inline-block;
+		content: '';
+		height: inherit;
+	}
+	.welcome-c {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	
+	
+.input-group input[name="tel-number"] {
+	-webkit-border-bottom-left-radius: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	border-bottom-left-radius: 0px;
+	-webkit-border-top-left-radius: 0px;
+	-moz-border-radius-topleft: 0px;
+	border-bottom-top-radius: 0px;
+}

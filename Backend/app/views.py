@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
 from app.forms import LoginForm, RegForm
-from app.models import User
+from app.models import User, ROLE_CAR, ROLE_ADD
 import datetime
 
 
@@ -27,6 +27,7 @@ def load_user(userid):
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
+    print(form.validate())
     if request.method == 'POST' and form.validate():
         if request.form['submit'] == 'login':
             email = form.email.data
@@ -55,35 +56,51 @@ def index():
 @app.route('/reg', methods = ['GET', 'POST'])
 def reg():
     if g.user.is_authenticated:
-        return url_for('index')
+        return redirect(url_for('index'))
     form = RegForm()
+    print(form.validate())
     if request.method == 'POST' and form.validate():
         password = form.password.data
+        confirm_password = form.confirm_password.data
         email = form.email.data
+        tel_number = form.tel_number.data
+        city = form.city.data
+        userrole = form.userrole.data
+        print ("Email: {0} Password: {1} Confirm: {2} Tel: {3} City: {4} Userrole: {5}".format(
+            email, password, confirm_password, tel_number, city, userrole))
 
         ok = True
 
-        if (len(email) <= 4):
-            ok = False
-            form.email.errors.append(u'Email должен быть длиннее 4 символов.')
-        if (len(password) <= 4):
-            ok = False
-            form.password.errors.append(u'Пароль должен быть длиннее 4 символов.')
+        # if password != confirm_password:
+        #     ok = False
+        #     form.password.errors.append(u'Пароли не совпадают')
+
+        # if len(email) <= 4:
+        #     ok = False
+        #     form.email.errors.append(u'Email должен быть длиннее 4 символов.')
+        # if len(password) <= 4:
+        #     ok = False
+        #     form.password.errors.append(u'Пароль должен быть длиннее 4 символов.')
 
         user1 = User.query.filter_by(email=email).first()
 
         if user1 is not None:
             ok = False
+            print ("Same email!")
             form.email.errors.append(u'Пользователь с таким email уже зарегистрирован.')
         if not ok:
-            return base_render('reg.html', reg_form=form)
+            return redirect(url_for('index'))
         else:
-            tmp = User(email=email, password=password)
+            if userrole == "reklamodatel":
+                userrole = ROLE_ADD
+            else:
+                userrole = ROLE_CAR
+            tmp = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
             db.session.add(tmp)
             db.session.commit()
             login_user(tmp)
             return redirect(url_for('index'))
-    return base_render('reg.html', reg_form=form)
+    return redirect(url_for('index'))
 
 def base_render(*args, **kwargs):
-    return render_template(*args, login_form=LoginForm(), **kwargs)
+    return render_template(*args, login_form=LoginForm(), reg_form=RegForm(), **kwargs)

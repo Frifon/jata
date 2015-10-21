@@ -10,6 +10,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     email = db.Column(db.String(120), index = True, unique = True)
     password = db.Column(db.String(30), index = True)
+    tel_number = db.Column(db.String(30), index = True)
+    city = db.Column(db.String(60), index = True)
     role = db.Column(db.SmallInteger, default = ROLE_CAR)
 
     def is_authenticated(self):

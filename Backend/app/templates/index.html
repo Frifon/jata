@@ -1,3 +1,108 @@
-{% extends "base.html" %}
-{% block content %}
-{% endblock %}
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	
+
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
+
+		
+</head>
+<body>
+	{% from "_formhelpers.html" import render_field %}
+	{% with messages = get_flashed_messages() %}
+	        {% if messages %}
+		        <ul>
+			 	    {% for message in messages %}
+			        	<li>{{ message }} </li>
+			        {% endfor %}
+		        </ul>
+		{% endif %}
+    {% endwith %}
+	
+	{% if g.user.is_authenticated %}
+        <div align="center">
+	        <b>Profile</b><br>
+	        Email: {{ g.user.email }}<br>
+	        City: {{ g.user.city }}<br>
+	        Tel: {{ g.user.tel_number }}<br>
+	        Role (1-car, 2-add): {{ g.user.role }}<br>
+	        <a href="{{url_for('logout')}}">Выйти</a>
+	    </div>
+    {% else %}
+		<div class="welcome">
+			<div class="welcome-c">
+				<form action="{{url_for('login')}}" method="post" name="login">
+					{{login_form.hidden_tag()}}
+						<input type="text" id="email" name="email" placeholder="Email:" style="vertical-align:middle" class="input-sm">
+						<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
+						<button class="btn btn-primary" type="submit" name="submit" value="login" style="vertical-align:middle">Войти</button>
+						<a href="#myModal" data-toggle="modal">Регистрация</a>
+
+				</form>	
+			</div>
+		</div>
+   
+		<div id="myModal" class="modal fade">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		        <h4 class="modal-title">Регистрация</h4>
+		      </div>
+		      <div class="modal-body">
+		        <form action="{{url_for('reg')}}" method="post" name="register">
+		        	{{reg_form.hidden_tag()}}
+						<div class="row register-form-left-block">
+							<div class="col-xs-6">
+								<label for="email">Введите E-mail</label>
+								<input type="text" id="email" name="email" placeholder="Email:" class="input-sm">
+								<label for="password">Введите пароль</label>
+								<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
+								<label for="confirm_password">Повторите пароль</label>
+								<input type="password" id="confirm_password" name="confirm_password" placeholder="Password:" class="input-sm">
+								<label for="tel_number">Введите номер телефона</label>
+								<div class="input-group">
+									<span class="input-group-addon">+7</span>
+									<input type="text" id="tel_number" name="tel_number" placeholder="" class="input-sm">
+								</div>
+								<label for="tel_number">Город проживания/передвижения</label>
+								<select id="city" name="city" class="form-control input-sm">
+									<option>Санкт-Петербург</option>
+									<option>Москва</option>
+								</select>
+							</div>
+							<div class="col-xs-6">
+								<div class="radio">
+									<label><input name="userrole" type="radio" value="vladelec">Я владелец авто</label>
+								</div>
+								<div class="radio">
+									<label><input name="userrole" type="radio" value="reklamodatel">Я рекламодатель</label>
+								</div>
+							</div>
+						</div>
+		      <div class="modal-footer">
+				<button class="btn btn-primary" type="submit" name="submit" value="reg" style="vertical-align:middle">Зарегистрироваться</button>
+		      </div>
+					</form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	{% endif %}
+			
+		
+		
+		
+		
+		
+		
+		
+	
+</body>
+</html>
