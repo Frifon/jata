@@ -28,7 +28,6 @@ class User(db.Model):
         session = Session.query.filter_by(id=self.id).first()
         if not session:
             return False
-        print(session)
         return session.is_valid()
 
     def is_active(self):

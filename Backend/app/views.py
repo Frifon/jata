@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, flash, redirect, url_for, request, Request, g, abort, jsonify, make_response
+from flask import render_template, flash, redirect, url_for, request, Request, g, abort, jsonify, make_response, json
 from flask.ext.login import login_user, logout_user, current_user, login_required, make_secure_token
-from app import app, db, lm
+from app import app, db #, lm
 from app.forms import RegForm
 from app.models import User, Session, ROLE_CAR, ROLE_ADD
 import datetime
@@ -32,18 +32,16 @@ def call_after_request_callbacks(response):
 ######################  REST API  ######################
 
 @app.route('/api/auth/login', methods = ['POST'])
-def apiLogin(internal=False):
+def apiLogin():
     response = {'code': 0,
                 'message': 'Missing parameters (email or password)'}
     email = request.form.get('email')
     password = request.form.get('password')
     if not email or not password:
-        if internal:
-            return
         return make_response(jsonify(response), 400)
     user = User.query.filter_by(email=email, password=password).first()
     if user is not None:
-        timestamp = int((datetime.datetime.utcnow() + datetime.timedelta(weeks=1)).timestamp())
+        timestamp = int((datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp())
         token = make_secure_token(email, password, str(timestamp))
         session = Session.query.filter_by(id=user.id).first()
         if session:
@@ -62,59 +60,47 @@ def apiLogin(internal=False):
         else:
             response = {'code': 0,
                         'message': "User doesn't exist"}
-    if internal:
-        return response
     if response['code'] is 1:
         return make_response(jsonify(response), 200)
     return make_response(jsonify(response), 401)
 
 
 @app.route('/api/auth/check', methods = ['POST'])
-def apiCheckToken(internal=False):
+def apiCheckToken():
     response = {'code': 0,
                 'message': 'Missing parameters (token)'}
     token = request.form.get('token')
-    if internal:
-        token = request.cookies.get('token')
     if not token:
-        if internal:
-            return
         return make_response(jsonify(response), 400)
     session = Session.query.filter_by(token=token).first()
-    if session:
-        if not session.is_valid():
+    if not session or not session.is_valid():
+        if session:
             db.session.delete(session)
             db.session.commit()
-            response['message'] = 'Expired'
-        else:
-            response = {'code': 1,
-                        'message': 'OK'}
-    if internal:
-        return response
+        response['message'] = 'Expired'
+    else:
+        response = {'code': 1,
+                    'message': 'OK'}
     if response['code'] is 1:
         return make_response(jsonify(response), 200)
     return make_response(jsonify(response), 401)
 
 
 @app.route('/api/auth/logout', methods = ['POST'])
-def apiLogout(internal=False):
+def apiLogout():
     response = {'code': 0,
                 'message': 'Missing parameters (token)'}
     token = request.form.get('token')
-    if internal:
-        token = request.cookies.get('token')
+    print(token)
     if not token:
-        if internal:
-            return
         return make_response(jsonify(response), 400)
     session = Session.query.filter_by(token=token).first()
     if session:
+        print('session')
         db.session.delete(session)
         db.session.commit()
     response = {'code': 1,
                 'message': 'OK'}
-    if internal:
-        return response
     return make_response(jsonify(response), 200)
     
 
@@ -134,7 +120,14 @@ def before_request():
 
 @app.route('/login', methods = ['POST'])
 def login():
-    result = apiLogin(internal=True)
+    email = request.form.get('email')
+    password = request.form.get('password')
+    # if not email:
+    #     email = ''
+    # if not password:
+    #     password = ''
+    rv = app.test_client().post('/api/auth/login', data={'email': email, 'password': password}, follow_redirects=True)
+    result = json.loads(rv.data)
     if result is None or not 'data' in result:
         return redirect(url_for('index'))
 
@@ -145,9 +138,14 @@ def login():
     return redirect(url_for('index'))
 
 
-@app.route('/logout')
+@app.route('/logout', methods = ['GET'])
 def logout():
-    result = apiLogout(internal=True)
+    print('start logout')
+    token = request.cookies.get('token')
+    # if not token:
+    #     token = ''
+    rv = app.test_client().post('/api/auth/logout', data={'token': token}, follow_redirects=True)
+    result = json.loads(rv.data)
     return redirect(url_for('index'))
 
 

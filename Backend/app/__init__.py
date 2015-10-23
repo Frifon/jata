@@ -9,9 +9,9 @@ app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 
-lm = LoginManager()
-lm.init_app(app)
-lm.session_protection = "strong"
-lm.login_view = 'index'
+# lm = LoginManager()
+# lm.init_app(app)
+# lm.session_protection = "strong"
+# lm.login_view = 'index'
 
 from app import views, models
