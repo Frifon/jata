@@ -1,30 +1,32 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, flash, redirect, session, url_for, request, g, abort, jsonify
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask import render_template, flash, redirect, session, url_for, request
+from flask import g, abort, jsonify
+from flask.ext.login import login_user, logout_user, current_user
+from flask.ext.login import login_required
 from app import app, db, lm
 from app.forms import LoginForm, RegForm
 from app.models import User, ROLE_CAR, ROLE_ADD
 import datetime
 
-
-
-###################### CONSTANTS ######################
+# ##################### CONSTANTS ######################
 MIN_NAME_LEN = 4
 MIN_TEXT_LEN = 10
-################## ################# ##################
+# ######################################################
+
+# ##################### USER LOGIN #####################
 
 
-
-###################### USER LOGIN ######################
 @app.before_request
 def before_request():
     g.user = current_user
+
 
 @lm.user_loader
 def load_user(userid):
     return User.query.get(userid)
 
-@app.route('/login', methods = ['GET', 'POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     print(form.validate())
@@ -38,8 +40,9 @@ def login():
                 login_user(user, remember=True)
             return redirect(url_for('index'))
         elif request.form['submit'] == 'register':
-            return redirect(url_for('reg'))            
+            return redirect(url_for('reg'))
     return redirect(url_for('index'))
+
 
 @app.route('/logout')
 @login_required
@@ -47,13 +50,14 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/index', methods = ['GET', 'POST'])
-@app.route('/', methods = ['GET', 'POST'])
+
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     return base_render("index.html", title=u"Jata")
 
 
-@app.route('/reg', methods = ['GET', 'POST'])
+@app.route('/reg', methods=['GET', 'POST'])
 def reg():
     if g.user.is_authenticated:
         return redirect(url_for('index'))
@@ -95,12 +99,15 @@ def reg():
                 userrole = ROLE_ADD
             else:
                 userrole = ROLE_CAR
-            tmp = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
+            tmp = User(email=email, password=password, tel_number=tel_number,
+                       city=city, role=userrole)
             db.session.add(tmp)
             db.session.commit()
             login_user(tmp)
             return redirect(url_for('index'))
     return redirect(url_for('index'))
 
+
 def base_render(*args, **kwargs):
-    return render_template(*args, login_form=LoginForm(), reg_form=RegForm(), **kwargs)
+    return render_template(*args, login_form=LoginForm(),
+                           reg_form=RegForm(), **kwargs)
