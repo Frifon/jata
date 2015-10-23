@@ -1,26 +1,31 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, flash, redirect, url_for, request, Request, g, abort, jsonify, make_response
-from flask.ext.login import login_user, logout_user, current_user, login_required, make_secure_token
+
+from flask import render_template, flash, redirect, url_for, request, Request
+from flask import g, abort, jsonify, make_response
+from flask.ext.login import login_user, logout_user, current_user
+from flask.ext.login import login_required, make_secure_token
 from app import app, db, lm
 from app.forms import RegForm
 from app.models import User, Session, ROLE_CAR, ROLE_ADD
 import datetime
 
 
-
-###################### CONSTANTS #######################
+# ##################### CONSTANTS #######################
 MIN_NAME_LEN = 4
 MIN_TEXT_LEN = 10
-################## ################# ###################
+# ################# ################# ###################
 
 default_user = User(id=4000000000)
 
-#################### COOKIE HELPERS ####################
+# ################### COOKIE HELPERS ####################
+
+
 def after_this_request(f):
     if not hasattr(g, 'after_request_callbacks'):
         g.after_request_callbacks = []
     g.after_request_callbacks.append(f)
     return f
+
 
 @app.after_request
 def call_after_request_callbacks(response):
@@ -29,9 +34,10 @@ def call_after_request_callbacks(response):
     return response
 
 
-######################  REST API  ######################
+# #####################  REST API  ######################
 
-@app.route('/api/auth/login', methods = ['POST'])
+
+@app.route('/api/auth/login', methods=['POST'])
 def apiLogin(internal=False):
     response = {'code': 0,
                 'message': 'Missing parameters (email or password)'}
@@ -69,7 +75,7 @@ def apiLogin(internal=False):
     return make_response(jsonify(response), 401)
 
 
-@app.route('/api/auth/check', methods = ['POST'])
+@app.route('/api/auth/check', methods=['POST'])
 def apiCheckToken(internal=False):
     response = {'code': 0,
                 'message': 'Missing parameters (token)'}
@@ -96,7 +102,7 @@ def apiCheckToken(internal=False):
     return make_response(jsonify(response), 401)
 
 
-@app.route('/api/auth/logout', methods = ['POST'])
+@app.route('/api/auth/logout', methods=['POST'])
 def apiLogout(internal=False):
     response = {'code': 0,
                 'message': 'Missing parameters (token)'}
@@ -116,9 +122,8 @@ def apiLogout(internal=False):
     if internal:
         return response
     return make_response(jsonify(response), 200)
-    
 
-###################### USER LOGIN ######################
+
 @app.before_request
 def before_request():
     token = request.cookies.get('token')
@@ -132,11 +137,33 @@ def before_request():
     g.user = user
 
 
-@app.route('/login', methods = ['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     result = apiLogin(internal=True)
-    if result is None or not 'data' in result:
+    if result is None or 'data' not in result:
         return redirect(url_for('index'))
+
+
+@lm.user_loader
+def load_user(userid):
+    return User.query.get(userid)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    print(form.validate())
+    if request.method == 'POST' and form.validate():
+        if request.form['submit'] == 'login':
+            email = form.email.data
+            password = form.password.data
+            user = User.query.filter_by(email=email, password=password).first()
+            print (email, password, user)
+            if user is not None:
+                login_user(user, remember=True)
+            return redirect(url_for('index'))
+        elif request.form['submit'] == 'register':
+            return redirect(url_for('reg'))
 
     @after_this_request
     def add_cookie_token(response):
@@ -151,13 +178,13 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/index', methods = ['GET', 'POST'])
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     return base_render("index.html", title=u"Jata")
 
 
-@app.route('/reg', methods = ['GET', 'POST'])
+@app.route('/reg', methods=['GET', 'POST'])
 def reg():
     if g.user.is_authenticated():
         return redirect(url_for('index'))
@@ -196,7 +223,8 @@ def reg():
                 userrole = ROLE_ADD
             else:
                 userrole = ROLE_CAR
-            tmp = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
+            tmp = User(email=email, password=password, tel_number=tel_number,
+                       city=city, role=userrole)
             db.session.add(tmp)
             db.session.commit()
             # login_user(tmp)
@@ -210,12 +238,12 @@ def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
 
 
-#################### ERROR HANDLERS ####################
+# ################### ERROR HANDLERS ####################
 
 @app.errorhandler(405)
 def error405(error):
     url = str(request.base_url)
-    if not 'api' in url:
+    if 'api' not in url:
         return
     return make_response(jsonify({'error': 'Method not allowed',
                                   'code': 405}))
