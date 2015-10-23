@@ -25,7 +25,7 @@
 		{% endif %}
     {% endwith %}
 	
-	{% if g.user.is_authenticated %}
+	{% if g.user.is_authenticated() %}
         <div align="center">
 	        <b>Profile</b><br>
 	        Email: {{ g.user.email }}<br>
@@ -38,7 +38,6 @@
 		<div class="welcome">
 			<div class="welcome-c">
 				<form action="{{url_for('login')}}" method="post" name="login">
-					{{login_form.hidden_tag()}}
 						<input type="text" id="email" name="email" placeholder="Email:" style="vertical-align:middle" class="input-sm">
 						<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
 						<button class="btn btn-primary" type="submit" name="submit" value="login" style="vertical-align:middle">Войти</button>
