@@ -4,8 +4,9 @@ from random import randint
 from datetime import datetime
 
 ROLE_CAR = 1
-ROLE_ADD = 2 
+ROLE_ADD = 2
 ROLE_ADMIN = 4
+
 
 class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -43,4 +44,20 @@ class User(db.Model):
         return '<User %r>' % (self.email)
 
 
+class Point(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, index=True)
+    latitude = db.Column(db.Float, index=True)
+    longtitude = db.Column(db.Float, index=True)
+    altitude = db.Column(db.Float, index=True)
+    accuracy = db.Column(db.SmallInteger, index=True)
+    timestamp = db.Column(db.Integer, index=True)
 
+    def __str__(self):
+        return ("Point id: {}\n".format(str(self.id)) +
+                "User id: {}\n".format(str(self.user_id)) +
+                "Coordinates: ({} | {})\n".format(str(self.latitude),
+                                                  str(self.longtitude)) +
+                "Altitude: {}\n".format(str(self.altitude)) +
+                "Accuracy: {}\n".format(str(self.accuracy)) +
+                "Timestamp: {}\n".format(str(self.timestamp)))

@@ -122,10 +122,6 @@ def before_request():
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
-    # if not email:
-    #     email = ''
-    # if not password:
-    #     password = ''
     rv = app.test_client().post('/api/auth/login', data={'email': email, 'password': password}, follow_redirects=True)
     result = json.loads(rv.data)
     if result is None or not 'data' in result:
@@ -140,10 +136,7 @@ def login():
 
 @app.route('/logout', methods = ['GET'])
 def logout():
-    print('start logout')
     token = request.cookies.get('token')
-    # if not token:
-    #     token = ''
     rv = app.test_client().post('/api/auth/logout', data={'token': token}, follow_redirects=True)
     result = json.loads(rv.data)
     return redirect(url_for('index'))
