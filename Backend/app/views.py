@@ -45,9 +45,6 @@ def apiLogin():
     if user is not None:
         timestamp = int((datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp())
         token = make_secure_token(email, password, str(timestamp))
-        session = Session.query.filter_by(id=user.id).first()
-        if session:
-            db.session.delete(session)
         db.session.add(Session(id=user.id, timestamp=timestamp, token=token))
         db.session.commit()
         response = {'code': 1,
@@ -138,7 +135,6 @@ def login():
     rv = app.test_client().post('/api/auth/login', data={'email': email, 'password': password}, follow_redirects=True)
     result = json.loads(rv.data)
     if result is None or not 'data' in result:
-        print('Heeeeyy')
         return redirect(url_for('index'))
 
     @after_this_request

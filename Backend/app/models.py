@@ -10,9 +10,9 @@ ROLE_ADMIN = 4
 
 
 class Session(db.Model):
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    token = db.Column(db.String(128), primary_key=True, index=True, unique=True)
+    id = db.Column(db.Integer, index=True)
     timestamp = db.Column(db.Integer, index=True)
-    token = db.Column(db.String(128), index=True)
 
     def is_valid(self):
         return self.timestamp >= int(datetime.utcnow().timestamp())
