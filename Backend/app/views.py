@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, flash, redirect, url_for, request, Request, g, abort, jsonify, make_response, json
 from flask.ext.login import login_user, logout_user, current_user, login_required, make_secure_token
+from werkzeug import datastructures
 from app import app, db #, lm
 from app.forms import RegForm
 from app.models import User, Session, ROLE_CAR, ROLE_ADD
@@ -14,6 +15,7 @@ MIN_TEXT_LEN = 10
 ################## ################# ###################
 
 default_user = User(id=4000000000)
+
 
 #################### COOKIE HELPERS ####################
 def after_this_request(f):
@@ -59,7 +61,7 @@ def apiLogin():
                         'message': 'Invalid password'}
         else:
             response = {'code': 0,
-                        'message': "User doesn't exist"}
+                        'message': 'User does not exist'}
     if response['code'] is 1:
         return make_response(jsonify(response), 200)
     return make_response(jsonify(response), 401)
@@ -77,7 +79,7 @@ def apiCheckToken():
         if session:
             db.session.delete(session)
             db.session.commit()
-        response['message'] = 'Expired'
+        response['message'] = 'Token expired'
     else:
         response = {'code': 1,
                     'message': 'OK'}
@@ -91,7 +93,6 @@ def apiLogout():
     response = {'code': 0,
                 'message': 'Missing parameters (token)'}
     token = request.form.get('token')
-    print(token)
     if not token:
         return make_response(jsonify(response), 400)
     session = Session.query.filter_by(token=token).first()
@@ -105,16 +106,26 @@ def apiLogout():
     
 
 ###################### USER LOGIN ######################
+
+def make_internal_redirect(path, method, data):
+    headers = datastructures.Headers()
+    if method is 'POST':
+        headers.add('Content-Type', 'application/x-www-form-urlencoded')
+    with app.test_request_context(path, method=method, data=data, headers=headers):
+        return app.full_dispatch_request()
+
+
 @app.before_request
 def before_request():
     token = request.cookies.get('token')
-    user = None
+    user = default_user
+    g.token, g.session = None, None
     if token:
+        g.token = token
         session = Session.query.filter_by(token=token).first()
+        g.session = session
         if session:
             user = User.query.filter_by(id=session.id).first()
-    if not user:
-        user = default_user
     g.user = user
 
 
@@ -122,9 +133,12 @@ def before_request():
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
+    print(request.headers)
+    print(request.data)
     rv = app.test_client().post('/api/auth/login', data={'email': email, 'password': password}, follow_redirects=True)
     result = json.loads(rv.data)
     if result is None or not 'data' in result:
+        print('Heeeeyy')
         return redirect(url_for('index'))
 
     @after_this_request
@@ -190,11 +204,10 @@ def reg():
             tmp = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
             db.session.add(tmp)
             db.session.commit()
-            # login_user(tmp)
             g.user = tmp
-            return make_response(redirect(url_for('index')))
+            return make_internal_redirect(path='/login', method='POST', data={'email': email, 'password': password})
 
-    return make_response(redirect('/'))
+    # return make_response(redirect('/'))
 
 
 def base_render(*args, **kwargs):

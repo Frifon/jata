@@ -1,4 +1,5 @@
 from app import db
+from flask import g
 from hashlib import md5
 from random import randint
 from datetime import datetime
@@ -26,10 +27,11 @@ class User(db.Model):
     role = db.Column(db.SmallInteger, default=ROLE_CAR)
 
     def is_authenticated(self):
-        session = Session.query.filter_by(id=self.id).first()
-        if not session:
-            return False
-        return session.is_valid()
+        session = g.session
+        if session and not session.is_valid():
+            db.session.delete(session)
+            db.session.commit()
+        return session and session.is_valid()
 
     def is_active(self):
         return True
