@@ -219,3 +219,11 @@ def error405(error):
         return
     return make_response(jsonify({'error': 'Method not allowed',
                                   'code': 405}))
+
+@app.errorhandler(404)
+def error405(error):
+    url = str(request.base_url)
+    if not 'api' in url:
+        return
+    return make_response(jsonify({'error': 'Method not found',
+                                  'code': 404}))
