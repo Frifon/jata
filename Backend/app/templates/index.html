@@ -122,7 +122,7 @@
 
 			$("#login").submit(function(e) {
 
-			    var url = "/api/auth/check_login"; // the script where you handle the form input.
+			    var url = "/api/auth/login"; // the script where you handle the form input.
 
 			    $.ajax({
 			           type: "POST",
@@ -130,11 +130,8 @@
 			           data: $("#login").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
-			           		console.log($("#login").serialize());
-			           		var xhttp = new XMLHttpRequest();
-			           		xhttp.open("POST", "/login", false);
-							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhttp.send($("#login").serialize());
+			           		console.log(data);
+			           		document.cookie="token="+data.data.token;
 							window.location="/";	
 			           },
 			           error: function(data)
