@@ -157,54 +157,44 @@ def logout():
 def index():
     return base_render("index.html", title=u"Jata")
 
-
-@app.route('/reg', methods = ['GET', 'POST'])
+@app.route('/reg', methods = ['POST', 'GET'])
 def reg():
-    if g.user.is_authenticated():
-        return redirect(url_for('index'))
-    form = RegForm()
-    if request.method == 'POST' and form.validate():
-        password = form.password.data
-        confirm_password = form.confirm_password.data
-        email = form.email.data
-        tel_number = form.tel_number.data
-        city = form.city.data
-        userrole = form.userrole.data
-
-        ok = True
-
-        # if password != confirm_password:
-        #     ok = False
-        #     form.password.errors.append(u'Пароли не совпадают')
-
-        # if len(email) <= 4:
-        #     ok = False
-        #     form.email.errors.append(u'Email должен быть длиннее 4 символов.')
-        # if len(password) <= 4:
-        #     ok = False
-        #     form.password.errors.append(u'Пароль должен быть длиннее 4 символов.')
-
-        user1 = User.query.filter_by(email=email).first()
-
-        if user1 is not None:
-            ok = False
-            print ("Same email!")
-            form.email.errors.append(u'Пользователь с таким email уже зарегистрирован.')
-        if not ok:
-            return redirect(url_for('index'))
-        else:
-            if userrole == "reklamodatel":
-                userrole = ROLE_ADD
-            else:
-                userrole = ROLE_CAR
-            tmp = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
-            db.session.add(tmp)
-            db.session.commit()
-            g.user = tmp
-            return make_internal_redirect(path='/login', method='POST', data={'email': email, 'password': password})
-
-    # return make_response(redirect('/'))
-
+    def construct_response(code, message):
+        return {'code': code, 'message': message}
+    def missing_param(p):
+        return construct_response(1, 'Missing parameter {0}'.format(p))
+    email = request.form.get('email')
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirm_password')
+    tel_number = request.form.get('tel_number')
+    city = request.form.get('city')
+    userrole = request.form.get('userrole')
+    print (email, password, confirm_password, tel_number, city, userrole, sep = ', ')
+    if not email:
+        return make_response(jsonify(missing_param('Email')), 401)
+    if not password:
+        return make_response(jsonify(missing_param('Password')), 401)
+    if not confirm_password:
+        return make_response(jsonify(missing_param('confirm_password')), 401)
+    if not tel_number:
+        return make_response(jsonify(missing_param('Tel. number')), 401)
+    if not city:
+        return make_response(jsonify(missing_param('City')), 401)
+    if not userrole:
+        return make_response(jsonify(missing_param('Userrole')), 401)
+    user = User.query.filter_by(email=email).first()
+    if password != confirm_password:
+        return make_response(jsonify(construct_response(2, 'Passwords are different')))
+    if user is not None:
+        return make_response(jsonify(construct_response(3, 'User with this Email exists')), 401)
+    if userrole == "reklamodatel":
+        userrole = ROLE_ADD
+    else:
+        userrole = ROLE_CAR
+    new_user = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
+    db.session.add(new_user)
+    db.session.commit()
+    return make_internal_redirect(path='/login', method='POST', data={'email': email, 'password': password})
 
 def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
