@@ -63,6 +63,23 @@ def apiLogin():
         return make_response(jsonify(response), 200)
     return make_response(jsonify(response), 401)
 
+@app.route('/api/auth/check_login', methods = ['POST'])
+def apiCheckLogin():
+    response = {'code': 0,
+                'message': 'Missing parameters (email or password)'}
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if not email or not password:
+        return make_response(jsonify(response), 400)
+    user = User.query.filter_by(email=email, password=password).first()
+    if user is not None:
+        response = {'code': 1, 'message': 'OK'}
+    else:
+        response = {'code': 0, 'message': 'Wrong email or password'}
+    if response['code'] is 1:
+        return make_response(jsonify(response), 200)
+    return make_response(jsonify(response), 400)
+
 
 @app.route('/api/auth/check', methods = ['POST'])
 def apiCheckToken():
