@@ -95,15 +95,14 @@
 		<script type="text/javascript">
 			$("#reg").submit(function(e) {
 
-			    var url = "/reg"; // the script where you handle the form input.
+			    var url = "/reg";
 
 			    $.ajax({
 			           type: "POST",
 			           url: url,
-			           data: $("#reg").serialize(), // serializes the form's elements.
+			           data: $("#reg").serialize(),
 			           success: function(data)
 			           {
-			           		console.log(data);
 			           		var xhttp = new XMLHttpRequest();
 			           		xhttp.open("POST", "/login", false);
 							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -112,32 +111,29 @@
 			           },
 			           error: function(data)
 			           {
-			           		console.log(data);
-			                alert("ERROR: " + JSON.parse(data.responseText).message); // show response from the php script.
+			                alert("ERROR: " + JSON.parse(data.responseText).message);
 			           }
 			         });
 
-			    e.preventDefault(); // avoid to execute the actual submit of the form.
+			    e.preventDefault();
 			});
 
 			$("#login").submit(function(e) {
 
-			    var url = "/api/auth/login"; // the script where you handle the form input.
+			    var url = "/api/auth/login";
 
 			    $.ajax({
 			           type: "POST",
 			           url: url,
-			           data: $("#login").serialize(), // serializes the form's elements.
+			           data: $("#login").serialize(),
 			           success: function(data)
 			           {
-			           		console.log(data);
 			           		document.cookie="token="+data.data.token;
 							window.location="/";	
 			           },
 			           error: function(data)
 			           {
-			           		console.log(data);
-			                alert("ERROR: " + JSON.parse(data.responseText).message); // show response from the php script.
+			                alert("ERROR: " + JSON.parse(data.responseText).message);
 			           }
 			         });
 
