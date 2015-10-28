@@ -37,7 +37,7 @@
     {% else %}
 		<div class="welcome">
 			<div class="welcome-c">
-				<form action="{{url_for('login')}}" method="post" name="login">
+				<form action="{{url_for('login')}}" id="login" method="post" name="login">
 						<input type="text" id="email" name="email" placeholder="Email:" style="vertical-align:middle" class="input-sm">
 						<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
 						<button class="btn btn-primary" type="submit" name="submit" value="login" style="vertical-align:middle">Войти</button>
@@ -55,8 +55,7 @@
 		        <h4 class="modal-title">Регистрация</h4>
 		      </div>
 		      <div class="modal-body">
-		        <form action="{{url_for('reg')}}" method="post" name="register">
-		        	{{reg_form.hidden_tag()}}
+		        <form action="{{url_for('reg')}}" id="reg" method="post" name="register">
 						<div class="row register-form-left-block">
 							<div class="col-xs-6">
 								<label for="email">Введите E-mail</label>
@@ -85,14 +84,62 @@
 								</div>
 							</div>
 						</div>
-		      <div class="modal-footer">
-				<button class="btn btn-primary" type="submit" name="submit" value="reg" style="vertical-align:middle">Зарегистрироваться</button>
-		      </div>
+				      <div class="modal-footer">
+						<button class="btn btn-primary" value="reg" style="vertical-align:middle">Зарегистрироваться</button>
+				      </div>
 					</form>
 		      </div>
 		    </div>
 		  </div>
 		</div>
+		<script type="text/javascript">
+			$("#reg").submit(function(e) {
+
+			    var url = "/reg";
+
+			    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#reg").serialize(),
+			           success: function(data)
+			           {
+			           		var xhttp = new XMLHttpRequest();
+			           		xhttp.open("POST", "/login", false);
+							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhttp.send($("#reg").serialize());
+							window.location="/";
+			           },
+			           error: function(data)
+			           {
+			                alert("ERROR: " + JSON.parse(data.responseText).message);
+			           }
+			         });
+
+			    e.preventDefault();
+			});
+
+			$("#login").submit(function(e) {
+
+			    var url = "/api/auth/login";
+
+			    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#login").serialize(),
+			           success: function(data)
+			           {
+			           		document.cookie="token="+data.data.token;
+							window.location="/";	
+			           },
+			           error: function(data)
+			           {
+			                alert("ERROR: " + JSON.parse(data.responseText).message);
+			           }
+			         });
+
+			    e.preventDefault(); // avoid to execute the actual submit of the form.
+			});
+		</script>
 	{% endif %}
 			
 		
