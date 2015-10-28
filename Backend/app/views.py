@@ -157,7 +157,7 @@ def logout():
 def index():
     return base_render("index.html", title=u"Jata")
 
-@app.route('/reg', methods = ['POST', 'GET'])
+@app.route('/reg', methods = ['POST'])
 def reg():
     def construct_response(code, message):
         return {'code': code, 'message': message}
@@ -169,24 +169,23 @@ def reg():
     tel_number = request.form.get('tel_number')
     city = request.form.get('city')
     userrole = request.form.get('userrole')
-    print (email, password, confirm_password, tel_number, city, userrole, sep = ', ')
     if not email:
-        return make_response(jsonify(missing_param('Email')), 401)
+        return make_response(jsonify(missing_param('Email')), 400)
     if not password:
-        return make_response(jsonify(missing_param('Password')), 401)
+        return make_response(jsonify(missing_param('Password')), 400)
     if not confirm_password:
-        return make_response(jsonify(missing_param('confirm_password')), 401)
+        return make_response(jsonify(missing_param('confirm_password')), 400)
     if not tel_number:
-        return make_response(jsonify(missing_param('Tel. number')), 401)
+        return make_response(jsonify(missing_param('Tel. number')), 400)
     if not city:
-        return make_response(jsonify(missing_param('City')), 401)
+        return make_response(jsonify(missing_param('City')), 400)
     if not userrole:
-        return make_response(jsonify(missing_param('Userrole')), 401)
+        return make_response(jsonify(missing_param('Userrole')), 400)
     user = User.query.filter_by(email=email).first()
     if password != confirm_password:
-        return make_response(jsonify(construct_response(2, 'Passwords are different')))
+        return make_response(jsonify(construct_response(2, 'Passwords are different')), 400)
     if user is not None:
-        return make_response(jsonify(construct_response(3, 'User with this Email exists')), 401)
+        return make_response(jsonify(construct_response(3, 'User with this Email exists')), 400)
     if userrole == "reklamodatel":
         userrole = ROLE_ADD
     else:
@@ -194,7 +193,7 @@ def reg():
     new_user = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
     db.session.add(new_user)
     db.session.commit()
-    return make_internal_redirect(path='/login', method='POST', data={'email': email, 'password': password})
+    return make_response(jsonify(construct_response(0, 'OK')), 200)
 
 def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
