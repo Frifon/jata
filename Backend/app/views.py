@@ -194,6 +194,10 @@ def reg():
     db.session.commit()
     return make_response(jsonify(construct_response(0, 'OK')), 200)
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
 
