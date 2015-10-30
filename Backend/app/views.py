@@ -101,7 +101,7 @@ def apiLogout():
     return make_response(jsonify(response), 200)
 
 
-@app.route('/reg', methods = ['POST'])              # DEPRECATED
+@app.route('/reg', methods = ['POST'])
 @app.route('/api/auth/reg', methods = ['POST'])
 def reg():
     def construct_response(code, message):
@@ -197,7 +197,14 @@ def index():
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
+    if hasattr(g, 'token'):
+        return render_template('profile.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/favicon.ico')
+def favicon_ico():
+    return ''
 
 def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)

@@ -171,7 +171,7 @@
 							<div class="col-lg-9">
 								<div class="ibox float-e-margins">
 																	
-									
+								{% if g.user.role == 1 %}
 								<!-- заполнение профиля -->	
 									<div class="ibox-title">
 										<h5>Добро пожаловать в нашу систему! (Если не заполннен профиль)</h5>
@@ -220,7 +220,7 @@
 									</form>
 									<!-- / заполняем Данные для ФизЛИЦА -->
 									
-									
+								{% elif g.user.role == 2%}
 									
 									<!-- заполняем Данные для ЮрЛИЦА -->
 									<form action="">
@@ -273,12 +273,13 @@
 									
 								<!-- /заполнение профиля -->		
 									
-
+							{% endif %}
+							{% if g.user.role == 1 %}
 								
 								
 								<!-- отображение заполненного профиля -->	
 									<div class="ibox-title">
-										<h5>Здравствуйте, Пупкин Василий! (Если заполннен профиль)</h5>
+										<h5>Здравствуйте, {{g.user.surname}} {{g.user.name}}! (Если заполннен профиль)</h5>
 									</div>
 								
 									<!-- отображаем Данные для ФизЛИЦА -->
@@ -286,38 +287,38 @@
 									<div class="row">
 										<div class="col-lg-4 font-24">Фамилия:</div>
 										<div class="col-lg-8 text-right font-24">
-											Пупкин
+											{{g.user.surname}}
 										</div>
 										
 										<div class="col-lg-12" style="clear: both;"></div>
 										<div class="col-lg-4 font-24">Имя:</div>
 										<div class="col-lg-8  text-right font-24">
-											Василий
+											{{g.user.name}}
 										</div>
 										
 										<div class="col-lg-12" style="clear: both;"></div>
 										<div class="col-lg-4 font-24">Отчество:</div>
 										<div class="col-lg-8 text-right font-24">
-											Васильевич
+											{{g.user.middle_name}}
 										</div>
 										
 										<div class="col-lg-12" style="clear: both;"></div>
 										<div class="col-lg-4 font-24">Дата рождения:</div>
 										<div class="col-lg-8 text-right font-24">
-											26 октября 2015
+											{{g.user.birthday}}
 										</div>
 										
 										<div class="col-lg-12" style="clear: both;"></div>
 										<div class="col-lg-4 font-24">Телефон:</div>
 										<div class="col-lg-8 text-right font-24">
-											+7 (812) 234-56-78
+											{{g.user.tel_number}}
 											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
 										</div>
 										
 										<div class="col-lg-12" style="clear: both;"></div>
 										<div class="col-lg-4 font-24">E-mail:</div>
 										<div class="col-lg-8 text-right font-24">
-											pupkin-vasilii@mail.ru
+											{{g.user.email}}
 											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
 										</div>
 										
@@ -338,14 +339,14 @@
 									</form>
 									<!-- / отображаем Данные для ФизЛИЦА -->
 									
-									
+								{% elif g.user.role == 2 %}
 									
 									<!-- отображаем Данные для ЮрЛИЦА -->
 									<form action="">
 									<div class="row">
-										<div class="col-lg-4 font-18">Название фрмы:</div>
+										<div class="col-lg-4 font-18">Название фирмы:</div>
 										<div class="col-lg-8 text-right font-18">
-											ООО "Рога и копыта"
+											{{g.user.company}}
 											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
 										</div>
 																			
@@ -375,7 +376,7 @@
 								
 								
 								
-								
+							{% endif %}
 								
 								
 								
