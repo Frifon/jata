@@ -197,7 +197,8 @@ def index():
 
 @app.route('/profile')
 def profile():
-    if hasattr(g, 'token'):
+    session = Session.query.filter_by(token=g.token).first()
+    if session and session.is_valid():
         return render_template('profile.html')
     else:
         return redirect(url_for('index'))
