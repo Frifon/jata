@@ -44,7 +44,7 @@ def apiLogin():
     user = User.query.filter_by(email=email, password=password).first()
     if user is not None:
         timestamp = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp()
-        token = make_secure_token(email, password, timestamp)
+        token = make_secure_token(email, password, str(timestamp))
         db.session.add(Session(id=user.id, timestamp=int(timestamp), token=token))
         db.session.commit()
         response = {'code': 1,
