@@ -10,8 +10,6 @@ import datetime
 
 
 ###################### CONSTANTS #######################
-MIN_NAME_LEN = 4
-MIN_TEXT_LEN = 
 default_user = User(id=4000000000)          # DEPRECATED
 ################## ################# ###################
 
