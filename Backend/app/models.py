@@ -26,6 +26,13 @@ class User(db.Model):
     city = db.Column(db.String(60), index=True)
     role = db.Column(db.SmallInteger, default=ROLE_CAR)
 
+    name = db.Column(db.String(60), index=True)
+    surname = db.Column(db.String(60), index=True)
+    middle_name = db.Column(db.String(60), index=True)
+    birthday = db.Column(db.Date, index=True)
+    company = db.Column(db.String(120), index=True)
+    company_type = db.Column(db.Integer, index=True)
+
     def is_authenticated(self):
         session = g.session
         if session and not session.is_valid():

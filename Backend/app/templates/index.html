@@ -26,14 +26,9 @@
     {% endwith %}
 	
 	{% if g.user.is_authenticated() %}
-        <div align="center">
-	        <b>Profile</b><br>
-	        Email: {{ g.user.email }}<br>
-	        City: {{ g.user.city }}<br>
-	        Tel: {{ g.user.tel_number }}<br>
-	        Role (1-car, 2-add): {{ g.user.role }}<br>
-	        <a href="{{url_for('logout')}}">Выйти</a>
-	    </div>
+		<script type="text/javascript">
+			window.location="/profile";
+		</script>
     {% else %}
 		<div class="welcome">
 			<div class="welcome-c">

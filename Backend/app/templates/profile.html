@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+
+	
+</head>
+<body  style="background-color: #2F3B50;">
+	<div id="wrapper">
+			<!--	
+		/*
+		 * Боковое меню рекламодателя
+		 *
+		 * При генераци страниц: генерировать блоки li > a, кроме первого (там подставляются ФИО и мейл пользователя)
+		 * Активный пункт меню имеет class="active"
+		 * Иконка перед текстом задается для каждого пункта своя, через классы "glyphicon glyphicon-....", если ссылки 
+		 * на страницах сайта будут ЧПУ и не динамическими, то назначение иконок можно будет перенести на плечи CSS 
+		 * (например: если ссылка на Профиль будет иметь неизменный href="/profile" без значащего ?query-string на конце.
+		 * В ином случае, нужно предусмотреть ручное задание иконки для страницы в админке сайта)
+		 */
+	-->
+		<!--
+		<nav class="navbar-static-side" role="navigation">
+            <div>
+                <ul class="nav">
+                    <li class="nav-header">
+                        <div class="profile-element">
+                            <a href="/">
+								<span class="clear">
+									<span class="block">
+										<strong class="font-bold profile-name">Пупкин Василий</strong>
+									</span>
+									<span class="text-muted text-xs block">
+										pupkin-vasilii@mail.ru
+									</span>
+								</span>
+                       		</a>
+                        </div>
+
+                    </li>
+                	<li>
+                        <a href="#"><i class="glyphicon glyphicon-shopping-cart"></i> <span class="nav-label">Мои Р/К</span> </a>
+                    </li>
+                    <li class="active">
+                        <a href="#"><i class="glyphicon glyphicon-user"></i> <span class="nav-label">Профиль</span> </a>
+                    </li> 
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-search"></i> <span class="nav-label">Поиск</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-briefcase"></i> <span class="nav-label">Мои предложения</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-time"></i> <span class="nav-label">История рботы</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-comment"></i> <span class="nav-label">Сообщения</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-ruble"></i> <span class="nav-label">Биллинг</span> </a>
+                    </li>  
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-off"></i> <span class="nav-label">Выход</span> </a>
+                    </li>               
+                </ul>
+
+            </div>
+        </nav>
+		<!-- Боковое меню рекламодателя -->
+	
+
+
+	<!--
+		/*
+		 * Боковое меню владельца ТС
+		 */
+	-->
+		<nav class="navbar-static-side" role="navigation">
+            <div>
+                <ul class="nav">
+                    <li class="nav-header">
+                        <div class="profile-element">
+                            <a href="/">
+								<span class="clear">
+									<span class="block">
+										<strong class="font-bold profile-name">Пупкин Василий</strong>
+									</span>
+									<span class="text-muted text-xs block">
+										{{ g.user.email }}
+									</span>
+								</span>
+                       		</a>
+                        </div>
+
+                    </li>
+                    
+                    
+                    <li class="active">
+                        <a href="#"><i class="glyphicon glyphicon-user"></i> <span class="nav-label">Профиль</span> </a>
+                    </li> 
+                	<li>
+                        <a href="#"><i class="glyphicon glyphicon-dashboard"></i> <span class="nav-label">Мои ТС</span> </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-globe"></i> <span class="nav-label">Мои маршруты</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-comment"></i> <span class="nav-label">Сообщения</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-briefcase"></i> <span class="nav-label">Предложения рекламодателей</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-ruble"></i> <span class="nav-label">Биллинг</span> </a>
+                    </li> 
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-time"></i> <span class="nav-label">История рботы</span> </a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('logout')}}"><i class="glyphicon glyphicon-off"></i> <span class="nav-label">Выход</span> </a>
+                    </li>              
+                </ul>
+
+            </div>
+        </nav>
+		<!-- Боковое меню владельца ТС -->
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+		<!-- Контентная часть -->
+		<div id="page-wrapper" class="bg-color-ddd">
+
+				<div class="row wrapper bg-color-fff border-bottom  page-heading">
+					<div id="page_name" class="col-sm-12">
+						<h2>Профиль</h2>
+					</div>
+				</div>
+				
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content">
+
+						<!-- Content -->                    
+
+
+
+
+						<div class="row">
+
+							<div class="col-lg-9">
+								<div class="ibox float-e-margins">
+																	
+								{% if g.user.role == 1 %}
+								<!-- заполнение профиля -->	
+									<div class="ibox-title">
+										<h5>Добро пожаловать в нашу систему! (Если не заполннен профиль)</h5>
+									</div>
+								
+									<!-- заполняем Данные для ФизЛИЦА -->
+									<form action="">
+									<div class="row">
+										<div class="col-lg-4 font-24">Фамилия *:</div>
+										<div class="col-lg-8">
+											<input type="text" id="familiya" name="familiya" class="input-sm" data-xp="required: true">
+											<span class="show_on_blured_and_invalid">Укажите фамилию</span>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Имя *:</div>
+										<div class="col-lg-8">
+											<input type="text" id="imya" name="imya" class="input-sm" data-xp="required: true">
+											<span class="show_on_blured_and_invalid">Укажите имя</span>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Отчество:</div>
+										<div class="col-lg-8">
+											<input type="text" id="otchestvo" name="otchestvo" class="input-sm">
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Дата рождения *:</div>
+										<div class="col-lg-8">
+											<input type="text" name="data-rozzdeniya" class="input-sm date-select"  data-xp="required: true">
+										</div>
+										
+										
+										<div class="col-lg-12" style="clear: both;">
+											<small>Пожалуйста, указывайте достоверные данные. На них будет составляться договор.</small>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24"></div>
+										<div class="col-lg-8">
+											<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Сохранить" data-xp="enabled_on_completed: true">
+										</div>
+
+									</div>
+									</form>
+									<!-- / заполняем Данные для ФизЛИЦА -->
+									
+								{% elif g.user.role == 2%}
+									
+									<!-- заполняем Данные для ЮрЛИЦА -->
+									<form action="">
+									<div class="row">
+										<div class="col-lg-4 font-24">Название фрмы *:</div>
+										<div class="col-lg-8">
+											<input type="text" id="nazv-firmy" name="nazv-firmy" class="input-sm" data-xp="required: true">
+											<span class="show_on_blured_and_invalid">Укажите название</span>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Тип фрмы *:</div>
+										<div class="col-lg-8">
+											<select class="form-control input-sm" name="tip-firmy">
+												<option disabled>Выберте тип</option>
+													<option>ИП</option>
+													<option>ООО</option>
+													<option>ОАО</option>
+													<option>ЗАО</option>
+											</select>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Представители фирмы:</div>
+										<div class="col-lg-8">
+											<div class="fields" data-xp="name: 'person', repeat: true">
+													<span class="predstavitel">
+														<input name="name-predstavitelya" placeholder="ФИО"  data-xp="required: true" />
+														<input name="kontakty-predstavitelya" placeholder="E-mail/Телефон"  data-xp="required: true" />
+													</span>												
+													<button class="repeat_append_button">+</button>
+													<button class="repeat_remove_button">&minus;</button>
+											</div>
+										</div>
+										
+										
+										<div class="col-lg-12" style="clear: both;">
+											<small>Пожалуйста, указывайте достоверные данные. На них будет составляться договор.</small>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24"></div>
+										<div class="col-lg-8">
+											<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Сохранить" data-xp="enabled_on_completed: true">
+										</div>
+
+									</div>
+									</form>
+									<!-- / заполняем Данные для ЮрЛИЦА -->
+									
+								<!-- /заполнение профиля -->		
+									
+							{% endif %}
+							{% if g.user.role == 1 %}
+								
+								
+								<!-- отображение заполненного профиля -->	
+									<div class="ibox-title">
+										<h5>Здравствуйте, {{g.user.surname}} {{g.user.name}}! (Если заполннен профиль)</h5>
+									</div>
+								
+									<!-- отображаем Данные для ФизЛИЦА -->
+									<form action="">
+									<div class="row">
+										<div class="col-lg-4 font-24">Фамилия:</div>
+										<div class="col-lg-8 text-right font-24">
+											{{g.user.surname}}
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Имя:</div>
+										<div class="col-lg-8  text-right font-24">
+											{{g.user.name}}
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Отчество:</div>
+										<div class="col-lg-8 text-right font-24">
+											{{g.user.middle_name}}
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Дата рождения:</div>
+										<div class="col-lg-8 text-right font-24">
+											{{g.user.birthday}}
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Телефон:</div>
+										<div class="col-lg-8 text-right font-24">
+											{{g.user.tel_number}}
+											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">E-mail:</div>
+										<div class="col-lg-8 text-right font-24">
+											{{g.user.email}}
+											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+										</div>
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Пароль:</div>
+										<div class="col-lg-8 text-right font-24">
+											<a data-toggle="modal" href="#Modal-accept">изменить пароль <i class="glyphicon glyphicon-pencil"></i></a>
+										</div>
+										
+										
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-24">Ваш номер договора:</div>
+										<div class="col-lg-8 text-right font-24">
+											01/001/2015 от 26 октября 2015
+										</div>
+
+									</div>
+									</form>
+									<!-- / отображаем Данные для ФизЛИЦА -->
+									
+								{% elif g.user.role == 2 %}
+									
+									<!-- отображаем Данные для ЮрЛИЦА -->
+									<form action="">
+									<div class="row">
+										<div class="col-lg-4 font-18">Название фирмы:</div>
+										<div class="col-lg-8 text-right font-18">
+											{{g.user.company}}
+											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+										</div>
+																			
+										<div class="col-lg-12" style="clear: both;"></div>
+										<div class="col-lg-4 font-18">Представители фирмы:</div>
+										<div class="col-lg-8">
+											<div class="col-lg-6 text-right font-18">Иванов Иван иванович</div>
+											<div class="col-lg-6 text-right font-18">
+												+7 987-45-45
+												<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+											</div>
+											<div class="col-lg-12" style="clear: both;"></div>
+											<div class="col-lg-6 text-right font-18">Петров Петр Петрович</div>
+											<div class="col-lg-6 text-right font-18">
+												petrov@rik.ru
+												<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+											</div>
+										</div>
+										
+									</div>
+									</form>
+									<!-- / отображаем Данные для ЮрЛИЦА -->
+									
+								<!-- /отображение заполненого профиля -->
+								
+								
+								
+								
+								
+							{% endif %}
+								
+								
+								
+								
+									
+								</div>
+							</div>
+
+
+							<div class="col-lg-3">
+								<div class="chat">
+									<div class="chat-title">
+										<h3>Сообщения и пр.</h3>
+									</div>
+									<div class="ibox-content">
+										<div class="row">
+											<div class="col-lg-12 chat-massage" style="margin-top:10px;">
+												Первое сообщение в чате
+											</div>
+											<div class="col-lg-12 chat-massage" style="margin-top:10px;">
+												Второе сообщение в чате
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							
+						</div> <!-- END row -->
+
+
+
+
+
+
+
+						<!-- END Content -->
+
+
+					</div>
+				</div>
+			</div>
+				<div class="footer">
+					<div class="pull-right">
+						
+					</div>
+					<div class="col-xs-8">
+					
+					
+					</div>
+				</div>
+
+        </div>
+		<!-- Контентная часть -->
+	
+	
+	
+	
+	
+	
+	
+<div id="Modal-accept" class="modal fade">
+<form action="">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Подтверждение действия</h4>
+      </div>
+	
+	 <div class="modal-body">
+		<div class="row">
+			<div class="col-xs-12">
+				Вы точно хотите изменить данные?
+			</div>
+		 </div>
+	 </div>
+	
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-xs-12">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Отмена</button>
+				<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Подтвердить">
+			</div>
+					
+     	</div>
+    </div>
+  </div>
+</div>
+</form>	
+	
+	
+	
+	
+	
+	
+	
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+		
+		
+		
+		
+	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/expromptum.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/jquery.pickmeup.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/jquery.pickmeup.twitter-bootstrap.js')}}" type="text/javascript"></script>
+		
+		<script>
+			expromptum();
+			
+			jQuery(function($){
+				$("#tel-number").mask("(999) 999-99-99"); // Маска телефона
+				
+				
+				$('#vladelec').click(function() {
+						$(".yurik-fizik-check").show();
+						});
+				$('#reklamodatel').click(function() {
+						$(".yurik-fizik-check").hide();
+					
+						});
+				
+				
+				
+				
+				
+				$('.date-select').pickmeup_twitter_bootstrap({
+    				format		: 'd-m-Y',
+					position	: 'top',
+					prev		: '',
+					next		: '',
+					separator	: ';',
+					locale		: {
+									days: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+									daysShort: ["Вск", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Суб"],
+									daysMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+									months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+									monthsShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+									}
+					});
+				
+				
+				
+				
+			});
+			
+			
+		</script>	
+	
+	
+	
+			
+	
+	
+</body>
+</html>

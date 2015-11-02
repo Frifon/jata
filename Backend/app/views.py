@@ -10,8 +10,6 @@ import datetime
 
 
 ###################### CONSTANTS #######################
-MIN_NAME_LEN = 4
-MIN_TEXT_LEN = 
 default_user = User(id=4000000000)          # DEPRECATED
 ################## ################# ###################
 
@@ -46,7 +44,7 @@ def apiLogin():
     user = User.query.filter_by(email=email, password=password).first()
     if user is not None:
         timestamp = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp()
-        token = make_secure_token(email, password, timestamp)
+        token = make_secure_token(email, password, str(timestamp))
         db.session.add(Session(id=user.id, timestamp=int(timestamp), token=token))
         db.session.commit()
         response = {'code': 1,
@@ -103,7 +101,7 @@ def apiLogout():
     return make_response(jsonify(response), 200)
 
 
-@app.route('/reg', methods = ['POST'])              # DEPRECATED
+@app.route('/reg', methods = ['POST'])
 @app.route('/api/auth/reg', methods = ['POST'])
 def reg():
     def construct_response(code, message):
@@ -196,6 +194,18 @@ def logout():
 def index():
     return base_render("index.html", title=u"Jata")
 
+
+@app.route('/profile')
+def profile():
+    session = Session.query.filter_by(token=g.token).first()
+    if session and session.is_valid():
+        return render_template('profile.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/favicon.ico')
+def favicon_ico():
+    return ''
 
 def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
