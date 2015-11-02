@@ -121,7 +121,7 @@ def reg():
     if not password:
         return make_response(jsonify(missing_param('password')), 400)
     if not confirm_password:
-        return make_response(jsonify(missing_param('Confirm_password')), 400)
+        return make_response(jsonify(missing_param('confirm_password')), 400)
     if not tel_number:
         return make_response(jsonify(missing_param('tel. number')), 400)
     if not city:
