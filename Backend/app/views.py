@@ -180,7 +180,8 @@ def getMessages():
                                       'message': 'Not authorized'}),
                              401)
     user = User.query.filter_by(id=session.id).first()
-    messages = Message.query.filter(or_(Message.user_email == user.email, Message.dest_email == user.email)).order_by(Message.timestamp).all()
+    messages = Message.query.filter(or_(Message.user_email == user.email, Message.dest_email == user.email),
+                                    Message.timestamp >= limit).order_by(Message.timestamp).all()
     return make_response(jsonify({'code': 0,
                                   'message': 'OK',
                                   'data': {'messages': [m.serialize() for m in messages]}}),

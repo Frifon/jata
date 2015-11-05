@@ -1,5 +1,4 @@
 import os
-from flask.ext.login import LoginManager
 from config import basedir
 
 from flask import Flask

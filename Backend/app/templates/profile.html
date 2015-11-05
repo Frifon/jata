@@ -91,7 +91,7 @@
                             <a href="/">
 								<span class="clear">
 									<span class="block">
-										<strong class="font-bold profile-name">Пупкин Василий</strong>
+										<strong class="font-bold profile-name"></strong>
 									</span>
 									<span class="text-muted text-xs block">
 										{{ g.user.email }}
@@ -123,7 +123,7 @@
                         <a href="#"><i class="glyphicon glyphicon-ruble"></i> <span class="nav-label">Биллинг</span> </a>
                     </li> 
                     <li>
-                        <a href="#"><i class="glyphicon glyphicon-time"></i> <span class="nav-label">История рботы</span> </a>
+                        <a href="#"><i class="glyphicon glyphicon-time"></i> <span class="nav-label">История работы</span> </a>
                     </li>
                     <li>
                         <a href="{{url_for('logout')}}"><i class="glyphicon glyphicon-off"></i> <span class="nav-label">Выход</span> </a>
@@ -224,14 +224,14 @@
 									<!-- заполняем Данные для ЮрЛИЦА -->
 									<form action="{{url_for('update_profile', role=2)}}" method="post">
 									<div class="row">
-										<div class="col-lg-4 font-24">Название фрмы *:</div>
+										<div class="col-lg-4 font-24">Название фирмы *:</div>
 										<div class="col-lg-8">
 											<input type="text" id="nazv-firmy" name="nazv-firmy" class="input-sm" data-xp="required: true">
 											<span class="show_on_blured_and_invalid">Укажите название</span>
 										</div>
 										
 										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Тип фрмы *:</div>
+										<div class="col-lg-4 font-24">Тип фирмы *:</div>
 										<div class="col-lg-8">
 											<select class="form-control input-sm" name="tip-firmy">
 												<option disabled>Выберте тип</option>
@@ -278,7 +278,7 @@
 								
 								<!-- отображение заполненного профиля -->	
 									<div class="ibox-title">
-										<h5>Здравствуйте, {{g.user.surname}} {{g.user.name}}! (Если заполннен профиль)</h5>
+										<h5>Здравствуйте, {{g.user.surname}} {{g.user.name}}! (Если заполнен профиль)</h5>
 									</div>
 								
 									<!-- отображаем Данные для ФизЛИЦА -->
