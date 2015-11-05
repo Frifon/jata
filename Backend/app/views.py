@@ -324,6 +324,10 @@ def update_profile(role):
     return redirect(url_for('index'))    
 
 
+@app.route('/chat')
+def chat():
+    return render_template('chat.html')
+
 #################### ERROR HANDLERS ####################
 
 @app.errorhandler(405)
