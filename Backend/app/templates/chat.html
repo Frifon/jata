@@ -226,7 +226,9 @@
 								</div>
 								<div class="panel-body">
 									<ul>
-										<li><span class="online"></span><a href="#">Техническая поддержка</a></li>
+                                        {% for item in users %}
+                                            <li><span class="online"></span><a id="__{{item}}" class="change_chat" href="{{item}}">{{item}}</a></li>
+                                        {% endfor %}
 										<!-- <li><span class="online"><a href="#">222</a></li>
 										<li><span class="online"><a href="#">333</a></li>
 										<li><span class="offline"><a href="#">444</a></li>
@@ -408,15 +410,41 @@
                 return time;
             }
 
+            var to = "";
+            var need_reload = 0;
+            {% if g.user.is_admin() %}
+                $('.change_chat').click(function(){ 
+                    var id = this.id;
+                    to = id.slice(2);
+                    need_reload = 1;
+                    messages_cnt = 0;
+                    console.log(need_reload);
+                    ajax_call();
+                    return false;
+                });  
+            {% else %}
+                to = "admin";
+                $('.change_chat').click(function(){ 
+                    return false;
+                });  
+            {% endif %}
+
             var messages_cnt = 0;
             var success_chat_get = function(data) {
                 if (data.code !== 0) {
                     return;
                 }
+                console.log("@" + need_reload);
+                if (need_reload == 1) {
+                    var div = document.getElementById('message_box');
+                    console.log('clear');
+                    div.innerHTML = '';
+                    need_reload = 0;
+                }
                 var messages = data.data.messages;
                 for (i = messages_cnt; i < messages.length; i++) {
                     var div = document.getElementById('message_box');
-                    if (messages[i].from == "{{g.user.email}}") {
+                    if ("{{g.user.is_admin()}}" == "False" ? messages[i].from == "{{g.user.email}}" : !(messages[i].from == "{{g.user.email}}")) {
                         div.innerHTML = div.innerHTML + "<div class=\"row massage\">\
                                                             <div class=\"float-right text-center col-xs-2 avatar-block\">\
                                                                 <div class=\"avatar\" style=\"background-image: url('{{url_for('static', filename='img/anonim.jpg')}}'); \"></div>\
@@ -425,7 +453,7 @@
                                                                 <div class=\"container-fluid\">\
                                                                     <div class=\"row-fluid\">\
                                                                         <div class=\"col-xs-4 centering-y padding-left-0 font-12\">" + timeConverter(messages[i].timestamp) + "</div> \
-                                                                        <div class=\"col-xs-8 text-right centering-y padding-right-0 font-14 b nick\"><span class=\"offline\"></span>{{g.user.email}}</div>\
+                                                                        <div class=\"col-xs-8 text-right centering-y padding-right-0 font-14 b nick\"><span class=\"offline\"></span>" + {% if g.user.is_admin() %}to{% else %} "{{g.user.email}}" {% endif %} + "</div>\
                                                                     </div>\
                                                                 </div>\
                                                                 <div class=\"row padding-top-7\">\
@@ -443,7 +471,7 @@
                                                             <div class=\"media-body-xs col-xs-9 alert from-supportman-massage font-16\">\
                                                                 <div class=\"container-fluid\">\
                                                                     <div class=\"row-fluid\">\
-                                                                        <div class=\"col-xs-8 centering-y padding-left-0 font-14 b nick\"><span class=\"online\"></span>Техническая поддержка</div>\
+                                                                        <div class=\"col-xs-8 centering-y padding-left-0 font-14 b nick\">Техническая поддержка <span class=\"online\"></span></div>\
                                                                         <div class=\"col-xs-4 text-right padding-right-0 centering-y font-12 date-massage\">" + timeConverter(messages[i].timestamp) + "</div>\
                                                                     </div>\
                                                                 </div>\
@@ -457,6 +485,7 @@
                     }
 
                 }
+                need_reload = 0;
                 if (messages.length < messages_cnt) {
                     messages_cnt = 0;
                 } else if (messages.length > messages_cnt) {
@@ -469,7 +498,7 @@
             }
 			
             var ajax_call = function() {
-                $.get( "api/chat", { "token" : getCookie("token"), limit: "-1" }, success_chat_get );
+                $.get( "api/chat", { "token" : getCookie("token"), limit: "-1", from: to}, success_chat_get );
             };
 
             var interval = 1000 * 5;
@@ -484,7 +513,7 @@
                 $.ajax({
                        type: "POST",
                        url: url,
-                       data: {"token" : getCookie("token"), "to" : "admin", "message" : $("#chat-massage-submitform").serializeArray()[0].value},
+                       data: {"token" : getCookie("token"), "to" : to, "message" : $("#chat-massage-submitform").serializeArray()[0].value},
                        success: function(data)
                        {
                             $('#chat-massage-submitform')[0].reset();

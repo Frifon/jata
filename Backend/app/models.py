@@ -56,6 +56,9 @@ class User(db.Model):
             db.session.commit()
         return session and session.is_valid()
 
+    def is_admin(self):
+        return self.email == 'admin'
+
     # def is_active(self):
     #     return True
 

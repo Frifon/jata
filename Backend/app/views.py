@@ -5,7 +5,7 @@ from werkzeug import datastructures
 from app import app, db #, lm
 from app.forms import RegForm
 from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 import datetime
 
 
@@ -170,6 +170,9 @@ def addMessage():
 def getMessages():
     token = request.args['token']
     limit = request.args['limit']
+    author = request.args['from']
+    if not(author):
+        author = "qkjbdlkjndflkjsbdlfk"
     if not token or not limit:
         return make_response(jsonify({'code': 0,
                                       'message': 'Missing parameters (token or limit)'}),
@@ -180,7 +183,9 @@ def getMessages():
                                       'message': 'Not authorized'}),
                              401)
     user = User.query.filter_by(id=session.id).first()
-    messages = Message.query.filter(or_(Message.user_email == user.email, Message.dest_email == user.email),
+    messages = Message.query.filter(or_(
+                                        and_(Message.user_email == user.email, Message.dest_email == author), 
+                                        and_(Message.dest_email == user.email, Message.user_email == author)),
                                     Message.timestamp >= limit).order_by(Message.timestamp).all()
     return make_response(jsonify({'code': 0,
                                   'message': 'OK',
@@ -327,7 +332,14 @@ def update_profile(role):
 
 @app.route('/chat')
 def chat():
-    return render_template('chat.html')
+    users = []
+    if g.user:
+        if g.user.is_admin():
+            users = [user.email for user in User.query.all() if not(user.is_admin())]
+        else:
+            users = [u"Техническая поддержка"]
+    print (users)
+    return render_template('chat.html', users=users)
 
 #################### ERROR HANDLERS ####################
 
