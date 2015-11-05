@@ -177,7 +177,7 @@
 									</div>
 								
 									<!-- заполняем Данные для ФизЛИЦА -->
-									<form action="">
+									<form action="{{url_for('update_profile', role=1)}}">
 									<div class="row">
 										<div class="col-lg-4 font-24">Фамилия *:</div>
 										<div class="col-lg-8">
@@ -222,7 +222,7 @@
 								{% elif g.user.role == 2%}
 									
 									<!-- заполняем Данные для ЮрЛИЦА -->
-									<form action="">
+									<form action="{{url_for('update_profile', role=2)}}">
 									<div class="row">
 										<div class="col-lg-4 font-24">Название фрмы *:</div>
 										<div class="col-lg-8">

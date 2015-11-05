@@ -211,6 +211,69 @@ def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
 
 
+@app.route('/update_profile/<int:role>')
+def update_profile(role):
+    def construct_response(code, message):
+        return {'code': code, 'message': message}
+    def incorrect_param(p):
+        return construct_response(1, 'Incorrect parameter: {0}'.format(p))
+    def missing_param(p):
+        return construct_response(1, 'Missing parameter: {0}'.format(p))
+
+    if role == 1:
+        surname = request.form.get('familiya')
+        name = request.form.get('imya')
+        middle_name = request.form.get('otchestvo')
+        birthday = request.form.get('data-rozzdeniya')
+
+        if not surname:
+            return make_response(jsonify(missing_param('surname')), 400)
+        if not name:
+            return make_response(jsonify(missing_param('name')), 400)
+        if not middle_name:
+            return make_response(jsonify(missing_param('middle_name')), 400)
+        if not birthday:
+            return make_response(jsonify(missing_param('birthday')), 400)
+
+        token = request.form.get('token')
+        if not token:
+            return make_response(jsonify(missing_param('token')), 400)
+        session = Session.query.filter_by(token=token).first()
+        if not session or not session.is_valid():
+            return make_response(jsonify(incorrect_param('token')), 400)
+
+        user = User.query.filter_by(id=session.id).first()
+        user.surname = surname
+        user.name = name
+        user.middle_name = middle_name
+        user.birthday = birthday
+        db.session.commit()
+
+    elif role == 2:
+        company = request.form.get('nazv-firmy')
+        company_type = request.form.get('tip-firmy')
+
+        if not company:
+            return make_response(jsonify(missing_param('company')), 400)
+        if not company_type:
+            return make_response(jsonify(missing_param('company_type')), 400)
+
+        token = request.form.get('token')
+        if not token:
+            return make_response(jsonify(missing_param('token')), 400)
+        session = Session.query.filter_by(token=token).first()
+        if not session or not session.is_valid():
+            return make_response(jsonify(incorrect_param('token')), 400)
+
+        user = User.query.filter_by(id=session.id).first()
+        user.company = company
+        user.company_type = company_type
+        db.session.commit()
+    else:
+        return make_response(jsonify(incorrect_param('role')), 400)
+    return redirect(url_for('index'))    
+
+
 #################### ERROR HANDLERS ####################
 
 @app.errorhandler(405)
