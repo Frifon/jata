@@ -257,8 +257,9 @@ def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
 
 
-@app.route('/update_profile/<int:role>')
+@app.route('/update_profile/<int:role>', methods = ['POST'])
 def update_profile(role):
+    
     def construct_response(code, message):
         return {'code': code, 'message': message}
     def incorrect_param(p):
@@ -271,7 +272,7 @@ def update_profile(role):
         name = request.form.get('imya')
         middle_name = request.form.get('otchestvo')
         birthday = request.form.get('data-rozzdeniya')
-
+        
         if not surname:
             return make_response(jsonify(missing_param('surname')), 400)
         if not name:
@@ -280,8 +281,9 @@ def update_profile(role):
             return make_response(jsonify(missing_param('middle_name')), 400)
         if not birthday:
             return make_response(jsonify(missing_param('birthday')), 400)
-
-        token = request.form.get('token')
+        
+        # token = request.form.get('token')
+        token = g.token
         if not token:
             return make_response(jsonify(missing_param('token')), 400)
         session = Session.query.filter_by(token=token).first()
@@ -292,7 +294,8 @@ def update_profile(role):
         user.surname = surname
         user.name = name
         user.middle_name = middle_name
-        user.birthday = birthday
+        birthday = list(map(int, birthday.split('-')))
+        user.birthday = datetime.date(birthday[2], birthday[1], birthday[0])
         db.session.commit()
 
     elif role == 2:
@@ -317,6 +320,7 @@ def update_profile(role):
         db.session.commit()
     else:
         return make_response(jsonify(incorrect_param('role')), 400)
+    
     return redirect(url_for('index'))    
 
 
