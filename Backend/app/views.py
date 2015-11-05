@@ -338,7 +338,6 @@ def chat():
             users = [user.email for user in User.query.all() if not(user.is_admin())]
         else:
             users = [u"Техническая поддержка"]
-    print (users)
     return render_template('chat.html', users=users)
 
 #################### ERROR HANDLERS ####################

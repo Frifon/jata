@@ -418,7 +418,6 @@
                     to = id.slice(2);
                     need_reload = 1;
                     messages_cnt = 0;
-                    console.log(need_reload);
                     ajax_call();
                     return false;
                 });  
@@ -434,10 +433,8 @@
                 if (data.code !== 0) {
                     return;
                 }
-                console.log("@" + need_reload);
                 if (need_reload == 1) {
                     var div = document.getElementById('message_box');
-                    console.log('clear');
                     div.innerHTML = '';
                     need_reload = 0;
                 }
