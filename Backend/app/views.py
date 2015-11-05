@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, flash, redirect, url_for, request, Request, g, abort, jsonify, make_response, json
-from flask.ext.login import login_user, logout_user, current_user, login_required, make_secure_token
+from flask import render_template, redirect, url_for, request, g, jsonify, make_response, json
+from flask.ext.login import make_secure_token
 from werkzeug import datastructures
 from app import app, db #, lm
 from app.forms import RegForm
-from app.models import User, Session, ROLE_CAR, ROLE_ADD
+from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD
+from sqlalchemy import or_
 import datetime
 
 
@@ -31,6 +32,7 @@ def call_after_request_callbacks(response):
     return response
 
 
+
 ######################  REST API  ######################
 
 @app.route('/api/auth/login', methods = ['POST'])
@@ -45,7 +47,8 @@ def apiLogin():
     if user is not None:
         timestamp = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp()
         token = make_secure_token(email, password, str(timestamp))
-        db.session.add(Session(id=user.id, timestamp=int(timestamp), token=token))
+        timestamp = int(timestamp)
+        db.session.add(Session(id=user.id, timestamp=timestamp, token=token))
         db.session.commit()
         response = {'code': 1,
                     'message': 'OK',
@@ -139,16 +142,59 @@ def reg():
     db.session.add(new_user)
     db.session.commit()
     return make_response(jsonify(construct_response(0, 'OK')), 200)
-    
+
+
+@app.route('/api/chat', methods = ['POST'])
+def addMessage():
+    token = request.form.get('token')
+    receiver = request.form.get('to')
+    message = request.form.get('message')
+    if not token or not receiver or not message:
+        return make_response(jsonify({'code': 0,
+                                      'message': 'Missing parameters (token or to or message)'}),
+                             400)
+    session = Session.query.filter_by(token=token).first()
+    if not session or not session.is_valid():
+        return make_response(jsonify({'code': 0,
+                                      'message': 'Not authorized'}),
+                             401)
+    user = User.query.filter_by(id=session.id).first()
+    timestamp = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp()
+    new_message = Message(id=int(timestamp), user_email=user.email, dest_email=receiver, message=message, timestamp=timestamp)
+    db.session.add(new_message)
+    db.session.commit()
+    return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
+
+
+@app.route('/api/chat', methods = ['GET'])
+def getMessages():
+    token = request.args['token']
+    timestamp = request.args['timestamp']
+    if not token or not timestamp:
+        return make_response(jsonify({'code': 0,
+                                      'message': 'Missing parameters (token or timestamp)'}),
+                             400)
+    session = Session.query.filter_by(token=token).first()
+    if not session or not session.is_valid():
+        return make_response(jsonify({'code': 0,
+                                      'message': 'Not authorized'}),
+                             401)
+    user = User.query.filter_by(id=session.id).first()
+    messages = Message.query.filter(or_(Message.user_email == user.email, Message.dest_email == user.email), Message.timestamp >= timestamp).all()
+    return make_response(jsonify({'code': 0,
+                                  'message': 'OK',
+                                  'data': {'messages': [m.serialize() for m in messages]}}),
+                         200)
+
 
 ###################### USER LOGIN ######################
 
-def make_internal_redirect(path, method, data):
-    headers = datastructures.Headers()
-    if method is 'POST':
-        headers.add('Content-Type', 'application/x-www-form-urlencoded')
-    with app.test_request_context(path, method=method, data=data, headers=headers):
-        return app.full_dispatch_request()
+# def make_internal_redirect(path, method, data):
+#     headers = datastructures.Headers()
+#     if method is 'POST':
+#         headers.add('Content-Type', 'application/x-www-form-urlencoded')
+#     with app.test_request_context(path, method=method, data=data, headers=headers):
+#         return app.full_dispatch_request()
 
 
 @app.before_request

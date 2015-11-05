@@ -8,6 +8,21 @@ ROLE_CAR = 1
 ROLE_ADD = 2
 ROLE_ADMIN = 4
 
+class Message(db.Model):
+    id = db.Column(db.BigInteger, primary_key=True)
+    user_email = db.Column(db.String(120), index=True)
+    dest_email = db.Column(db.String(120), index=True)
+    message = db.Column(db.String(500), index=True)
+    timestamp = db.Column(db.Float, index=True)
+
+    def serialize(self):
+        return {
+            'from': self.user_email,
+            'to': self.dest_email,
+            'timestamp': self.timestamp,
+            'message': self.message
+        }
+
 
 class Session(db.Model):
     token = db.Column(db.String(128), primary_key=True, index=True, unique=True)
@@ -40,11 +55,11 @@ class User(db.Model):
             db.session.commit()
         return session and session.is_valid()
 
-    def is_active(self):
-        return True
+    # def is_active(self):
+    #     return True
 
-    def is_anonymous(self):
-        return False
+    # def is_anonymous(self):
+    #     return False
 
     def get_id(self):
         return self.id
