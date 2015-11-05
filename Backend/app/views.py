@@ -160,7 +160,7 @@ def addMessage():
                              401)
     user = User.query.filter_by(id=session.id).first()
     timestamp = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp()
-    new_message = Message(id=int(timestamp), user_email=user.email, dest_email=receiver, message=message, timestamp=timestamp)
+    new_message = Message(user_email=user.email, dest_email=receiver, message=message, timestamp=timestamp)
     db.session.add(new_message)
     db.session.commit()
     return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
@@ -169,10 +169,10 @@ def addMessage():
 @app.route('/api/chat', methods = ['GET'])
 def getMessages():
     token = request.args['token']
-    timestamp = request.args['timestamp']
-    if not token or not timestamp:
+    limit = request.args['limit']
+    if not token or not limit:
         return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (token or timestamp)'}),
+                                      'message': 'Missing parameters (token or limit)'}),
                              400)
     session = Session.query.filter_by(token=token).first()
     if not session or not session.is_valid():
@@ -180,7 +180,7 @@ def getMessages():
                                       'message': 'Not authorized'}),
                              401)
     user = User.query.filter_by(id=session.id).first()
-    messages = Message.query.filter(or_(Message.user_email == user.email, Message.dest_email == user.email), Message.timestamp >= timestamp).all()
+    messages = Message.query.filter(or_(Message.user_email == user.email, Message.dest_email == user.email)).order_by(Message.timestamp).all()
     return make_response(jsonify({'code': 0,
                                   'message': 'OK',
                                   'data': {'messages': [m.serialize() for m in messages]}}),

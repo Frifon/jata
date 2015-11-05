@@ -9,7 +9,8 @@ ROLE_ADD = 2
 ROLE_ADMIN = 4
 
 class Message(db.Model):
-    id = db.Column(db.BigInteger, primary_key=True)
+    __table_args__ = {'sqlite_autoincrement': True}
+    id = db.Column(db.Integer, primary_key=True)
     user_email = db.Column(db.String(120), index=True)
     dest_email = db.Column(db.String(120), index=True)
     message = db.Column(db.String(500), index=True)
