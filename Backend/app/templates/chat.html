@@ -498,7 +498,7 @@
                 $.get( "api/chat", { "token" : getCookie("token"), limit: "-1", from: to}, success_chat_get );
             };
 
-            var interval = 1000 * 5;
+            var interval = 1000 * 3;
             ajax_call();
             setInterval(ajax_call, interval);
 
