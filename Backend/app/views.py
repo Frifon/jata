@@ -316,6 +316,7 @@ def index():
 
 
 @app.route('/change_password', methods = ['POST'])
+@login_required
 def change_password():
 
     def construct_response(code, message):

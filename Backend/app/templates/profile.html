@@ -34,7 +34,7 @@
 							<div id="page-settings" class="col-sm-3 centering-y">
 								<a data-toggle="modal" href="#Modal-accept">
 									<i class="glyphicon glyphicon-cog"></i>
-									Редактировать
+									Редактровать
 								</a>
 							</div>
 						</div>
@@ -281,7 +281,7 @@
 								{% endif %}
 							
 									<!-- смена пароля -->
-									<form action="">
+									<form action="{{url_for('change_password')}}" method='post' id='change_password'>
 										<div class="panel panel-default">
 											<div class="panel-heading font-18">
 												Изменение пароля
@@ -310,7 +310,7 @@
 												</div>
 												<div class="row">
 													<div class="col-xs-12 clear">
-														<label for="new-password-reenter">Повторите новый пароль</label>
+														<label for="new-password-confirmation">Повторите новый пароль</label>
 														<div class="input-group field">
 															<input type="password" name="new-password-confirmation" class="input-sm new-password-confirmation">
 														</div>
@@ -321,7 +321,7 @@
 												<div class="row">
 													<div class="col-xs-8"></div>
 													<div class="col-xs-4 text-right">
-														<button class="btn btn-primary" type="submit" name="submit" data-xp="enabled_on_completed: true">Сменить пароль</button>
+														<button class="btn btn-primary" id="change_password" type="submit" name="submit" data-xp="enabled_on_completed: true">Сменить пароль</button>
 													</div>
 												</div>
 											</div>
@@ -522,6 +522,31 @@
 							           		xhttp.open("POST", "/login", false);
 											xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 											xhttp.send($("#update_profile_2").serialize());
+											window.location="/";
+							           },
+							           error: function(data)
+							           {
+							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           }
+							         });
+
+							    e.preventDefault();
+							});
+
+							$("#change_password").submit(function(e) {
+
+							    var url = "/change_password";
+
+							    $.ajax({
+							           type: "POST",
+							           url: url,
+							           data: $("#change_password").serialize(),
+							           success: function(data)
+							           {
+							           		var xhttp = new XMLHttpRequest();
+							           		xhttp.open("POST", "/login", false);
+											xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+											xhttp.send($("#change_password").serialize());
 											window.location="/";
 							           },
 							           error: function(data)
