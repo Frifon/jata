@@ -4,7 +4,7 @@ from flask.ext.login import make_secure_token
 from werkzeug import datastructures
 from app import app, db #, lm
 from app.forms import RegForm
-from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD
+from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD, Representative
 from sqlalchemy import or_, and_
 import datetime
 import json
@@ -253,7 +253,20 @@ def index():
 def profile():
     session = Session.query.filter_by(token=g.token).first()
     if session and session.is_valid():
-        return render_template('profile.html')
+        if g.user.role == 2:
+            # token = request.form.get('token')
+            token = g.token
+            if not token:
+                return make_response(jsonify(missing_param('token')), 400)
+            session = Session.query.filter_by(token=token).first()
+            if not session or not session.is_valid():
+                return make_response(jsonify(incorrect_param('token')), 400)
+
+            representatives = Representative.query.filter_by(company_id=session.id).all()
+            print(representatives)
+            return render_template('profile.html', representatives=representatives)
+        else:
+            return render_template('profile.html')
     else:
         return redirect(url_for('index'))
 
@@ -316,15 +329,22 @@ def update_profile(role):
         return make_response(jsonify(construct_response(0, 'OK')), 200)
 
     elif role == 2:
-        company = request.form.get('nazv-firmy')
-        company_type = request.form.get('tip-firmy')
+        company_name = request.form.get('company-name')
+        company_representative_name = request.form.get('company-representative-name')
+        company_representative_email = request.form.get('company-representative-email')
+        company_representative_phone = request.form.get('company-representative-phone')
 
-        if not company:
-            return make_response(jsonify(missing_param('company')), 400)
-        if not company_type:
-            return make_response(jsonify(missing_param('company_type')), 400)
+        if not company_name:
+            return make_response(jsonify(missing_param('company_name')), 400)
+        if not company_representative_name:
+            return make_response(jsonify(missing_param('company_representative_name')), 400)
+        if not company_representative_phone:
+            return make_response(jsonify(missing_param('company_representative_phone')), 400)
+        if not company_representative_email:
+            return make_response(jsonify(missing_param('company_representative_email')), 400)
 
-        token = request.form.get('token')
+        # token = request.form.get('token')
+        token = g.token
         if not token:
             return make_response(jsonify(missing_param('token')), 400)
         session = Session.query.filter_by(token=token).first()
@@ -332,8 +352,15 @@ def update_profile(role):
             return make_response(jsonify(incorrect_param('token')), 400)
 
         user = User.query.filter_by(id=session.id).first()
-        user.company = company
-        user.company_type = company_type
+        user.company_name = company_name
+
+        new_representative = Representative(
+            email=company_representative_email,
+            tel_number=company_representative_phone,
+            name=company_representative_name,
+            company_id=user.id)
+
+        db.session.add(new_representative)
         db.session.commit()
         return make_response(jsonify(construct_response(0, 'OK')), 200)
     else:

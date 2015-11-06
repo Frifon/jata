@@ -195,35 +195,35 @@
 													</div>
 												</div>
 												<div class="row padding-bottom-21">
-													<div class="col-xs-12 font-16">Название фирмы *:</div>
+													<div class="col-xs-12 font-16 padding-bottom-21">Название фирмы *:</div>
 													<div class="col-xs-12">
-														<input type="text" id="nazv-firmy" name="nazv-firmy" class="input-sm form-control" data-xp="required: true">
+														<input type="text" id="company-name" name="company-name" class="input-sm form-control" data-xp="required: true">
 														<span class="show_on_blured_and_invalid">Укажите название фирмы</span>
 													</div>
 												</div>
-												<div class="row padding-bottom-21">
+												<!-- <div class="row padding-bottom-21">
 													<div class="col-xs-12 font-16">Представители фирмы:</div>
 													<div class="col-xs-12">
 														<div class="fields" data-xp="name: 'person', repeat: true">
 															<div class="repeat-block padding-bottom-21">
-																<span class="predstavitel col-xs-10">
+																<span class="representative col-xs-10">
 
 																	<span class="col-xs-12 padding-left-0 padding-right-0 padding-bottom-7">
 																		<span class="input-group">
 																			<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-																			<input name="name-predstavitelya" placeholder="ФИО представителя"  data-xp="required: true"  class="form-control" />
+																			<input name="company-representative-name" placeholder="ФИО представителя"  data-xp="required: true"  class="form-control" />
 																		</span>
 																	</span>
 																	<span class="col-xs-6 email-group">
 																		<span class="input-group">
 																			<span class="input-group-addon">@</span>
-																			<input name="email-predstavitelya" placeholder="E-mail"  data-xp="type: 'email', required: true" class="form-control" />
+																			<input name="company-representative-email" placeholder="E-mail"  data-xp="type: 'email', required: true" class="form-control" />
 																		</span>
 																	</span>
 																	<span class="col-xs-6 phone-group">
 																		<span class="input-group">
 																			<span class="input-group-addon">+7</span>
-																			<input name="phone-predstavitelya" placeholder="(___) ___-__-__"  data-xp="type: 'phone', required: true" class="tel-number form-control" />
+																			<input name="company-representative-phone" placeholder="(___) ___-__-__"  data-xp="type: 'phone', required: true" class="tel-number form-control" />
 																		</span>
 																	</span>
 																</span>												
@@ -234,7 +234,33 @@
 														</div>
 													</div>
 									
+												</div> -->
+
+												<div class="row padding-bottom-21">
+													<div class="col-xs-12 font-16 padding-bottom-21">Добавить представителя фирмы:</div>
+													<div class="col-xs-12 padding-bottom-21">
+														<span class="col-xs-12 padding-left-0 padding-right-0 padding-bottom-7">
+															<span class="input-group">
+																<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+																<input name="company-representative-name" placeholder="ФИО представителя"  data-xp="required: true"  class="form-control" />
+															</span>
+														</span>
+														<span class="col-xs-6 padding-left-0 email-group">
+															<span class="input-group">
+																<span class="input-group-addon">@</span>
+																<input name="company-representative-email" placeholder="E-mail"  data-xp="type: 'email', required: true" class="form-control" />
+															</span>
+														</span>
+														<span class="col-xs-6 padding-right-0 phone-group">
+															<span class="input-group">
+																<span class="input-group-addon">+7</span>
+																<input name="company-representative-phone" placeholder="(___) ___-__-__"  data-xp="type: 'phone', required: true" class="tel-number form-control" />
+															</span>
+														</span>
+													</div>
+									
 												</div>
+
 												<div class="row">
 													<div class="col-xs-12 clear">
 														<small>Пожалуйста, указывайте достоверные данные. На них будет составляться договор.</small>
@@ -245,7 +271,7 @@
 												<div class="row">
 													<div class="col-xs-8"></div>
 													<div class="col-xs-4 text-right">
-														<input class="btn btn-primary" value="update_profile_2" value="Сохранить" data-xp="enabled_on_completed: true">
+														<button class="btn btn-primary" value="update_profile_2" data-xp="enabled_on_completed: true">Сохранить</button>
 													</div>
 												</div>
 											</div>
@@ -353,20 +379,20 @@
 												<div class="col-xs-4 font-18">Телефон:</div>
 												<div class="col-xs-8 text-right font-24">
 													{{g.user.tel_number}}
-													<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+													<!-- <a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a> -->
 												</div>
 
 												<div class="col-xs-12 clear"></div>
 												<div class="col-xs-4 font-18">E-mail:</div>
 												<div class="col-xs-8 text-right font-24">
 													{{g.user.email}}
-													<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+													<!-- <a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a> -->
 												</div>
 
 												<div class="col-xs-12 clear"></div>
 												<div class="col-xs-4 font-18">Пароль:</div>
 												<div class="col-xs-8 text-right font-24">
-													<a data-toggle="modal" href="#Modal-accept">изменить пароль <i class="glyphicon glyphicon-pencil"></i></a>
+													<!-- <a data-toggle="modal" href="#Modal-accept">изменить пароль <i class="glyphicon glyphicon-pencil"></i></a> -->
 												</div>
 											</div>
 											<div class="row">
@@ -386,7 +412,7 @@
 									<!-- отображаем Данные для ЮрЛИЦА -->
 									<div class="alert alert-success alert-dismissible">
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										<i class="glyphicon glyphicon-ok-circle padding-right-7"></i>Здравствуйте, {{g.user.company}}!
+										<i class="glyphicon glyphicon-ok-circle padding-right-7"></i>Здравствуйте!
 									</div>
 								
 									<div class="panel panel-default">
@@ -397,33 +423,26 @@
 											<div class="row padding-bottom-21">
 												<div class="col-xs-4 font-18">Название фирмы:</div>
 												<div class="col-xs-8 text-right font-24">
-													ООО "РиК"
+													{{g.user.company_name}}
 												</div>
 											</div>
 											<div class="row padding-bottom-21">
 												<div class="col-xs-3 font-18">Представители:</div>
 												<div class="col-xs-9">
-													<div class="predstavitel-info padding-bottom-21"><!-- Данные представителя 1 -->
-														<div class="col-xs-7 font-24">
-															Иванов Иван Иванович
+													{% for representative in representatives %}
+														<!-- Данные представителя -->
+														<div class="representative-info padding-bottom-21">
+															<div class="col-xs-7 font-24">
+																{{representative.name}}
+															</div>
+															<div class="col-xs-5 text-right">
+																<div class="font-18">+7 {{representative.tel_number}}</div>
+																<div class="font-16">{{representative.email}}</div>
+															</div>
+															<div class="clear"></div>
 														</div>
-														<div class="col-xs-5 text-right">
-															<div class="font-18">+7 (911) 987-45-45</div>
-															<div class="font-16">ivanov@rik.ru</div>
-														</div>
-														<div class="clear"></div>
-													</div>
-													<!-- / Данные представителя 1 -->
-													<div class="predstavitel-info"><!-- Данные представителя 2 -->
-														<div class="col-xs-7 font-24">
-															 Петров Петр Петрович
-														</div>
-														<div class="col-xs-5 text-right">
-															<div class="font-18">+7 (922) 123-45-67</div>
-															<div class="font-16">petrov@rik.ru</div>
-														</div>
-														<div class="clear"></div>
-													</div><!-- / Данные представителя 2 -->
+														<!-- / Данные представителя -->
+													{% endfor %}
 												</div>
 											</div>
 										</div>
