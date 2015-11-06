@@ -6,7 +6,11 @@
                         <a href="/">
                             <span class="clear">
                                 <span class="block">
-                                    <strong class="font-bold profile-name">{{g.user.surname}} {{g.user.name}}</strong>
+                                    {% if g.user.surname != None %}
+                                        <strong class="font-bold profile-name">{{g.user.surname}} {{g.user.name}}</strong>
+                                    {% else %}
+                                        <strong class="font-bold profile-name">Новый пользователь</strong>
+                                    {% endif %}
                                 </span>
                                 <span class="text-muted text-xs block">
                                     {{ g.user.email }}

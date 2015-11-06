@@ -274,10 +274,12 @@ def update_profile(role):
         return construct_response(1, 'Missing parameter: {0}'.format(p))
 
     if role == 1:
-        surname = request.form.get('familiya')
-        name = request.form.get('imya')
-        middle_name = request.form.get('otchestvo')
-        birthday = request.form.get('data-rozzdeniya')
+        surname = request.form.get('user-lastname')
+        name = request.form.get('user-firstname')
+        middle_name = request.form.get('user-middlename')
+        birthday = request.form.get('user-birthday')
+        tel_number = request.form.get('user-phone')
+        email = request.form.get('user-email')
         
         if not surname:
             return make_response(jsonify(missing_param('surname')), 400)
@@ -287,7 +289,11 @@ def update_profile(role):
             return make_response(jsonify(missing_param('middle_name')), 400)
         if not birthday:
             return make_response(jsonify(missing_param('birthday')), 400)
-        
+        if not tel_number:
+            return make_response(jsonify(missing_param('tel_number')), 400)
+        if not email:
+            return make_response(jsonify(missing_param('email')), 400)
+
         # token = request.form.get('token')
         token = g.token
         if not token:
@@ -302,7 +308,10 @@ def update_profile(role):
         user.middle_name = middle_name
         birthday = list(map(int, birthday.split('-')))
         user.birthday = datetime.date(birthday[2], birthday[1], birthday[0])
+        user.tel_number = tel_number
+        user.email = email
         db.session.commit()
+        return make_response(jsonify(construct_response(0, 'OK')), 200)
 
     elif role == 2:
         company = request.form.get('nazv-firmy')
@@ -324,10 +333,9 @@ def update_profile(role):
         user.company = company
         user.company_type = company_type
         db.session.commit()
+        return make_response(jsonify(construct_response(0, 'OK')), 200)
     else:
         return make_response(jsonify(incorrect_param('role')), 400)
-    
-    return redirect(url_for('index'))    
 
 
 @app.route('/chat')

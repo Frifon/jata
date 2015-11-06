@@ -86,7 +86,7 @@
 																				
 								{% if g.user.role == 1 %}								
 									<!-- заполняем Данные для ФизЛИЦА -->
-									<form action="{{url_for('update_profile', role=1)}}">
+									<form action="{{url_for('update_profile', role=1)}}" method="post" id="update_profile_1", name="update_profile_1">
 										<div class="panel panel-default">
 											<div class="panel-heading font-18">
 													Заполните, пожалуйста, информацию о себе
@@ -169,18 +169,19 @@
 												<div class="row">
 													<div class="col-xs-8"></div>
 													<div class="col-xs-4 text-right">
-														<button class="btn btn-primary" id="submit" type="submit" name="submit" data-xp="enabled_on_completed: true">Сохранить</button>
+														<button class="btn btn-primary" value="update_profile_1" data-xp="enabled_on_completed: true">Сохранить</button>
 													</div>
 												</div>
 											</div>
 										</div>
 									</form>
 									<!-- / заполняем Данные для ФизЛИЦА -->
+
 									
 									
 								{% elif g.user.role == 2%}	
 									<!-- заполняем Данные для ЮрЛИЦА -->
-									<form action="{{url_for('update_profile', role=2)}}">
+									<form action="{{url_for('update_profile', role=2)}}" method="post" id="update_profile_2", name="update_profile_2">
 										<div class="panel panel-default">
 											<div class="panel-heading font-18">
 													Заполните, пожалуйста, информацию о фирме
@@ -244,7 +245,7 @@
 												<div class="row">
 													<div class="col-xs-8"></div>
 													<div class="col-xs-4 text-right">
-														<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Сохранить" data-xp="enabled_on_completed: true">
+														<input class="btn btn-primary" value="update_profile_2" value="Сохранить" data-xp="enabled_on_completed: true">
 													</div>
 												</div>
 											</div>
@@ -462,11 +463,57 @@
 							
 						</div> <!-- END row -->
 
+						<script type="text/javascript">
+							$("#update_profile_1").submit(function(e) {
 
+							    var url = "/update_profile/1";
 
+							    $.ajax({
+							           type: "POST",
+							           url: url,
+							           data: $("#update_profile_1").serialize(),
+							           success: function(data)
+							           {
+							           		var xhttp = new XMLHttpRequest();
+							           		xhttp.open("POST", "/login", false);
+											xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+											xhttp.send($("#update_profile_1").serialize());
+											window.location="/";
+							           },
+							           error: function(data)
+							           {
+							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           }
+							         });
 
+							    e.preventDefault();
+							});
 
+							$("#update_profile_2").submit(function(e) {
 
+							    var url = "/update_profile/2";
+
+							    $.ajax({
+							           type: "POST",
+							           url: url,
+							           data: $("#update_profile_2").serialize(),
+							           success: function(data)
+							           {
+							           		var xhttp = new XMLHttpRequest();
+							           		xhttp.open("POST", "/login", false);
+											xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+											xhttp.send($("#update_profile_2").serialize());
+											window.location="/";
+							           },
+							           error: function(data)
+							           {
+							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           }
+							         });
+
+							    e.preventDefault();
+							});
+						</script>
 
 						<!-- END Content -->
 
