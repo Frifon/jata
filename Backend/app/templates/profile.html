@@ -14,244 +14,452 @@
 	
 </head>
 <body  style="background-color: #2F3B50;">
+	
 	<div id="wrapper">
-		{% include 'sidebar.html' %}	
+	
+		{% include 'sidebar.html' %}
+	
 		<!-- Контентная часть -->
 		<div id="page-wrapper" class="bg-color-ddd">
-
-				<div class="row wrapper bg-color-fff border-bottom  page-heading">
-					<div id="page_name" class="col-sm-12">
-						<h2>Профиль</h2>
+			
+			<!-- Заголовок страницы -->
+			<div class="row wrapper bg-color-fff border-bottom  page-heading margin-bottom-21">
+				<div class="col-sm-12">
+					
+					<div class="container-fluid">
+						<div class="row row-fluid">
+							<div id="page-name" class="col-sm-9 centering-y">
+								Профиль
+							</div>
+							<div id="page-settings" class="col-sm-3 centering-y">
+								<a data-toggle="modal" href="#Modal-accept">
+									<i class="glyphicon glyphicon-cog"></i>
+									Редактровать
+								</a>
+							</div>
+						</div>
 					</div>
+					
 				</div>
+			</div>
+			<!-- /Заголовок страницы -->
+	
 				
+						
 			<div class="row">
-				<div class="col-lg-12">
+				<div class="col-xs-12">
 					<div class="wrapper wrapper-content">
 
 						<!-- Content -->                    
 
 
-
-
 						<div class="row">
 
-							<div class="col-lg-9">
+							<div class="col-xs-12">
 								<div class="ibox float-e-margins">
 																	
-								{% if g.user.role == 1 %}
-								<!-- заполнение профиля -->	
-									<div class="ibox-title">
-										<h5>Добро пожаловать в нашу систему! (Если не заполннен профиль)</h5>
-									</div>
 								
-									<!-- заполняем Данные для ФизЛИЦА -->
-									<form action="{{url_for('update_profile', role=1)}}" method="post">
-									<div class="row">
-										<div class="col-lg-4 font-24">Фамилия *:</div>
-										<div class="col-lg-8">
-											<input type="text" id="familiya" name="familiya" class="input-sm" data-xp="required: true">
-											<span class="show_on_blured_and_invalid">Укажите фамилию</span>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Имя *:</div>
-										<div class="col-lg-8">
-											<input type="text" id="imya" name="imya" class="input-sm" data-xp="required: true">
-											<span class="show_on_blured_and_invalid">Укажите имя</span>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Отчество:</div>
-										<div class="col-lg-8">
-											<input type="text" id="otchestvo" name="otchestvo" class="input-sm">
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Дата рождения *:</div>
-										<div class="col-lg-8">
-											<input type="text" name="data-rozzdeniya" class="input-sm date-select"  data-xp="required: true">
-										</div>
-										
-										
-										<div class="col-lg-12" style="clear: both;">
-											<small>Пожалуйста, указывайте достоверные данные. На них будет составляться договор.</small>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24"></div>
-										<div class="col-lg-8">
-											<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Сохранить" data-xp="enabled_on_completed: true">
-										</div>
-
+								<!-- заполнение профиля Физ или Юр лиц -->	
+									<div class="alert alert-success alert-dismissible">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<i class="glyphicon glyphicon-ok-circle padding-right-7"></i>Добро пожаловать в нашу систему!
 									</div>
+
+															
+									<div class="alert alert-dismissible padding-right-14 help-slider" role="alert">
+										<span class="padding-bottom-14 inline-block">
+											<i class="glyphicon glyphicon-education padding-right-7 font-18"></i>
+											Как работать в нашей системе?
+										</span>
+										<button id="helper-slider-close" disabled="disabled" type="button" class="close" aria-label="Close" title="Досмотрите до конца, чтобы убрать этот блок">
+											<span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+										</button>
+										<div class="fotorama" id="helper-slider">
+											<img src="/2015-11-06_115019.jpg">
+											<img src="http://dreempics.com/img/picture/Jul/10/846c2f053be6d8c5a4ba39ce9a89a18b/6.jpg" data-caption="Текст к слайду 2. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.">
+											<img src="http://fetsvvo.com/upload/iblock/ce1/ce11c5d54348e9c2aaab5424e81235b1.jpg" data-caption="Текст к слайду 3. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.">
+											<img src="http://7themes.su/_ph/4/995650231.jpg" data-caption="Текст к слайду 4">
+											<img src="http://dreempics.com/img/picture/Apr/30/ce9442d5944bfb3ac3fa6385552c7580/7.jpg" data-caption="Последний слайд. Можно закрывать слайдер, если нужно">
+										</div>
+									</div>								
+										
+																				
+								{% if g.user.role == 1 %}								
+									<!-- заполняем Данные для ФизЛИЦА -->
+									<form action="{{url_for('update_profile', role=1)}}">
+										<div class="panel panel-default">
+											<div class="panel-heading font-18">
+													Заполните, пожалуйста, информацию о себе
+											</div>
+											<div class="panel-body">
+												<div class="row padding-bottom-21 message-before-content">
+													<div class="col-xs-12 clear">
+														<small>
+															Указав информацию о себе, Вам станут доступны дополнительные разделы сайта.
+														</small>
+													</div>
+												</div>
+												<div class="row padding-bottom-21">
+													<div class="col-xs-6">
+														<div class="font-16">Фамилия *</div>
+														<input type="text" id="user-lastname" name="user-lastname" class="input-sm form-control" data-xp="required: true">
+														<span class="show_on_blured_and_invalid">Укажите фамилию</span>	
+													</div>
+													<div class="col-xs-6">
+														<div class="font-16">Телефон *</div>
+														<span class="input-group">
+																<span class="input-group-addon">+7</span>
+																<input name="user-phone" placeholder="(___) ___-__-__"  data-xp="type: 'phone', required: true" class="tel-number form-control" />
+														</span>
+														<span class="show_on_blured_and_invalid">Укажите контактный телефон</span>	
+													</div>
+												</div>
+												<div class="row padding-bottom-21">
+													<div class="col-xs-6">
+														<div class="font-16">Имя *</div>
+														<input type="text" id="user-firstname" name="user-firstname" class="input-sm  form-control" data-xp="required: true">
+														<span class="show_on_blured_and_invalid">Укажите имя</span>
+													</div>
+													<div class="col-xs-6">
+														<div class="font-16">E-mail *</div>
+														<span class="input-group">
+																<span class="input-group-addon">@</span>
+																<input  id="user-email" name="user-email" placeholder="E-mail"  data-xp="type: 'email', required: true" class="form-control" />
+														</span>
+														<span class="show_on_blured_and_invalid">Укажите контактный e-mail</span>
+													</div>
+												</div>
+												<div class="row padding-bottom-21">
+													<div class="col-xs-6">
+														<div class="font-16">Отчество</div>
+														<input type="text" id="user-middlename" name="user-middlename" class="input-sm form-control">
+													</div>
+													<div class="col-xs-6">
+														<div class="font-16">Город проживания *</div>
+														<span class="input-group">
+																<span class="input-group-addon">
+																	<i class="glyphicon glyphicon-map-marker"></i>
+																</span>
+																<input id="user-city" name="user-city"  data-xp="required: true" class="input-sm form-control" />
+														</span>
+													</div>
+												</div>
+												<div class="row padding-bottom-21">
+													<div class="col-xs-6">
+														<div class="font-16">Дата рождения *</div>
+														<span class="input-group">
+																<input type="text" id="user-birthday" name="user-birthday" class="input-sm form-control date-select">
+																<span class="input-group-addon">
+																	<i class="glyphicon glyphicon-calendar date-selector"></i>
+																</span>
+														</span>
+														
+													</div>
+													<div class="col-xs-6">
+														
+													</div>
+												</div>
+												<div class="row message-after-content">
+													<div class="col-xs-12 clear">
+														<small>Пожалуйста, указывайте достоверные данные. На них будет составляться договор.</small>
+													</div>
+												</div>
+											</div>
+											<div class="panel-footer">
+												<div class="row">
+													<div class="col-xs-8"></div>
+													<div class="col-xs-4 text-right">
+														<button class="btn btn-primary" id="submit" type="submit" name="submit" data-xp="enabled_on_completed: true">Сохранить</button>
+													</div>
+												</div>
+											</div>
+										</div>
 									</form>
 									<!-- / заполняем Данные для ФизЛИЦА -->
 									
-								{% elif g.user.role == 2%}
 									
+								{% elif g.user.role == 2%}	
 									<!-- заполняем Данные для ЮрЛИЦА -->
-									<form action="{{url_for('update_profile', role=2)}}" method="post">
-									<div class="row">
-										<div class="col-lg-4 font-24">Название фирмы *:</div>
-										<div class="col-lg-8">
-											<input type="text" id="nazv-firmy" name="nazv-firmy" class="input-sm" data-xp="required: true">
-											<span class="show_on_blured_and_invalid">Укажите название</span>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Тип фирмы *:</div>
-										<div class="col-lg-8">
-											<select class="form-control input-sm" name="tip-firmy">
-												<option disabled>Выберте тип</option>
-													<option>ИП</option>
-													<option>ООО</option>
-													<option>ОАО</option>
-													<option>ЗАО</option>
-											</select>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Представители фирмы:</div>
-										<div class="col-lg-8">
-											<div class="fields" data-xp="name: 'person', repeat: true">
-													<span class="predstavitel">
-														<input name="name-predstavitelya" placeholder="ФИО"  data-xp="required: true" />
-														<input name="kontakty-predstavitelya" placeholder="E-mail/Телефон"  data-xp="required: true" />
-													</span>												
-													<button class="repeat_append_button">+</button>
-													<button class="repeat_remove_button">&minus;</button>
+									<form action="{{url_for('update_profile', role=2)}}">
+										<div class="panel panel-default">
+											<div class="panel-heading font-18">
+													Заполните, пожалуйста, информацию о фирме
+											</div>
+											<div class="panel-body">
+												<div class="row padding-bottom-21 message-before-content">
+													<div class="col-xs-12 clear">
+														<small>
+															Указав информацию о себе, Вам станут доступны дополнительные разделы сайта.
+														</small>
+													</div>
+												</div>
+												<div class="row padding-bottom-21">
+													<div class="col-xs-12 font-16">Название фирмы *:</div>
+													<div class="col-xs-12">
+														<input type="text" id="nazv-firmy" name="nazv-firmy" class="input-sm form-control" data-xp="required: true">
+														<span class="show_on_blured_and_invalid">Укажите название фирмы</span>
+													</div>
+												</div>
+												<div class="row padding-bottom-21">
+													<div class="col-xs-12 font-16">Представители фирмы:</div>
+													<div class="col-xs-12">
+														<div class="fields" data-xp="name: 'person', repeat: true">
+															<div class="repeat-block padding-bottom-21">
+																<span class="predstavitel col-xs-10">
+
+																	<span class="col-xs-12 padding-left-0 padding-right-0 padding-bottom-7">
+																		<span class="input-group">
+																			<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+																			<input name="name-predstavitelya" placeholder="ФИО представителя"  data-xp="required: true"  class="form-control" />
+																		</span>
+																	</span>
+																	<span class="col-xs-6 email-group">
+																		<span class="input-group">
+																			<span class="input-group-addon">@</span>
+																			<input name="email-predstavitelya" placeholder="E-mail"  data-xp="type: 'email', required: true" class="form-control" />
+																		</span>
+																	</span>
+																	<span class="col-xs-6 phone-group">
+																		<span class="input-group">
+																			<span class="input-group-addon">+7</span>
+																			<input name="phone-predstavitelya" placeholder="(___) ___-__-__"  data-xp="type: 'phone', required: true" class="tel-number form-control" />
+																		</span>
+																	</span>
+																</span>												
+																<button class="repeat_append_button col-xs-1">+</button>
+																<button class="repeat_remove_button col-xs-1">&minus;</button>
+																<div class="clear"></div>
+															</div>
+														</div>
+													</div>
+									
+												</div>
+												<div class="row">
+													<div class="col-xs-12 clear">
+														<small>Пожалуйста, указывайте достоверные данные. На них будет составляться договор.</small>
+													</div>
+												</div>
+											</div>
+											<div class="panel-footer">
+												<div class="row">
+													<div class="col-xs-8"></div>
+													<div class="col-xs-4 text-right">
+														<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Сохранить" data-xp="enabled_on_completed: true">
+													</div>
+												</div>
 											</div>
 										</div>
-										
-										
-										<div class="col-lg-12" style="clear: both;">
-											<small>Пожалуйста, указывайте достоверные данные. На них будет составляться договор.</small>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24"></div>
-										<div class="col-lg-8">
-											<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Сохранить" data-xp="enabled_on_completed: true">
-										</div>
-
-									</div>
 									</form>
 									<!-- / заполняем Данные для ЮрЛИЦА -->
-									
-								<!-- /заполнение профиля -->		
-									
-							{% endif %}
-							{% if g.user.role == 1 %}
-								
-								
-								<!-- отображение заполненного профиля -->	
-									<div class="ibox-title">
-										<h5>Здравствуйте, {{g.user.surname}} {{g.user.name}}! (Если заполнен профиль)</h5>
-									</div>
-								
-									<!-- отображаем Данные для ФизЛИЦА -->
+								{% endif %}
+							
+									<!-- смена пароля -->
 									<form action="">
-									<div class="row">
-										<div class="col-lg-4 font-24">Фамилия:</div>
-										<div class="col-lg-8 text-right font-24">
-											{{g.user.surname}}
+										<div class="panel panel-default">
+											<div class="panel-heading font-18">
+												Изменение пароля
+											</div>
+											<div class="panel-body">
+												<div class="row padding-bottom-7 message-before-content">
+													<div class="col-xs-12 font-14 clear">
+														Используя данную форму, Вы можете поменять пароль от своего кабинета
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 clear">
+														<label for="old-password">Введите старый пароль</label>
+														<div class="input-group field">
+															<input type="password" name="old-password" class="input-sm old-password">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 clear">
+														<label for="new-password">Введите новый пароль</label>
+														<div class="input-group field">
+															<input type="password" name="new-password" class="input-sm new-password">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 clear">
+														<label for="new-password-reenter">Повторите новый пароль</label>
+														<div class="input-group field">
+															<input type="password" name="new-password-reenter" class="input-sm new-password-reenter">
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="panel-footer">
+												<div class="row">
+													<div class="col-xs-8"></div>
+													<div class="col-xs-4 text-right">
+														<button class="btn btn-primary" type="submit" name="submit" data-xp="enabled_on_completed: true">Сменить пароль</button>
+													</div>
+												</div>
+											</div>
 										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Имя:</div>
-										<div class="col-lg-8  text-right font-24">
-											{{g.user.name}}
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Отчество:</div>
-										<div class="col-lg-8 text-right font-24">
-											{{g.user.middle_name}}
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Дата рождения:</div>
-										<div class="col-lg-8 text-right font-24">
-											{{g.user.birthday}}
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Телефон:</div>
-										<div class="col-lg-8 text-right font-24">
-											{{g.user.tel_number}}
-											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">E-mail:</div>
-										<div class="col-lg-8 text-right font-24">
-											{{g.user.email}}
-											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
-										</div>
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Пароль:</div>
-										<div class="col-lg-8 text-right font-24">
-											<a data-toggle="modal" href="#Modal-accept">изменить пароль <i class="glyphicon glyphicon-pencil"></i></a>
-										</div>
-										
-										
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-24">Ваш номер договора:</div>
-										<div class="col-lg-8 text-right font-24">
-											01/001/2015 от 26 октября 2015
-										</div>
+									</form>
+									<!-- / смена пароля -->
+									
+								<!-- /заполнение профиля -->
+								
+								
+								{% if g.user.role == 1 %}
+									<!-- отображение заполненного профиля -->
+									<div class="alert alert-success alert-dismissible">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<i class="glyphicon glyphicon-ok-circle padding-right-7"></i>Здравствуйте, {{g.user.name}} {{g.user.surname}}! Рады видеть Вас.
+									</div>
 
+									<div class="panel panel-default">
+										<div class="panel-heading font-18">
+											Учетные данные пользователя
+										</div>
+										<div class="panel-body">
+											<div class="row padding-bottom-7 message-before-content">
+												<div class="col-xs-12 font-14 clear">
+													Ваши учетные данные по аккаунту.
+												</div>
+											</div>
+											<div class="row padding-bottom-21">
+												<div class="col-xs-4 font-18">Фамилия:</div>
+												<div class="col-xs-8 text-right font-24">
+													{{g.user.surname}}
+												</div>
+
+												<div class="col-xs-12 clear"></div>
+												<div class="col-xs-4 font-18">Имя:</div>
+												<div class="col-xs-8  text-right font-24">
+													{{g.user.name}}
+												</div>
+
+												<div class="col-xs-12 clear"></div>
+												<div class="col-xs-4 font-18">Отчество:</div>
+												<div class="col-xs-8 text-right font-24">
+													{{g.user.middle_name}}
+												</div>
+											</div>
+											<div class="row padding-bottom-21">
+												<div class="col-xs-12 clear"></div>
+												<div class="col-xs-4 font-18">Дата рождения:</div>
+												<div class="col-xs-8 text-right font-24">
+													{{g.user.birthday}}
+												</div>
+											</div>
+											<div class="row padding-bottom-21">
+												<div class="col-xs-12 clear"></div>
+												<div class="col-xs-4 font-18">Телефон:</div>
+												<div class="col-xs-8 text-right font-24">
+													{{g.user.tel_number}}
+													<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+												</div>
+
+												<div class="col-xs-12 clear"></div>
+												<div class="col-xs-4 font-18">E-mail:</div>
+												<div class="col-xs-8 text-right font-24">
+													{{g.user.email}}
+													<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
+												</div>
+
+												<div class="col-xs-12 clear"></div>
+												<div class="col-xs-4 font-18">Пароль:</div>
+												<div class="col-xs-8 text-right font-24">
+													<a data-toggle="modal" href="#Modal-accept">изменить пароль <i class="glyphicon glyphicon-pencil"></i></a>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xs-12 clear"></div>
+												<div class="col-xs-4 font-18">Ваш номер договора:</div>
+												<div class="col-xs-8 text-right font-24">
+													01/001/2015 от 26 октября 2015
+												</div>
+
+											</div>
+										</div>
 									</div>
-									</form>
-									<!-- / отображаем Данные для ФизЛИЦА -->
-									
-								{% elif g.user.role == 2 %}
-									
+								
+							
+								{% elif g.user.role == 2 %}	
+								
 									<!-- отображаем Данные для ЮрЛИЦА -->
-									<form action="">
-									<div class="row">
-										<div class="col-lg-4 font-18">Название фирмы:</div>
-										<div class="col-lg-8 text-right font-18">
-											{{g.user.company}}
-											<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
-										</div>
-																			
-										<div class="col-lg-12" style="clear: both;"></div>
-										<div class="col-lg-4 font-18">Представители фирмы:</div>
-										<div class="col-lg-8">
-											<div class="col-lg-6 text-right font-18">Иванов Иван иванович</div>
-											<div class="col-lg-6 text-right font-18">
-												+7 987-45-45
-												<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
-											</div>
-											<div class="col-lg-12" style="clear: both;"></div>
-											<div class="col-lg-6 text-right font-18">Петров Петр Петрович</div>
-											<div class="col-lg-6 text-right font-18">
-												petrov@rik.ru
-												<a data-toggle="modal" href="#Modal-accept"><i class="glyphicon glyphicon-pencil"></i></a>
-											</div>
-										</div>
-										
+									<div class="alert alert-success alert-dismissible">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<i class="glyphicon glyphicon-ok-circle padding-right-7"></i>Здравствуйте, {{g.user.company}}!
 									</div>
-									</form>
+								
+									<div class="panel panel-default">
+										<div class="panel-heading font-18">
+											Учетные данные пользователя
+										</div>
+										<div class="panel-body">
+											<div class="row padding-bottom-21">
+												<div class="col-xs-4 font-18">Название фирмы:</div>
+												<div class="col-xs-8 text-right font-24">
+													ООО "РиК"
+												</div>
+											</div>
+											<div class="row padding-bottom-21">
+												<div class="col-xs-3 font-18">Представители:</div>
+												<div class="col-xs-9">
+													<div class="predstavitel-info padding-bottom-21"><!-- Данные представителя 1 -->
+														<div class="col-xs-7 font-24">
+															Иванов Иван Иванович
+														</div>
+														<div class="col-xs-5 text-right">
+															<div class="font-18">+7 (911) 987-45-45</div>
+															<div class="font-16">ivanov@rik.ru</div>
+														</div>
+														<div class="clear"></div>
+													</div>
+													<!-- / Данные представителя 1 -->
+													<div class="predstavitel-info"><!-- Данные представителя 2 -->
+														<div class="col-xs-7 font-24">
+															 Петров Петр Петрович
+														</div>
+														<div class="col-xs-5 text-right">
+															<div class="font-18">+7 (922) 123-45-67</div>
+															<div class="font-16">petrov@rik.ru</div>
+														</div>
+														<div class="clear"></div>
+													</div><!-- / Данные представителя 2 -->
+												</div>
+											</div>
+										</div>
+									</div>
 									<!-- / отображаем Данные для ЮрЛИЦА -->
 									
 								<!-- /отображение заполненого профиля -->
+								{% endif %}	
 								
 								
 								
-								
-								
-							{% endif %}
-								
-								
-								
-								
+						
 									
 								</div>
 							</div>
+
+							<!--
+							<div class="col-xs-3">
+								<div class="chat">
+									<div class="chat-title">
+										<h3>Сообщения и пр.</h3>
+									</div>
+									<div class="ibox-content">
+										<div class="row">
+											<div class="col-xs-12 chat-massage" style="margin-top:10px;">
+												Первое сообщение в чате
+											</div>
+											<div class="col-xs-12 chat-massage" style="margin-top:10px;">
+												Второе сообщение в чате
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							-->
+
+							
 						</div> <!-- END row -->
 
 
@@ -286,42 +494,35 @@
 	
 	
 <div id="Modal-accept" class="modal fade">
-<form action="">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title">Подтверждение действия</h4>
-      </div>
-	
-	 <div class="modal-body">
-		<div class="row">
-			<div class="col-xs-12">
-				Вы точно хотите изменить данные?
-			</div>
+	<form action="">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 class="modal-title">Подтверждение действия</h4>
+		  </div>
+
+		 <div class="modal-body">
+			<div class="row">
+				<div class="col-xs-12">
+					Вы точно хотите изменить данные?
+				</div>
+			 </div>
 		 </div>
-	 </div>
-	
-	<div class="modal-footer">
-		<div class="row">
-			<div class="col-xs-12">
-				<button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Отмена</button>
-				<input class="btn btn-primary" id="submit" type="submit" name="submit" value="Подтвердить">
+
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-xs-12">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Отмена</button>
+					<button class="btn btn-primary" id="submit" type="submit" name="submit" >Подтвердить</button>
+				</div>
+
 			</div>
-					
-     	</div>
-    </div>
-  </div>
-</div>
-</form>	
-	
-	
-	
-	
-	
-	
-	
+		</div>
+	  </div>
 	</div>
+	</form>	
+</div>
 	
 	
 	
@@ -336,16 +537,21 @@
 		
 		
 		
-	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
-	<script src="{{url_for('static', filename='js/expromptum.js')}}" type="text/javascript"></script>
-	<script src="{{url_for('static', filename='js/jquery.pickmeup.js')}}" type="text/javascript"></script>
-	<script src="{{url_for('static', filename='js/jquery.pickmeup.twitter-bootstrap.js')}}" type="text/javascript"></script>
+	<script src="js/bootstrap.js" type="text/javascript"></script>
+	<script src="js/expromptum.js" type="text/javascript"></script>
+	<script src="js/jquery.pickmeup.js" type="text/javascript"></script>
+	<script src="js/jquery.pickmeup.twitter-bootstrap.js" type="text/javascript"></script>
+	<script src="js/fotorama.js"></script>
 		
 		<script>
 			expromptum();
 			
 			jQuery(function($){
 				$("#tel-number").mask("(999) 999-99-99"); // Маска телефона
+
+				$('body').on('click', '.tel-number', function(){
+					$(".tel-number").mask("(999) 999-99-99");
+					});
 				
 				
 				$('#vladelec').click(function() {
@@ -356,6 +562,12 @@
 					
 						});
 				
+				
+				$('#helper-slider').on('fotorama:show', function (e, fotorama) {
+						if(fotorama.activeIndex+1 == fotorama.size) {
+							$('#helper-slider-close').attr('data-dismiss', 'alert').removeAttr("disabled");
+							}
+					});
 				
 				
 				
