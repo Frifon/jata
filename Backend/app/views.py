@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, request, g, jsonify, make_response, json
+from flask import render_template, redirect, url_for, request, g, jsonify, make_response, json, flash, Request, abort, jsonify
 from flask.ext.login import make_secure_token
 from werkzeug import datastructures
 from app import app, db #, lm
@@ -7,7 +7,9 @@ from app.forms import RegForm
 from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD
 from sqlalchemy import or_, and_
 import datetime
-
+import json
+from app.models import Point
+from sqlalchemy import desc
 
 
 ###################### CONSTANTS #######################
@@ -336,6 +338,60 @@ def update_profile(role):
         return make_response(jsonify(construct_response(0, 'OK')), 200)
     else:
         return make_response(jsonify(incorrect_param('role')), 400)
+
+@app.route('/api/gps', methods=['GET', 'POST'])
+def apiGPS():
+    if not g.user.is_authenticated():
+        response = {'code': 0,
+                    'message': 'Invalid token'}
+        return response
+
+    if request.method == 'POST':
+        raw_points_json = request.form.get('points')
+        if not raw_points_json:
+            response = {'code': 0,
+                        'message': 'JSON missing'}
+            return response
+
+        try:
+            raw_points = json.loads(raw_points_json)
+        except:
+            response = {'code': 0,
+                        'message': 'Invalid JSON'}
+            return response
+
+        for raw_point in raw_points:
+            point = Point(user_id=raw_point['user_id'],
+                          latitude=raw_point['latitude'],
+                          longtitude=raw_point['longtitude'],
+                          altitude=raw_point['altitude'],
+                          accuracy=raw_point['accuracy'],
+                          timestamp=int(datetime.datetime.utcnow().timestamp()))
+            db.session.add(point)
+            db.session.commit()
+
+        response = {'code': 1,
+                    'message': 'OK'}
+        return response
+    else:
+        user_id = request.form.get('user_id')
+        timestamp_start = request.form.get('timestamp_start')
+        timestamp_end = request.form.get('timestamp_end')
+
+        if not user_id:
+            response = {'code': 0,
+                        'message': 'User id missing'}
+            return response
+        if not timestamp_start:
+            timestamp_start = 0
+        if not timestamp_end:
+            timestamp_end = int((datetime.datetime.utcnow() + datetime.timedelta(weeks=1000)).timestamp())
+
+        query = db.session.query(Point).filter(Point.user_id == user_id, Point.timestamp >= timestamp_start, Point.timestamp <= timestamp_start).order_by(desc('timestamp')).all()
+
+        response = {'code': 1,
+                    'message': json.dumps(query)}
+        return response
 
 
 @app.route('/chat')
