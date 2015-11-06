@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, request, g, jsonify, make_response, json, flash, Request, abort, jsonify
+from flask import render_template, redirect, url_for, request, g, jsonify, make_response, flash, Request, abort, jsonify
 from flask.ext.login import make_secure_token
 from werkzeug import datastructures
 from app import app, db #, lm
@@ -80,6 +80,7 @@ def api_login_required(f):
     return decorated_function
 
 
+
 ######################  REST API  ######################
 
 @app.route('/api/auth/login', methods = ['POST'])
@@ -132,12 +133,10 @@ def apiCheckToken():
 
 @app.route('/api/auth/logout', methods = ['POST'])
 def apiLogout():
-    print('logout')
     response = {'code': 0,
                 'message': 'Already not authorized (or token forgotten)'}
     if not g.session:
         return make_response(jsonify(response), 400)
-    print('.')
     db.session.delete(g.session)
     db.session.commit()
     response = {'code': 1,
@@ -292,7 +291,7 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
     rv = app.test_client().post('/api/auth/login', data={'email': email, 'password': password}, follow_redirects=True)
-    result = json.load(rv.data)
+    result = json.loads(rv.data.decode('unicode_escape'))
     if result is None or not 'data' in result:
         return redirect(url_for('index'))
 
@@ -306,7 +305,7 @@ def login():
 @app.route('/logout', methods = ['GET'])
 def logout():
     rv = app.test_client().post('/api/auth/logout', data={'token': g.token}, follow_redirects=True)
-    result = json.loads(rv.data)
+    result = json.loads(rv.data.decode('unicode_escape'))
     return redirect(url_for('index'))
 
 
