@@ -8,7 +8,7 @@ from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD
 from sqlalchemy import or_, and_
 from sqlalchemy.orm.exc import NoResultFound
 import datetime
-
+from functools import wraps
 
 
 ###################### CONSTANTS #######################
@@ -38,10 +38,8 @@ def before_request():
             session = Session.query.filter_by(token=token).one()
         except NoResultFound:
             pass
-        print(session is None)
         g.session = session
         g.auth = (session and session.is_valid())
-        print(g.auth)
         if session:
             user = session.user
     g.user = user
@@ -61,12 +59,25 @@ def call_after_request_callbacks(response):
     return response
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not g.auth:
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def api_login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not g.auth:
+            return make_response(jsonify({'code': 0, 'message': 'Not authorized'}), 400)
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 ######################  REST API  ######################
-
-def login_required():
-    return make_response(jsonify({'code': 0, 'message': 'Login required'}), 400)
-
 
 @app.route('/api/auth/login', methods = ['POST'])
 def apiLogin():
@@ -172,10 +183,8 @@ def reg():
 
 
 @app.route('/api/chat', methods = ['POST'])
+@api_login_required
 def addMessage():
-    if not g.auth:
-        return login_required()
-
     receiver = request.form.get('to')
     message = request.form.get('message')
     if not receiver or not message:
@@ -190,10 +199,8 @@ def addMessage():
 
 
 @app.route('/api/chat', methods = ['GET'])
+@api_login_required
 def getMessages():
-    if not g.auth:
-        return login_required()
-
     limit = request.args['limit']
     author = request.args['from']
     if not author:
@@ -267,6 +274,7 @@ def base_render(*args, **kwargs):
 
 
 @app.route('/update_profile/<int:role>', methods = ['POST'])
+@login_required
 def update_profile(role):
     
     def construct_response(code, message):
@@ -290,21 +298,12 @@ def update_profile(role):
             return make_response(jsonify(missing_param('middle_name')), 400)
         if not birthday:
             return make_response(jsonify(missing_param('birthday')), 400)
-        
-        # token = request.form.get('token')
-        token = g.token
-        if not token:
-            return make_response(jsonify(missing_param('token')), 400)
-        session = Session.query.filter_by(token=token).first()
-        if not session or not session.is_valid():
-            return make_response(jsonify(incorrect_param('token')), 400)
 
-        user = User.query.filter_by(id=session.id).first()
-        user.surname = surname
-        user.name = name
-        user.middle_name = middle_name
+        g.user.surname = surname
+        g.user.name = name
+        g.user.middle_name = middle_name
         birthday = list(map(int, birthday.split('-')))
-        user.birthday = datetime.date(birthday[2], birthday[1], birthday[0])
+        g.user.birthday = datetime.date(birthday[2], birthday[1], birthday[0])
         db.session.commit()
 
     elif role == 2:
@@ -316,16 +315,8 @@ def update_profile(role):
         if not company_type:
             return make_response(jsonify(missing_param('company_type')), 400)
 
-        token = request.form.get('token')
-        if not token:
-            return make_response(jsonify(missing_param('token')), 400)
-        session = Session.query.filter_by(token=token).first()
-        if not session or not session.is_valid():
-            return make_response(jsonify(incorrect_param('token')), 400)
-
-        user = User.query.filter_by(id=session.id).first()
-        user.company = company
-        user.company_type = company_type
+        g.user.company = company
+        g.user.company_type = company_type
         db.session.commit()
     else:
         return make_response(jsonify(incorrect_param('role')), 400)
@@ -334,6 +325,7 @@ def update_profile(role):
 
 
 @app.route('/chat')
+@login_required
 def chat():
     users = []
     if g.user:
@@ -351,7 +343,7 @@ def chat():
 def error405(error):
     url = str(request.base_url)
     if not 'api' in url:
-        return
+        return redirect(url_for('index'))
     return make_response(jsonify({'error': 'Method not allowed',
                                   'code': 405}))
 
@@ -360,6 +352,6 @@ def error405(error):
 def error404(error):
     url = str(request.base_url)
     if not 'api' in url:
-        return
+        return redirect(url_for('index'))
     return make_response(jsonify({'error': 'Method not found',
                                   'code': 404}))
