@@ -14,7 +14,7 @@
 		
 </head>
 <body>
-	{% if g.user.is_authenticated() %}
+	{% if g.auth %}
 		<script type="text/javascript">
 			window.location="/profile";
 		</script>

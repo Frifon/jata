@@ -3,6 +3,7 @@ from flask import g
 from hashlib import md5
 from random import randint
 from datetime import datetime
+from sqlalchemy.orm import relationship, backref
 
 ROLE_CAR = 1
 ROLE_ADD = 2
@@ -10,10 +11,11 @@ ROLE_ADMIN = 4
 
 class Message(db.Model):
     __table_args__ = {'sqlite_autoincrement': True}
-    id = db.Column(db.Integer, primary_key=True)
+
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     user_email = db.Column(db.String(120), index=True)
     dest_email = db.Column(db.String(120), index=True)
-    message = db.Column(db.String(500), index=True)
+    message = db.Column(db.String(2000), index=True)
     timestamp = db.Column(db.Float, index=True)
 
     def serialize(self):
@@ -27,8 +29,9 @@ class Message(db.Model):
 
 class Session(db.Model):
     token = db.Column(db.String(128), primary_key=True, index=True, unique=True)
-    id = db.Column(db.Integer, index=True)
-    timestamp = db.Column(db.Integer, index=True)
+    timestamp = db.Column(db.Integer)
+    user = relationship('User', backref=backref('sessions', order_by=timestamp))
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
 
     def is_valid(self):
         return self.timestamp >= int(datetime.utcnow().timestamp())
@@ -36,11 +39,12 @@ class Session(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
+
     email = db.Column(db.String(120), index=True, unique=True)
     password = db.Column(db.String(30), index=True)
     tel_number = db.Column(db.String(30), index=True)
     city = db.Column(db.String(60), index=True)
-    role = db.Column(db.SmallInteger, default=ROLE_CAR)
+    role = db.Column(db.SmallInteger, default=ROLE_CAR, index=True)
 
     name = db.Column(db.String(60), index=True)
     surname = db.Column(db.String(60), index=True)
@@ -49,28 +53,18 @@ class User(db.Model):
     company = db.Column(db.String(120), index=True)
     company_type = db.Column(db.Integer, index=True)
 
-    def is_authenticated(self):
-        session = g.session
-        if session and not session.is_valid():
-            db.session.delete(session)
-            db.session.commit()
-        return session and session.is_valid()
-
     def is_admin(self):
         return self.email == 'admin'
 
-    # def is_active(self):
-    #     return True
-
-    # def is_anonymous(self):
-    #     return False
-
-    def get_id(self):
+    def get_id(self):       # wtf is it needed for
         return self.id
 
     def __repr__(self):
         return '<User %r>' % (self.email)
 
+
+
+######################### GPS ##########################
 
 class Point(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -6,17 +6,46 @@ from app import app, db #, lm
 from app.forms import RegForm
 from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD
 from sqlalchemy import or_, and_
+from sqlalchemy.orm.exc import NoResultFound
 import datetime
 
 
 
 ###################### CONSTANTS #######################
-default_user = User(id=4000000000)          # DEPRECATED
+default_user = User(id=12345678987654321)   # DEPRECATED
 ################## ################# ###################
 
 
 
-#################### COOKIE HELPERS ####################
+####################### WRAPPERS #######################
+
+@app.before_request
+def before_request():
+    token = request.cookies.get('token')
+    user = default_user
+    g.token, g.session, g.auth = None, None, False
+    if not token:
+        token = request.form.get('token')
+    if not token:
+        try:
+            token = request.args['token']
+        except:
+            token = None
+    g.token = token
+    if token:
+        session = None
+        try:
+            session = Session.query.filter_by(token=token).one()
+        except NoResultFound:
+            pass
+        print(session is None)
+        g.session = session
+        g.auth = (session and session.is_valid())
+        print(g.auth)
+        if session:
+            user = session.user
+    g.user = user
+
 
 def after_this_request(f):
     if not hasattr(g, 'after_request_callbacks'):
@@ -34,6 +63,10 @@ def call_after_request_callbacks(response):
 
 
 ######################  REST API  ######################
+
+def login_required():
+    return make_response(jsonify({'code': 0, 'message': 'Login required'}), 400)
+
 
 @app.route('/api/auth/login', methods = ['POST'])
 def apiLogin():
@@ -70,16 +103,11 @@ def apiLogin():
 @app.route('/api/auth/check', methods = ['POST'])
 def apiCheckToken():
     response = {'code': 0,
-                'message': 'Missing parameters (token)'}
-    token = request.form.get('token')
-    if not token:
-        return make_response(jsonify(response), 400)
-    session = Session.query.filter_by(token=token).first()
-    if not session or not session.is_valid():
-        if session:
-            db.session.delete(session)
+                'message': 'Token expired or does not exist'}
+    if not g.auth:
+        if g.session:
+            db.session.delete(g.session)
             db.session.commit()
-        response['message'] = 'Token expired'
     else:
         response = {'code': 1,
                     'message': 'OK'}
@@ -90,15 +118,14 @@ def apiCheckToken():
 
 @app.route('/api/auth/logout', methods = ['POST'])
 def apiLogout():
+    print('logout')
     response = {'code': 0,
-                'message': 'Missing parameters (token)'}
-    token = request.form.get('token')
-    if not token:
+                'message': 'Already not authorized (or token forgotten)'}
+    if not g.session:
         return make_response(jsonify(response), 400)
-    session = Session.query.filter_by(token=token).first()
-    if session:
-        db.session.delete(session)
-        db.session.commit()
+    print('.')
+    db.session.delete(g.session)
+    db.session.commit()
     response = {'code': 1,
                 'message': 'OK'}
     return make_response(jsonify(response), 200)
@@ -146,21 +173,17 @@ def reg():
 
 @app.route('/api/chat', methods = ['POST'])
 def addMessage():
-    token = request.form.get('token')
+    if not g.auth:
+        return login_required()
+
     receiver = request.form.get('to')
     message = request.form.get('message')
-    if not token or not receiver or not message:
+    if not receiver or not message:
         return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (token or to or message)'}),
+                                      'message': 'Missing parameters (to or message)'}),
                              400)
-    session = Session.query.filter_by(token=token).first()
-    if not session or not session.is_valid():
-        return make_response(jsonify({'code': 0,
-                                      'message': 'Not authorized'}),
-                             401)
-    user = User.query.filter_by(id=session.id).first()
     timestamp = datetime.datetime.utcnow().timestamp()
-    new_message = Message(user_email=user.email, dest_email=receiver, message=message, timestamp=timestamp)
+    new_message = Message(user_email=g.user.email, dest_email=receiver, message=message, timestamp=timestamp)
     db.session.add(new_message)
     db.session.commit()
     return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
@@ -168,24 +191,20 @@ def addMessage():
 
 @app.route('/api/chat', methods = ['GET'])
 def getMessages():
-    token = request.args['token']
+    if not g.auth:
+        return login_required()
+
     limit = request.args['limit']
     author = request.args['from']
-    if not(author):
-        author = "qkjbdlkjndflkjsbdlfk"
-    if not token or not limit:
+    if not author:
+        author = "qkjbdlkjndflkjsbdlfk"       # Well designed by Artem (OK, at least it's surely not an e-mail)
+    if not limit:
         return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (token or limit)'}),
+                                      'message': 'Missing parameters (limit)'}),
                              400)
-    session = Session.query.filter_by(token=token).first()
-    if not session or not session.is_valid():
-        return make_response(jsonify({'code': 0,
-                                      'message': 'Not authorized'}),
-                             401)
-    user = User.query.filter_by(id=session.id).first()
     messages = Message.query.filter(or_(
-                                        and_(Message.user_email == user.email, Message.dest_email == author), 
-                                        and_(Message.dest_email == user.email, Message.user_email == author)),
+                                        and_(Message.user_email == g.user.email, Message.dest_email == author), 
+                                        and_(Message.dest_email == g.user.email, Message.user_email == author)),
                                     Message.timestamp >= limit).order_by(Message.timestamp).all()
     return make_response(jsonify({'code': 0,
                                   'message': 'OK',
@@ -201,20 +220,6 @@ def getMessages():
 #         headers.add('Content-Type', 'application/x-www-form-urlencoded')
 #     with app.test_request_context(path, method=method, data=data, headers=headers):
 #         return app.full_dispatch_request()
-
-
-@app.before_request
-def before_request():
-    token = request.cookies.get('token')
-    user = default_user
-    g.token, g.session = None, None
-    if token:
-        g.token = token
-        session = Session.query.filter_by(token=token).first()
-        g.session = session
-        if session:
-            user = User.query.filter_by(id=session.id).first()
-    g.user = user
 
 
 @app.route('/login', methods = ['POST'])
@@ -235,8 +240,7 @@ def login():
 
 @app.route('/logout', methods = ['GET'])
 def logout():
-    token = request.cookies.get('token')
-    rv = app.test_client().post('/api/auth/logout', data={'token': token}, follow_redirects=True)
+    rv = app.test_client().post('/api/auth/logout', data={'token': g.token}, follow_redirects=True)
     result = json.loads(rv.data)
     return redirect(url_for('index'))
 
@@ -249,8 +253,7 @@ def index():
 
 @app.route('/profile')
 def profile():
-    session = Session.query.filter_by(token=g.token).first()
-    if session and session.is_valid():
+    if g.auth:
         return render_template('profile.html')
     else:
         return redirect(url_for('index'))
@@ -340,6 +343,8 @@ def chat():
             users = [u"Техническая поддержка"]
     return render_template('chat.html', users=users)
 
+
+
 #################### ERROR HANDLERS ####################
 
 @app.errorhandler(405)
@@ -352,7 +357,7 @@ def error405(error):
 
 
 @app.errorhandler(404)
-def error405(error):
+def error404(error):
     url = str(request.base_url)
     if not 'api' in url:
         return

@@ -2,7 +2,7 @@
 {% block content %}
 	<link href="../static/reg.css" rel="stylesheet" />
 	<div class="container">
-	    {% if g.user.is_authenticated %}
+	    {% if g.auth %}
 	    	
 		{% else %}
 			<form action="reg" method="post" id="signup" name="reg">

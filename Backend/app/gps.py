@@ -11,7 +11,7 @@ from flask import g, abort, jsonify, make_response
 
 @app.route('/api/gps', methods=['GET', 'POST'])
 def apiGPS():
-    if not g.user.is_authenticated():
+    if not g.auth:
         response = {'code': 0,
                     'message': 'Invalid token'}
         return response
