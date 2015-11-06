@@ -14,17 +14,6 @@
 		
 </head>
 <body>
-	{% from "_formhelpers.html" import render_field %}
-	{% with messages = get_flashed_messages() %}
-	        {% if messages %}
-		        <ul>
-			 	    {% for message in messages %}
-			        	<li>{{ message }} </li>
-			        {% endfor %}
-		        </ul>
-		{% endif %}
-    {% endwith %}
-	
 	{% if g.user.is_authenticated() %}
 		<script type="text/javascript">
 			window.location="/profile";
