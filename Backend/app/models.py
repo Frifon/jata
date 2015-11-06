@@ -37,6 +37,14 @@ class Session(db.Model):
         return self.timestamp >= int(datetime.utcnow().timestamp())
 
 
+class Representative(db.Model):
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    name = db.Column(db.String(60), index=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    tel_number = db.Column(db.String(30), index=True)
+    company_id = db.Column(db.Integer, index=True)
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
 
@@ -50,8 +58,7 @@ class User(db.Model):
     surname = db.Column(db.String(60), index=True)
     middle_name = db.Column(db.String(60), index=True)
     birthday = db.Column(db.Date, index=True)
-    company = db.Column(db.String(120), index=True)
-    company_type = db.Column(db.Integer, index=True)
+    company_name = db.Column(db.String(120), index=True)
 
     def is_admin(self):
         return self.email == 'admin'

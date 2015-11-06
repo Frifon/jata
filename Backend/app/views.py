@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, request, g, jsonify, make_response, json
+from flask import render_template, redirect, url_for, request, g, jsonify, make_response, json, flash, Request, abort, jsonify
 from flask.ext.login import make_secure_token
 from werkzeug import datastructures
 from app import app, db #, lm
 from app.forms import RegForm
-from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD
+from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD, Representative
 from sqlalchemy import or_, and_
 from sqlalchemy.orm.exc import NoResultFound
 import datetime
 from functools import wraps
+import json
+from app.models import Point
+from sqlalchemy import desc
 
 
 ###################### CONSTANTS #######################
@@ -219,6 +222,61 @@ def getMessages():
                          200)
 
 
+@app.route('/api/gps', methods=['GET', 'POST'])
+def apiGPS():
+    if not g.auth:
+        response = {'code': 0,
+                    'message': 'Invalid token'}
+        return response
+
+    if request.method == 'POST':
+        raw_points_json = request.form.get('points')
+        if not raw_points_json:
+            response = {'code': 0,
+                        'message': 'JSON missing'}
+            return response
+
+        try:
+            raw_points = json.loads(raw_points_json)
+        except:
+            response = {'code': 0,
+                        'message': 'Invalid JSON'}
+            return response
+
+        for raw_point in raw_points:
+            point = Point(user_id=raw_point['user_id'],
+                          latitude=raw_point['latitude'],
+                          longtitude=raw_point['longtitude'],
+                          altitude=raw_point['altitude'],
+                          accuracy=raw_point['accuracy'],
+                          timestamp=int(datetime.datetime.utcnow().timestamp()))
+            db.session.add(point)
+            db.session.commit()
+
+        response = {'code': 1,
+                    'message': 'OK'}
+        return response
+    else:
+        user_id = request.form.get('user_id')
+        timestamp_start = request.form.get('timestamp_start')
+        timestamp_end = request.form.get('timestamp_end')
+
+        if not user_id:
+            response = {'code': 0,
+                        'message': 'User id missing'}
+            return response
+        if not timestamp_start:
+            timestamp_start = 0
+        if not timestamp_end:
+            timestamp_end = int((datetime.datetime.utcnow() + datetime.timedelta(weeks=1000)).timestamp())
+
+        query = db.session.query(Point).filter(Point.user_id == user_id, Point.timestamp >= timestamp_start, Point.timestamp <= timestamp_start).order_by(desc('timestamp')).all()
+
+        response = {'code': 1,
+                    'message': json.dumps(query)}
+        return response
+
+
 ###################### USER LOGIN ######################
 
 # def make_internal_redirect(path, method, data):
@@ -234,7 +292,7 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
     rv = app.test_client().post('/api/auth/login', data={'email': email, 'password': password}, follow_redirects=True)
-    result = json.loads(rv.data)
+    result = json.load(rv.data)
     if result is None or not 'data' in result:
         return redirect(url_for('index'))
 
@@ -259,11 +317,14 @@ def index():
 
 
 @app.route('/profile')
+@login_required
 def profile():
-    if g.auth:
-        return render_template('profile.html')
+    if g.user.role == 2:
+        representatives = Representative.query.filter_by(company_id=g.session.id).all()
+        print(representatives)
+        return render_template('profile.html', representatives=representatives)
     else:
-        return redirect(url_for('index'))
+        return render_template('profile.html')
 
 @app.route('/favicon.ico')
 def favicon_ico():
@@ -285,10 +346,12 @@ def update_profile(role):
         return construct_response(1, 'Missing parameter: {0}'.format(p))
 
     if role == 1:
-        surname = request.form.get('familiya')
-        name = request.form.get('imya')
-        middle_name = request.form.get('otchestvo')
-        birthday = request.form.get('data-rozzdeniya')
+        surname = request.form.get('user-lastname')
+        name = request.form.get('user-firstname')
+        middle_name = request.form.get('user-middlename')
+        birthday = request.form.get('user-birthday')
+        tel_number = request.form.get('user-phone')
+        email = request.form.get('user-email')
         
         if not surname:
             return make_response(jsonify(missing_param('surname')), 400)
@@ -298,18 +361,35 @@ def update_profile(role):
             return make_response(jsonify(missing_param('middle_name')), 400)
         if not birthday:
             return make_response(jsonify(missing_param('birthday')), 400)
+        if not tel_number:
+            return make_response(jsonify(missing_param('tel_number')), 400)
+        if not email:
+            return make_response(jsonify(missing_param('email')), 400)
 
         g.user.surname = surname
         g.user.name = name
         g.user.middle_name = middle_name
         birthday = list(map(int, birthday.split('-')))
         g.user.birthday = datetime.date(birthday[2], birthday[1], birthday[0])
+        g.user.tel_number = tel_number
+        g.user.email = email
         db.session.commit()
+        return make_response(jsonify(construct_response(0, 'OK')), 200)
 
     elif role == 2:
-        company = request.form.get('nazv-firmy')
-        company_type = request.form.get('tip-firmy')
+        company_name = request.form.get('company-name')
+        company_representative_name = request.form.get('company-representative-name')
+        company_representative_email = request.form.get('company-representative-email')
+        company_representative_phone = request.form.get('company-representative-phone')
 
+        if not company_name:
+            return make_response(jsonify(missing_param('company_name')), 400)
+        if not company_representative_name:
+            return make_response(jsonify(missing_param('company_representative_name')), 400)
+        if not company_representative_phone:
+            return make_response(jsonify(missing_param('company_representative_phone')), 400)
+        if not company_representative_email:
+            return make_response(jsonify(missing_param('company_representative_email')), 400)
         if not company:
             return make_response(jsonify(missing_param('company')), 400)
         if not company_type:
@@ -317,11 +397,18 @@ def update_profile(role):
 
         g.user.company = company
         g.user.company_type = company_type
+
+        new_representative = Representative(
+            email=company_representative_email,
+            tel_number=company_representative_phone,
+            name=company_representative_name,
+            company_id=user.id)
+
+        db.session.add(new_representative)
         db.session.commit()
+        return make_response(jsonify(construct_response(0, 'OK')), 200)
     else:
         return make_response(jsonify(incorrect_param('role')), 400)
-    
-    return redirect(url_for('index'))    
 
 
 @app.route('/chat')

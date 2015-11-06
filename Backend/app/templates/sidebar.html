@@ -5,9 +5,24 @@
                     <div class="profile-element">
                         <a href="/">
                             <span class="clear">
-                                <span class="block">
-                                    <strong class="font-bold profile-name">{{g.user.surname}} {{g.user.name}}</strong>
-                                </span>
+                                {% if g.user.role == 1 %}
+                                    <span class="block">
+                                        {% if g.user.surname != None %}
+                                            <strong class="font-bold profile-name">{{g.user.surname}} {{g.user.name}}</strong>
+                                        {% else %}
+                                            <strong class="font-bold profile-name">Новый пользователь</strong>
+                                        {% endif %}
+                                    </span>
+                                {% else %}
+                                    <span class="block">
+                                        {% if g.user.company_name != None %}
+                                            <strong class="font-bold profile-name">{{g.user.company_name}}</strong>
+                                        {% else %}
+                                            <strong class="font-bold profile-name">Новая компания</strong>
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+
                                 <span class="text-muted text-xs block">
                                     {{ g.user.email }}
                                 </span>
