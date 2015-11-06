@@ -159,7 +159,7 @@ def addMessage():
                                       'message': 'Not authorized'}),
                              401)
     user = User.query.filter_by(id=session.id).first()
-    timestamp = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp()
+    timestamp = datetime.datetime.utcnow().timestamp()
     new_message = Message(user_email=user.email, dest_email=receiver, message=message, timestamp=timestamp)
     db.session.add(new_message)
     db.session.commit()

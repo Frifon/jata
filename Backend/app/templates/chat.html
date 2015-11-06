@@ -254,7 +254,8 @@
             }
             function timeConverter(UNIX_timestamp){
                 var offset = new Date().getTimezoneOffset();
-                var a = new Date(UNIX_timestamp * 1000 + offset * 60 * 1000);
+                var a = new Date(UNIX_timestamp * 1000 - offset * 60 * 1000);
+
                 var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
                 var year = a.getFullYear();
                 var month = a.getMonth();
