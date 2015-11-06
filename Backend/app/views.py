@@ -316,6 +316,38 @@ def index():
     return base_render("index.html", title=u"Jata")
 
 
+@app.route('/change_password', methods = ['POST'])
+def change_password():
+
+    def construct_response(code, message):
+        return {'code': code, 'message': message}
+    def incorrect_param(p):
+        return construct_response(1, 'Incorrect parameter: {0}'.format(p))
+    def missing_param(p):
+        return construct_response(1, 'Missing parameter: {0}'.format(p))
+
+    old_password = request.form.get('old-password')
+    new_password = request.form.get('new-password')
+    new_password_confirmation = request.form.get('new-password-confirmation')
+
+    if not old_password:
+        return make_response(jsonify(missing_param('old_password')), 400)
+    if not new_password:
+        return make_response(jsonify(missing_param('new_password')), 400)
+    if not new_password_confirmation:
+        return make_response(jsonify(missing_param('new_password_confirmation')), 400)
+
+    if old_password != g.user.password:
+        return make_response(jsonify(incorrect_param('old_password')), 400)
+    if new_password != new_password_confirmation:
+        return make_response(jsonify(incorrect_param('new_password_confirmation')), 400)
+
+    g.user.password = new_password
+    db.session.commit()
+
+    return make_response(jsonify(construct_response(0, 'OK')), 200)
+
+
 @app.route('/profile')
 @login_required
 def profile():
