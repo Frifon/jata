@@ -365,7 +365,7 @@
             }
 			
             var ajax_call = function() {
-                $.get( "api/chat", { "token" : getCookie("token"), limit: "-1", from: to}, success_chat_get );
+                $.get( "api/chat/message", { "token" : getCookie("token"), limit: "-1", from: to}, success_chat_get );
             };
 
             var interval = 1000 * 3;
@@ -375,7 +375,7 @@
 
             $("#chat-massage-submitform").submit(function(e) {
 
-                var url = "/api/chat";
+                var url = "/api/chat/message";
 
                 $.ajax({
                        type: "POST",

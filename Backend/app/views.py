@@ -4,7 +4,7 @@ from flask.ext.login import make_secure_token
 from werkzeug import datastructures
 from app import app, db #, lm
 from app.forms import RegForm
-from app.models import User, Session, Message, ROLE_CAR, ROLE_ADD, Representative
+from app.models import User, Session, Message, MessageHistory, ROLE_CAR, ROLE_ADD, Representative
 from sqlalchemy import or_, and_
 from sqlalchemy.orm.exc import NoResultFound
 import datetime
@@ -75,7 +75,7 @@ def api_login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not g.auth:
-            return make_response(jsonify({'code': 0, 'message': 'Not authorized'}), 400)
+            return make_response(jsonify({'code': 0, 'message': 'Not authorized'}), 401)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -144,8 +144,7 @@ def apiLogout():
     return make_response(jsonify(response), 200)
 
 
-@app.route('/reg', methods = ['POST'])
-@app.route('/api/auth/reg', methods = ['POST'])
+@app.route('/api/auth/reg', methods=['POST'])
 def reg():
     def construct_response(code, message):
         return {'code': code, 'message': message}
@@ -184,7 +183,7 @@ def reg():
     return make_response(jsonify(construct_response(0, 'OK')), 200)
 
 
-@app.route('/api/chat', methods = ['POST'])
+@app.route('/api/chat/message', methods=['POST'])
 @api_login_required
 def addMessage():
     receiver = request.form.get('to')
@@ -193,6 +192,10 @@ def addMessage():
         return make_response(jsonify({'code': 0,
                                       'message': 'Missing parameters (to or message)'}),
                              400)
+    try:
+        mes_hist = MessageHistory.query.filter(MessageHistory.user_email == g.user.email, MessageHistory.dest_email == receiver).one()
+    except NoResultFound:
+        db.session.add(MessageHistory(user_email=g.user.email, dest_email=receiver, timestamp=0))
     timestamp = datetime.datetime.utcnow().timestamp()
     new_message = Message(user_email=g.user.email, dest_email=receiver, message=message, timestamp=timestamp)
     db.session.add(new_message)
@@ -200,7 +203,7 @@ def addMessage():
     return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
 
 
-@app.route('/api/chat', methods = ['GET'])
+@app.route('/api/chat/message', methods=['GET'])
 @api_login_required
 def getMessages():
     limit = request.args['limit']
@@ -215,10 +218,43 @@ def getMessages():
                                         and_(Message.user_email == g.user.email, Message.dest_email == author), 
                                         and_(Message.dest_email == g.user.email, Message.user_email == author)),
                                     Message.timestamp >= limit).order_by(Message.timestamp).all()
-    return make_response(jsonify({'code': 0,
-                                  'message': 'OK',
-                                  'data': {'messages': [m.serialize() for m in messages]}}),
-                         200)
+    return make_response(
+        jsonify({
+            'code': 0,
+            'message': 'OK',
+            'data': {'messages': [m.serialize() for m in messages]}}),
+        200)
+
+
+@app.route('/api/chat/seen', methods=['POST'])
+@api_login_required
+def manageSeenMessages():
+    user = request.form.get('user')
+    timestamp = request.form.get('timestamp')
+    if not user or not timestamp:
+        return make_response(
+            jsonify({
+                'code': 0,
+                'message': 'Missing parameters (user or timestamp)'}),
+            400)
+    try:
+        mes_hist = MessageHistory.query.filter(MessageHistory.dest_email == g.user.email, MessageHistory.user_email == user).one()
+        mes_hist.timestamp = timestamp
+        db.session.commit()
+    except NoResultFound:
+        pass
+    return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
+
+
+@app.route('/api/chat/seen', methods=['GET'])
+@api_login_required
+def getSeenTimestamps():
+    return make_response(jsonify({
+        'code': 0,
+        'message': 'OK',
+        'data': {
+            'arr': [mh.serialize() for mh in g.user.send_to_me_history]
+        }}))
 
 
 @app.route('/api/gps', methods=['GET', 'POST'])
