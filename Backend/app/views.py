@@ -230,7 +230,7 @@ def getMessages():
 @api_login_required
 def manageSeenMessages():
     user = request.form.get('user')
-    timestamp = request.form.get('timestamp')
+    timestamp = float(request.form.get('timestamp'))
     if not user or not timestamp:
         return make_response(
             jsonify({
@@ -394,7 +394,6 @@ def change_password():
 def profile():
     if g.user.role == 2:
         representatives = Representative.query.filter_by(company_id=g.session.id).all()
-        print(representatives)
         return render_template('profile.html', representatives=representatives)
     else:
         return render_template('profile.html')

@@ -13,6 +13,9 @@
 
 	
 </head>
+<script type="text/javascript">
+    var to = "";
+</script>
 <body  style="background-color: #2F3B50;">
 	
 	<div id="wrapper">
@@ -280,7 +283,6 @@
                 return time;
             }
 
-            var to = "";
             var need_reload = 0;
             {% if g.user.is_admin() %}
                 $('.change_chat').click(function(){ 
@@ -309,7 +311,11 @@
                     need_reload = 0;
                 }
                 var messages = data.data.messages;
+                var max = 0;
                 for (i = messages_cnt; i < messages.length; i++) {
+                    if (messages[i].timestamp > max) {
+                        max = messages[i].timestamp;
+                    }
                     var div = document.getElementById('message_box');
                     if ("{{g.user.is_admin()}}" == "False" ? messages[i].from == "{{g.user.email}}" : !(messages[i].from == "{{g.user.email}}")) {
                         div.innerHTML = div.innerHTML + "<div class=\"row massage\">\
@@ -351,6 +357,13 @@
                                                         </div>";
                     }
 
+                }
+                if (to && max > 0) {
+                    $.ajax({
+                           type: "POST",
+                           url: '/api/chat/seen',
+                           data: {"user" : to, "timestamp" : max.toString()}
+                         });
                 }
                 need_reload = 0;
                 if (messages.length < messages_cnt) {

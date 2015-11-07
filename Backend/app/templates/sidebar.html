@@ -51,13 +51,13 @@
                     <a href="#"><i class="glyphicon glyphicon-time"></i> <span class="nav-label">История рботы</span> </a>
                 </li>
                 <li>
-                    <a href="/chat"><i class="glyphicon glyphicon-comment"></i> <span class="nav-label">Сообщения</span> </a>
+                    <a id="chat_span" href="/chat"><i class="glyphicon glyphicon-comment"></i> <span class="nav-label">Сообщения</span></a>
                 </li>
                 <li>
                     <a href="#"><i class="glyphicon glyphicon-ruble"></i> <span class="nav-label">Биллинг</span> </a>
                 </li>  
                 <li>
-                    <a href="#"><i class="glyphicon glyphicon-off"></i> <span class="nav-label">Выход</span> </a>
+                    <a href="{{url_for('logout')}}"><i class="glyphicon glyphicon-off"></i> <span class="nav-label">Выход</span> </a>
                 </li>               
 {% else %}
                 <li>
@@ -71,7 +71,7 @@
                     <a href="#"><i class="glyphicon glyphicon-globe"></i> <span class="nav-label">Мои маршруты</span> </a>
                 </li>
                 <li>
-                    <a href="{{url_for('chat')}}"><i class="glyphicon glyphicon-comment"></i> <span class="nav-label">Сообщения</span> </a>
+                    <a id="chat_span" href="{{url_for('chat')}}"><i class="glyphicon glyphicon-comment"></i> <span class="nav-label">Сообщения</span></a>
                 </li>
                 <li>
                     <a href="#"><i class="glyphicon glyphicon-briefcase"></i> <span class="nav-label">Предложения рекламодателей</span> </a>
@@ -90,3 +90,44 @@
         </ul>
     </div>
 </nav>
+
+<script type="text/javascript">
+    var last_names = [];
+    var success_chat_seen_get = function(data) {
+        var sum = 0;
+        var tmp = {};
+        var tmp_arr = [];
+        for (i = 0; i < data.data.arr.length; i++) {
+            var key = data.data.arr[i].from;
+            tmp.key = 1;
+            tmp_arr.push(key);
+            var div = document.getElementById('__' + key);
+            sum += data.data.arr[i].new;
+            if (div) {
+                div.innerHTML = '<span class="badge">' + data.data.arr[i].new.toString() + '</span> ' + key;
+            }
+        }
+        for (i = 0; i < last_names.length; i++) {
+            if (last_names[i] == to && !(tmp['last_names[i]'])) {
+                var div = document.getElementById('__' + last_names[i]);
+                if (div) {
+                    div.innerHTML = last_names[i];
+                }
+            }
+        }
+        last_names = tmp_arr;
+        var div_chat = document.getElementById('chat_span');
+        div_chat.innerHTML = '<i class="glyphicon glyphicon-comment"></i> <span class="nav-label">Сообщения</span> ';
+        if (sum) {
+            div_chat.innerHTML += '<span class="badge">' + sum + '</span> ';
+        }
+    }
+
+    var ajax_call_chat_seen = function() {
+        $.get( "api/chat/seen", {}, success_chat_seen_get );
+    };
+
+    var interval = 1000 * 3;
+    ajax_call_chat_seen();
+    setInterval(ajax_call_chat_seen, interval);
+</script>
