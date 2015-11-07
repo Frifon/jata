@@ -422,19 +422,16 @@ def update_profile(role):
             return make_response(jsonify(missing_param('company_representative_phone')), 400)
         if not company_representative_email:
             return make_response(jsonify(missing_param('company_representative_email')), 400)
-        if not company:
-            return make_response(jsonify(missing_param('company')), 400)
-        if not company_type:
-            return make_response(jsonify(missing_param('company_type')), 400)
+        if not company_name:
+            return make_response(jsonify(missing_param('company_name')), 400)
 
-        g.user.company = company
-        g.user.company_type = company_type
+        g.user.company_name = company_name
 
         new_representative = Representative(
             email=company_representative_email,
             tel_number=company_representative_phone,
             name=company_representative_name,
-            company_id=user.id)
+            company_id=g.user.id)
 
         db.session.add(new_representative)
         db.session.commit()
