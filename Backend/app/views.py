@@ -249,11 +249,16 @@ def manageSeenMessages():
 @app.route('/api/chat/seen', methods=['GET'])
 @api_login_required
 def getSeenTimestamps():
+    ans = []
+    for mh in g.user.send_to_me_history:
+        new = len(Message.query.filter(Message.dest_email == mh.dest_email, Message.user_email == mh.user_email, Message.timestamp > mh.timestamp).all())
+        if new != 0:
+            ans.append({'new': new, 'from': mh.user_email})
     return make_response(jsonify({
         'code': 0,
         'message': 'OK',
         'data': {
-            'arr': [mh.serialize() for mh in g.user.send_to_me_history]
+            'arr': ans
         }}))
 
 
