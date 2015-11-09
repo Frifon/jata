@@ -378,7 +378,7 @@
             }
 			
             var ajax_call = function() {
-                $.get( "api/chat/message", { "token" : getCookie("token"), limit: "-1", from: to}, success_chat_get );
+                $.get( "api/chat/message", { "token" : getCookie("token"), timestamp: "0", user: to}, success_chat_get );
             };
 
             var interval = 1000 * 3;

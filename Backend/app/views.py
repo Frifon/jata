@@ -206,18 +206,18 @@ def addMessage():
 @app.route('/api/chat/message', methods=['GET'])
 @api_login_required
 def getMessages():
-    limit = request.args['limit']
-    author = request.args['from']
+    timestamp = request.args['timestamp']
+    author = request.args['user']
     if not author:
         author = "qkjbdlkjndflkjsbdlfk"       # Well designed by Artem (OK, at least it's surely not an e-mail)
-    if not limit:
+    if not timestamp:
         return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (limit)'}),
+                                      'message': 'Missing parameters (timestamp)'}),
                              400)
     messages = Message.query.filter(or_(
                                         and_(Message.user_email == g.user.email, Message.dest_email == author), 
-                                        and_(Message.dest_email == g.user.email, Message.user_email == author)),
-                                    Message.timestamp >= limit).order_by(Message.timestamp).all()
+                                        and_(Message.dest_email == g.user.email, Message.user_email == author)
+                                        ), Message.timestamp >= timestamp).order_by(Message.timestamp).all()
     return make_response(
         jsonify({
             'code': 0,
