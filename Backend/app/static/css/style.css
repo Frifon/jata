@@ -49,6 +49,15 @@ html {
 .margin-0 {
 	margin: 0;
 	}
+.margin-top-0 {
+	margin-top: 0;
+	}
+.margin-top-7 {
+	margin-top: 7px;
+	}
+.margin-top-14 {
+	margin-top: 14px;
+	}
 .margin-left-7 {
 	margin-left: 7px;
 	}
@@ -173,6 +182,22 @@ html {
 		color: #069;
 		background: transparent;
 		}
+	.btn .glyphicon {
+		vertical-align: middle;
+		}
+
+	.btn-transparent {
+		color: #069;
+		background: transparent;
+		border: none;
+		box-shadow: none;
+		}
+		.btn-transparent:hover {
+			color: #09c;
+			}
+
+
+
 
 .upprcs {
     text-transform: uppercase;
@@ -251,45 +276,12 @@ input {
 
 
 
-	.show_on_blured_and_invalid {display: none;}
-	.blured.invalid .show_on_blured_and_invalid {
-		display: inline-block;
-		position: absolute;
-		white-space: pre;
-		margin: -2px 0 0 15px;
-		color: #ce4844;
-		background: #FFF2EC;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		-o-border-radius: 5px;
-		border-radius: 5px;
-		border: 1px solid #ce4844;
-		padding: 5px 15px;
-		z-index: 1;
-		font-size: 14px;
-		}
-
-
-	.invalid > .fields_label,
-	.fields_label.invalid,
-	.field.invalid input, 
-	.field.invalid textarea, 
-	input.invalid, 
-	textarea.invalid,
-	.uncompleted_fields .pseudo_link {
-		color: #f90;
-		}
-		.uncompleted_fields .pseudo_link {
-			font-size: 14px;
-			}
-	.valid > .fields_label, 
-	.fields_label.valid,
-	.field.valid input, 
-	.field.valid textarea, 
-	input.valid, textarea.valid {
-		color: green;
+.show_on_blured_and_invalid {
+	display: block;
+	color: #f90;
+	font-size: 14px;
+	margin-top: 0;
 	}
-
 
 
 
@@ -585,6 +577,11 @@ input {
 						background: #19A5AA;
 						margin: 0 7px;
 						}
+
+
+	.glyphicon {
+		padding-right: 7px;
+		}
 
 						
 	#page-wrapper {

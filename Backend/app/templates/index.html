@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
+
 
 		
 </head>
@@ -38,41 +38,119 @@
 		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		        <h4 class="modal-title">Регистрация</h4>
 		      </div>
-		      <div class="modal-body">
+	          <!-- Форма регистраци -->
 		        <form action="{{url_for('reg')}}" id="reg" method="post" name="register">
+		        	<div class="modal-body">
 						<div class="row register-form-left-block">
 							<div class="col-xs-6">
-								<label for="email">Введите E-mail</label>
-								<input type="text" id="email" name="email" placeholder="Email:" class="input-sm">
-								<label for="password">Введите пароль</label>
-								<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
-								<label for="confirm_password">Повторите пароль</label>
-								<input type="password" id="confirm_password" name="confirm_password" placeholder="Password:" class="input-sm">
-								<label for="tel_number">Введите номер телефона</label>
-								<div class="input-group">
-									<span class="input-group-addon">+7</span>
-									<input type="text" id="tel_number" name="tel_number" placeholder="" class="input-sm">
-								</div>
-								<label for="tel_number">Город проживания/передвижения</label>
-								<select id="city" name="city" class="form-control input-sm">
-									<option>Санкт-Петербург</option>
-									<option>Москва</option>
-								</select>
+								<label for="email">Введите E-mail *
+									<div class="input-group field">
+										<input type="text" id="email" name="email" placeholder="Email:" class="input-sm">
+									</div>
+									<span class="show_on_blured_and_invalid hide">Введите корректный E-mail</span>
+								</label>
+								
+								<label for="password">Введите пароль *
+									<div class="input-group field">
+										<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
+									</div>
+								</label>
+								<label for="confirm_password">Повторите пароль *
+									<div class="input-group field">
+										<input type="password" id="confirm_password" name="confirm_password" placeholder="Password:" class="input-sm">
+									</div>
+									<span class="show_on_blured_and_invalid hide">Пароли не совпадают</span>
+								</label>
+									
+								<label for="tel_number">Введите номер телефона *
+									<div class="input-group">
+										<span class="input-group-addon">+7</span>
+										<input type="text" id="tel_number" name="tel_number" class="input-sm tel-number" placeholder="(___) ___-__-__" class="input-sm" data-xp="type: 'phone'">
+									</div>
+									<span class="show_on_blured_and_invalid hide">Номер телефона не указан</span>
+								</label>
+								
+								<label for="city">Город проживания/передвижения *
+									<select id="city" name="city" class="form-control input-sm">
+										<option value>город</option>
+										<option value="spb">Санкт-Петербург</option>
+										<option value="msk">Москва</option>
+									</select>
+									<span class="show_on_blured_and_invalid hide">Выберите город *</span>
+								</label>
 							</div>
 							<div class="col-xs-6">
-								<div class="radio">
-									<label><input name="userrole" type="radio" value="vladelec">Я владелец рекламного места</label>
+								<div class="check-role">
+									<label>Тип участия *</label>
+									<div class="radio margin-0">
+										<label class="margin-0"><input name="userrole" id="vladelec" type="radio" value="vladelec">Я владелец рекламного места</label>
+									</div>
+									<div class="radio">
+										<label><input name="userrole" id="reklamodatel" type="radio" value="reklamodatel">Я рекламодатель</label>
+									</div>
+									<span class="show_on_blured_and_invalid hide">Укажите тип участия</span>
 								</div>
-								<div class="radio">
-									<label><input name="userrole" type="radio" value="reklamodatel">Я рекламодатель</label>
+								
+								<!-- Выборать Юр/Физ лицо -->
+								<div class="yurik-fizik-check">
+									<label>Выступаете в качетсве *</label>
+									<div class="radio margin-0">
+										<label class="margin-0"><input name="lico" type="radio" checked="checked" value="fiz_lico">Физического лица</label>
+									</div>
+									<div class="radio">
+										<label><input name="lico" type="radio" value="yur_lico">Юридического лица</label>
+									</div>
+									<span class="show_on_blured_and_invalid hide">Укажите, в качестве кого Вы будете принимать заказы</span>
 								</div>
+								<!-- / Выборать Юр/Физ лицо -->
+
+								<label for="rekl_mesto">Тип рекламного места</label>
+								<div class="input-group field">
+									<select class="form-control input-sm" name="rekl_mesto">
+										<option selected>Автомобиль/автобус</option>
+										<option disabled>Вариант 1</option>
+										<option disabled>Еще вариант</option>
+									</select>
+								</div>
+								
+							</div>
+							
+						</div>
+			      
+			      	</div>
+				    <div class="modal-footer">
+						<button class="btn btn-primary" value="reg" style="vertical-align:middle">Зарегистрироваться</button>
+				    </div> 
+				</form>
+	      		<!-- / Форма регистраци -->
+	      
+	      
+	      		<!-- Ввод кода подтверждения по СМС -->
+	      		<!-- Появляется, когда успешно пройдена предыдущая форма регистрации -->
+	      		<form action="" method="post">
+	      			<div class="modal-body">
+						<div class="row register-form-sms-block">
+							<div class="col-xs-12">
+								<label for="sms_code">Введите код подтвержденя из SMS *
+									<div class="input-group field">
+										<input type="text" id="sms_code" name="sms_code" placeholder="SMS-код" class="input-sm">
+									</div>
+									<span class="show_on_blured_and_invalid hide">СМС-код введен неверно</span>
+								</label>
 							</div>
 						</div>
-				      <div class="modal-footer">
-						<button class="btn btn-primary" value="reg" style="vertical-align:middle">Зарегистрироваться</button>
-				      </div>
-					</form>
-		      </div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-transparent" value="" style="vertical-align:middle">
+							<i class="glyphicon glyphicon-repeat"></i>
+							Смс не пришло
+						</button>
+						<button class="btn btn-primary" value="" style="vertical-align:middle">Подтвердить</button>
+					</div>
+	      		</form>
+	      		<!-- / Ввод кода подтверждения по СМС -->
+	      		
+		      
 		    </div>
 		  </div>
 		</div>
@@ -133,6 +211,32 @@
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/expromptum.js')}}" type="text/javascript"></script>
+		
+	<script type="text/javascript">
+		expromptum();
+			
+		jQuery(function($){
+			$(".tel-number").mask("(999) 999-99-99"); // Маска телефона
+					
+			
+			$(".yurik-fizik-check").hide();
+			$('#vladelec').click(function() {
+				$(".yurik-fizik-check").show();
+				});
+			$('#reklamodatel').click(function() {
+				$(".yurik-fizik-check").hide();
+				});
+	
+	</script>	
 	
 </body>
 </html>
