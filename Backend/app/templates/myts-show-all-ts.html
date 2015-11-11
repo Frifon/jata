@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+
+	
+</head>
+<body  style="background-color: #2F3B50;">
+	
+	<div id="wrapper">
+
+		
+		{% include 'sidebar.html' %}
+	
+	
+
+		<!-- Контентная часть -->
+		<div id="page-wrapper" class="bg-color-ddd">
+			
+			<!-- Заголовок страницы -->
+			<div class="row wrapper bg-color-fff border-bottom  page-heading margin-bottom-21">
+				<div class="col-sm-12">
+					
+					<div class="container-fluid">
+						<div class="row row-fluid">
+							<div id="page-name" class="col-sm-12 centering-y">
+								Данные о Вашем ТС
+							</div>
+							<!--
+							<div id="page-settings" class="col-sm-3 centering-y">
+								<a data-toggle="modal" href="#Modal-accept">
+									<i class="glyphicon glyphicon-plus"></i>
+									Добавить ТС
+								</a>
+							</div>
+							-->
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<!-- /Заголовок страницы -->
+	
+				
+						
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="wrapper wrapper-content">
+
+						<!-- Content -->                    
+
+
+						<div class="row">
+							<div class="col-xs-12">
+								
+								
+							<!--	/* 
+									 * Если пользователь случайно попал на данную страницу и у него в базе нет ни одного ТС, 
+									 * то показываем сообщение-предупреждение с кнопкой "Добавить ТС", в ином случае, просто кнопку
+									 */	-->
+								
+								<div class="alert alert-warning alert-dismissible">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+									<i class="glyphicon glyphicon glyphicon-info-sign padding-right-7"></i>Вы пока что не создали ни одного транспортного средства. 
+								</div>
+								
+								<div class="col-sm-12 centering-y text-right add-ts-link ">
+									<a href="/myts-add-ts.php">
+										<i class="glyphicon glyphicon-plus"></i>
+										Добавить ТС
+									</a>
+								</div>
+								
+								
+								<div class="col-xs-6 ts-parametrs padding-bottom-21">
+									<div class="row">
+										<a href="/myts-show-ts.php" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
+										<div class="col-xs-8">
+											<div class="ts-title">Mercedes-Benz AMG GLE Coupe</div>
+											<div class="ts-description">Тип:&nbsp;<span>личное ТС</span></div>
+											<div class="ts-proposals">Заявок:&nbsp;<a href="#">57</a> </div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-xs-6 ts-parametrs padding-bottom-21">
+									<div class="row">
+										<a href="/myts-show-ts.php" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
+										<div class="col-xs-8">
+											<div class="ts-title">Mercedes-Benz</div>
+											<div class="ts-description">Тип:&nbsp;<span>личное ТС</span></div>
+											<div class="ts-proposals">Заявок:&nbsp;<a href="#">57</a> </div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-xs-6 ts-parametrs padding-bottom-21">
+									<div class="row">
+										<a href="/myts-show-ts.php" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
+										<div class="col-xs-8">
+											<div class="ts-title">Mercedes-Benz AMG GLE Coupe</div>
+											<div class="ts-description">Тип:&nbsp;<span>личное ТС</span></div>
+											<div class="ts-proposals">Заявок:&nbsp;<a href="#">57</a> </div>
+										</div>
+									</div>
+								</div>
+								
+								
+							</div>
+						</div> <!-- END row -->
+
+
+						<!-- END Content -->
+
+
+					</div>
+				</div>
+			</div>
+
+
+        </div>
+		<!-- Контентная часть -->
+	
+	
+	 </div>
+	
+	
+	
+	
+
+		
+		
+	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/expromptum.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/jquery.pickmeup.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/jquery.pickmeup.twitter-bootstrap.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/fotorama.js')}}"></script>
+	<script src="{{url_for('static', filename='js/jquery.colorPicker.js')}}"></script>
+	<script src="{{url_for('static', filename='js/my.js')}}"></script>
+	
+
+	
+	
+	
+			
+	
+	
+</body>
+</html>
