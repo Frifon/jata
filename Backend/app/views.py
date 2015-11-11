@@ -491,7 +491,20 @@ def chat():
             users = [u"Техническая поддержка"]
     return render_template('chat.html', users=users)
 
+@app.route('/ts')
+@login_required
+def ts():
+    return render_template('myts-show-all-ts.html')
 
+@app.route('/add_ts')
+@login_required
+def add_ts():
+    return render_template('myts-add-ts.html')
+
+@app.route('/edit_ts')
+@login_required
+def edit_ts():
+    return render_template('myts-show-edit-ts.html')
 
 #################### ERROR HANDLERS ####################
 
