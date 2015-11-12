@@ -29,7 +29,7 @@ class User(db.Model):
         return self.email == 'admin'
 
     def __repr__(self):
-        return '<User %r>' % (self.email)
+        return '{0}:{1}'.format(self.id, self.email)
 
 
 class Message(db.Model):
@@ -52,6 +52,9 @@ class Message(db.Model):
             'message': self.message
         }
 
+    def __repr__(self):
+        return '{0} ==> {1} : {2} ({3} : {4})'.format(self.user, self.dest, self.message, self.id, self.timestamp)
+
 
 class Session(db.Model):
     token = db.Column(db.String(128), primary_key=True, index=True, unique=True)
@@ -61,6 +64,9 @@ class Session(db.Model):
 
     def is_valid(self):
         return self.timestamp >= int(datetime.utcnow().timestamp())
+
+    def __repr__(self):
+        return '<Session token: {0} timestamp: {1} id: {2} user: {3}>'.format(self.token, self.timestamp, self.id, self.user)
 
 
 class MessageHistory(db.Model):
@@ -77,6 +83,9 @@ class MessageHistory(db.Model):
             'timestamp': self.timestamp
         }
 
+    def __repr__(self):
+        return '{0} ==> {1} : {2}'.format(self.user, self.dest, self.timestamp)
+
 
 class Representative(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -84,6 +93,9 @@ class Representative(db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     tel_number = db.Column(db.String(30), index=True)
     company_id = db.Column(db.Integer, index=True)
+
+    def __repr__(self):
+        return 'Id: {0} Email: {1}'.format(self.id, self.email)
 
 
 
@@ -99,6 +111,14 @@ class Point(db.Model):
     timestamp = db.Column(db.Integer, index=True)
 
     def __str__(self):
+        return ("Point id: {}\n".format(str(self.id)) +
+                "User id: {}\n".format(str(self.user_id)) +
+                "Coordinates: ({} | {})\n".format(str(self.latitude),
+                                                  str(self.longtitude)) +
+                "Altitude: {}\n".format(str(self.altitude)) +
+                "Accuracy: {}\n".format(str(self.accuracy)) +
+                "Timestamp: {}\n".format(str(self.timestamp)))
+    def __repr__(self):
         return ("Point id: {}\n".format(str(self.id)) +
                 "User id: {}\n".format(str(self.user_id)) +
                 "Coordinates: ({} | {})\n".format(str(self.latitude),

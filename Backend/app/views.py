@@ -508,7 +508,7 @@ def edit_ts():
     return render_template('myts-show-edit-ts.html')
 
 @app.route('/db')
-def db():
+def db_admin():
     tables = []
     for name, obj in inspect.getmembers(sys.modules['app.models']):
         if inspect.isclass(obj) and hasattr(obj, 'query'):
