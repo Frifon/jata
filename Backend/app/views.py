@@ -12,6 +12,7 @@ from functools import wraps
 import json
 from app.models import Point
 from sqlalchemy import desc
+import sys, inspect
 
 
 ###################### CONSTANTS #######################
@@ -505,6 +506,14 @@ def add_ts():
 @login_required
 def edit_ts():
     return render_template('myts-show-edit-ts.html')
+
+@app.route('/db')
+def db():
+    tables = []
+    for name, obj in inspect.getmembers(sys.modules['app.models']):
+        if inspect.isclass(obj) and hasattr(obj, 'query'):
+            tables.append([obj.__name__, obj.query.all()])
+    return render_template('db_admin.html', tables=tables)
 
 #################### ERROR HANDLERS ####################
 

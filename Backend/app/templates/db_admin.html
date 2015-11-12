@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админка</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+    <body>
+        {% for table in tables %}
+            <input type="button" type="submit" value="{{table[0]}}" onclick="updateList('{{table[0]}}')">
+        {% endfor %}
+        {% for table in tables %}
+            <div id="__{{table[0]}}" style="display:none;">
+                {% for item in table[1] %}
+                    <p>{{item}}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    <script type="text/javascript">
+        var updateList = function(id) {
+            var elements = $('[id^="__"]');
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.display = "none";
+            }
+            var div = document.getElementById('__' + id);
+            div.style.display = "";
+        }
+    </script>
+    </body>
+</html>
