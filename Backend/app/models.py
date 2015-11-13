@@ -53,7 +53,7 @@ class Message(db.Model):
         }
 
     def __repr__(self):
-        return '{0} ==> {1} : {2} ({3} : {4})'.format(self.user, self.dest, self.message, self.id, self.timestamp)
+        return u'{0} ==> {1} : {2} ({3} : {4})'.format(self.user, self.dest, self.message, self.id, self.timestamp)
 
 
 class Session(db.Model):
