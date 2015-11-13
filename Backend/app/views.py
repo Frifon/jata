@@ -507,14 +507,6 @@ def add_ts():
 def edit_ts():
     return render_template('myts-show-edit-ts.html')
 
-@app.route('/db')
-def db_admin():
-    tables = []
-    for name, obj in inspect.getmembers(sys.modules['app.models']):
-        if inspect.isclass(obj) and hasattr(obj, 'query'):
-            tables.append([obj.__name__, obj.query.all()])
-    return render_template('db_admin.html', tables=tables)
-
 #################### ERROR HANDLERS ####################
 
 @app.errorhandler(405)
