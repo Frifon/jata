@@ -1,224 +1,14 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, request, g, jsonify, make_response, flash, Request, abort, jsonify
-from flask.ext.login import make_secure_token
+from flask import render_template, redirect, url_for, request, g, jsonify, make_response, abort
 from werkzeug import datastructures
-from app import app, db #, lm
+import datetime, json, sys, inspect
+
+from app import app, db
 from app.forms import RegForm
-from app.models import User, Session, Message, MessageHistory, ROLE_CAR, ROLE_ADD, Representative
-from sqlalchemy import or_, and_
-from sqlalchemy.orm.exc import NoResultFound
-import datetime
-from functools import wraps
-import json
-from app.models import Point
-from sqlalchemy import desc
-import sys, inspect
+from app.models import User, Representative
+from app.decorators import login_required, after_this_request
 
 
-###################### CONSTANTS #######################
-default_user = User(id=12345678987654321)   # DEPRECATED
-################## ################# ###################
-
-
-
-####################### WRAPPERS #######################
-
-@app.before_request
-def before_request():
-    token = request.cookies.get('token')
-    user = default_user
-    g.token, g.session, g.auth = None, None, False
-    if not token:
-        token = request.form.get('token')
-    if not token:
-        try:
-            token = request.args['token']
-        except:
-            token = None
-    g.token = token
-    if token:
-        session = None
-        try:
-            session = Session.query.filter_by(token=token).one()
-        except NoResultFound:
-            pass
-        g.session = session
-        g.auth = (session and session.is_valid())
-        if session:
-            user = session.user
-    g.user = user
-
-
-def after_this_request(f):
-    if not hasattr(g, 'after_request_callbacks'):
-        g.after_request_callbacks = []
-    g.after_request_callbacks.append(f)
-    return f
-
-
-@app.after_request
-def call_after_request_callbacks(response):
-    for callback in getattr(g, 'after_request_callbacks', ()):
-        callback(response)
-    return response
-
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not g.auth:
-            return redirect(url_for('index'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-
-def api_login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not g.auth:
-            return make_response(jsonify({'code': 0, 'message': 'Not authorized'}), 401)
-        return f(*args, **kwargs)
-    return decorated_function
-
-
-
-######################  REST API  ######################
-
-@app.route('/api/chat/message', methods=['POST'])
-@api_login_required
-def addMessage():
-    receiver = request.form.get('to')
-    message = request.form.get('message')
-    if not receiver or not message:
-        return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (to or message)'}),
-                             400)
-    try:
-        mes_hist = MessageHistory.query.filter(MessageHistory.user_email == g.user.email, MessageHistory.dest_email == receiver).one()
-    except NoResultFound:
-        db.session.add(MessageHistory(user_email=g.user.email, dest_email=receiver, timestamp=0))
-    timestamp = datetime.datetime.utcnow().timestamp()
-    new_message = Message(user_email=g.user.email, dest_email=receiver, message=message, timestamp=timestamp)
-    db.session.add(new_message)
-    db.session.commit()
-    return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
-
-
-@app.route('/api/chat/message', methods=['GET'])
-@api_login_required
-def getMessages():
-    timestamp = request.args['timestamp']
-    author = request.args['user']
-    if not author:
-        author = "qkjbdlkjndflkjsbdlfk"       # Well designed by Artem (OK, at least it's surely not an e-mail)
-    if not timestamp:
-        return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (timestamp)'}),
-                             400)
-    messages = Message.query.filter(or_(
-                                        and_(Message.user_email == g.user.email, Message.dest_email == author), 
-                                        and_(Message.dest_email == g.user.email, Message.user_email == author)
-                                        ), Message.timestamp >= timestamp).order_by(Message.timestamp).all()
-    return make_response(
-        jsonify({
-            'code': 0,
-            'message': 'OK',
-            'data': {'messages': [m.serialize() for m in messages]}}),
-        200)
-
-
-@app.route('/api/chat/seen', methods=['POST'])
-@api_login_required
-def manageSeenMessages():
-    user = request.form.get('user')
-    timestamp = float(request.form.get('timestamp'))
-    if not user or not timestamp:
-        return make_response(
-            jsonify({
-                'code': 0,
-                'message': 'Missing parameters (user or timestamp)'}),
-            400)
-    try:
-        mes_hist = MessageHistory.query.filter(MessageHistory.dest_email == g.user.email, MessageHistory.user_email == user).one()
-        mes_hist.timestamp = timestamp
-        db.session.commit()
-    except NoResultFound:
-        pass
-    return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
-
-
-@app.route('/api/chat/seen', methods=['GET'])
-@api_login_required
-def getSeenTimestamps():
-    ans = []
-    for mh in g.user.send_to_me_history:
-        new = len(Message.query.filter(Message.dest_email == mh.dest_email, Message.user_email == mh.user_email, Message.timestamp > mh.timestamp).all())
-        if new != 0:
-            ans.append({'new': new, 'from': mh.user_email})
-    return make_response(jsonify({
-        'code': 0,
-        'message': 'OK',
-        'data': {
-            'arr': ans
-        }}))
-
-
-@app.route('/api/gps', methods=['GET', 'POST'])
-def apiGPS():
-    if not g.auth:
-        response = {'code': 0,
-                    'message': 'Invalid token'}
-        return response
-
-    if request.method == 'POST':
-        raw_points_json = request.form.get('points')
-        if not raw_points_json:
-            response = {'code': 0,
-                        'message': 'JSON missing'}
-            return response
-
-        try:
-            raw_points = json.loads(raw_points_json)
-        except:
-            response = {'code': 0,
-                        'message': 'Invalid JSON'}
-            return response
-
-        for raw_point in raw_points:
-            point = Point(user_id=raw_point['user_id'],
-                          latitude=raw_point['latitude'],
-                          longtitude=raw_point['longtitude'],
-                          altitude=raw_point['altitude'],
-                          accuracy=raw_point['accuracy'],
-                          timestamp=int(datetime.datetime.utcnow().timestamp()))
-            db.session.add(point)
-            db.session.commit()
-
-        response = {'code': 1,
-                    'message': 'OK'}
-        return response
-    else:
-        user_id = request.form.get('user_id')
-        timestamp_start = request.form.get('timestamp_start')
-        timestamp_end = request.form.get('timestamp_end')
-
-        if not user_id:
-            response = {'code': 0,
-                        'message': 'User id missing'}
-            return response
-        if not timestamp_start:
-            timestamp_start = 0
-        if not timestamp_end:
-            timestamp_end = int((datetime.datetime.utcnow() + datetime.timedelta(weeks=1000)).timestamp())
-
-        query = db.session.query(Point).filter(Point.user_id == user_id, Point.timestamp >= timestamp_start, Point.timestamp <= timestamp_start).order_by(desc('timestamp')).all()
-
-        response = {'code': 1,
-                    'message': json.dumps(query)}
-        return response
-
-
-###################### USER LOGIN ######################
 
 # def make_internal_redirect(path, method, data):
 #     headers = datastructures.Headers()
@@ -414,6 +204,8 @@ def db_admin():
         if inspect.isclass(obj) and hasattr(obj, 'query'):
             tables.append([obj.__name__, obj.query.all()])
     return render_template('db_admin.html', tables=tables)
+
+
 
 #################### ERROR HANDLERS ####################
 

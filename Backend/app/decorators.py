@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 from flask import g, request, redirect, url_for, make_response, jsonify
-from app import app
 from functools import wraps
 from sqlalchemy.orm.exc import NoResultFound
 
-from app.views import default_user
-from app.models import Session
+from app import app
+from app.models import Session, User
+
+
+###################### CONSTANTS #######################
+default_user = User(id=12345678987654321)   # DEPRECATED
+################## ################# ###################
 
 
 @app.before_request

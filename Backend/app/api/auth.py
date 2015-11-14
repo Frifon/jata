@@ -2,15 +2,16 @@
 from flask import Blueprint, g, request, jsonify, make_response
 from flask.ext.login import make_secure_token
 import datetime
-from app.models import User, Session
+
 from app import db
+from app.models import User, Session, ROLE_CAR, ROLE_ADD
 
 
 api_auth = Blueprint('api_auth', __name__)
 
 
 @api_auth.route('/api/auth/login', methods = ['POST'])
-def apiLogin():
+def login():
     response = {'code': 0,
                 'message': 'Missing parameters (email or password)'}
     email = request.form.get('email')
@@ -42,7 +43,7 @@ def apiLogin():
 
 
 @api_auth.route('/api/auth/check', methods = ['POST'])
-def apiCheckToken():
+def check():
     response = {'code': 0,
                 'message': 'Token expired or does not exist'}
     if not g.auth:
@@ -58,7 +59,7 @@ def apiCheckToken():
 
 
 @api_auth.route('/api/auth/logout', methods = ['POST'])
-def apiLogout():
+def logout():
     response = {'code': 0,
                 'message': 'Already not authorized (or token forgotten)'}
     if not g.session:
