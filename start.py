@@ -34,5 +34,5 @@ if __name__ == "__main__":
         run("nohup python3 {0}/{1} 1>{0}/{2} 2>&1 &".format(project_dir, start_script, error_log))
         run("nohup python2.7 {0}/{1} 1>{0}/{2} 2>&1 &".format(project_dir, start_admin, error_log_admin))
     else:
-        run("py -3 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(project_dir, start_script, error_log))
-        run("py -2 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(project_dir, start_admin, error_log_admin))
+        run("start py -3 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(project_dir, start_script, error_log))
+        run("start py -2 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(project_dir, start_admin, error_log_admin))
