@@ -8,6 +8,9 @@ app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 
+from app.api.auth import api_auth
+app.register_blueprint(api_auth)
+
 # lm = LoginManager()
 # lm.init_app(app)
 # lm.session_protection = "strong"
