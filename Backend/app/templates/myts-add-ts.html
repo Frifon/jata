@@ -55,7 +55,7 @@
 								
 								
 								<!-- Форма добавления информации по ТС -->
-								<form action="">
+								<form action="{{url_for('add_car')}}" method="post" id="add_car", name="add_car">
 									<div class="panel panel-default">
 											<div class="panel-heading font-18">
 													Заполните, пожалуйста, информацию о Вашем ТС
@@ -73,38 +73,38 @@
 														<label for="ts_type">Выберите тип ТС *</label>
 														<div class="input-group field padding-bottom-14">
 															<select class="input-sm form-control" name="ts_type">
-																<option selected>Легковое авто</option>
-																<option>Микроавтобус</option>
-																<option>Автобус</option>
-																<option>Грузовое авто (менее 3,5т)</option>
-																<option>Грузовое авто (более 3,5т)</option>
+																<option selected value="Легковое авто">Легковое авто</option>
+																<option value="Микроавтобус">Микроавтобус</option>
+																<option value="Автобус">Автобус</option>
+																<option value="Грузовое авто (менее 3,5т)">Грузовое авто (менее 3,5т)</option>
+																<option value="Грузовое авто (более 3,5т)">Грузовое авто (более 3,5т)</option>
 															</select>
 															<span class="show_on_blured_and_invalid hide">Выберите тип ТС</span>
 														</div>
 														<label for="ts_usagetype">Тип пользования *</label>
 														<div class="input-group field field padding-bottom-14">
 															<select class="input-sm form-control" name="ts_usagetype">
-																<option selected>Личный</option>
-																<option>Служебный</option>
-																<option>Коммерческий</option>
+																<option selected value="Личный">Личный</option>
+																<option value="Служебный">Служебный</option>
+																<option value="Коммерческий">Коммерческий</option>
 															</select>
 															<span class="show_on_blured_and_invalid hide">Укажите тип пользования</span>
 														</div>
 														<div class="radio">
 															<label>
-																<input type="radio" name="ts_activities" value="ts_taxi">
+																<input type="radio" name="ts_activities" value="Такси">
 																Работаю в такси
 															</label>
 														</div>
 														<div class="radio">
 															<label>
-																<input type="radio" name="ts_activities" value="ts_cargo_delivery">
+																<input type="radio" name="ts_activities" value="Доставка грузов">
 																Работаю в доставке грузов
 															</label>
 														</div>
 														<div class="radio">
 															<label>
-																<input type="radio" name="ts_activities" value="ts_freight">
+																<input type="radio" name="ts_activities" value="Перевозка грузов">
 																Работаю в перевозке грузов
 															</label>
 														</div>
@@ -115,9 +115,9 @@
 														<div class="field padding-bottom-14">
 															<select class="input-sm form-control width-50" name="ts_make">
 																<option value>марка</option>
-																<option value="001">Alfa Romeo</option>
-																<option value="002">Audi</option>
-																<option value="003">Bentley</option>
+																<option value="Alfa Romeo">Alfa Romeo</option>
+																<option value="Audi">Audi</option>
+																<option value="Bentley">Bentley</option>
 															</select>
 															<span class="show_on_blured_and_invalid hide">Марка ТС не указана</span>
 														</div>
@@ -125,9 +125,9 @@
 														<div class="field padding-bottom-14">
 															<select class="input-sm form-control width-50" name="ts_model"  data-xp="enabled: '[name=ts_make]'">
 																<option value>модель</option>
-																<option value="001_1">Модель 1</option>
-																<option value="001_2">Модель 2</option>
-																<option value="001_3">Модель 3</option>
+																<option value="Модель 1">Модель 1</option>
+																<option value="Модель 2">Модель 2</option>
+																<option value="Модель 3">Модель 3</option>
 															</select>
 															<span class="show_on_blured_and_invalid hide">Выберите модель ТС</span>
 														</div>
@@ -193,7 +193,7 @@
 												<div class="row">
 													<div class="col-xs-8"></div>
 													<div class="col-xs-4 text-right">
-														<button class="btn btn-primary" id="submit" type="submit" name="submit">Сохранить</button>
+														<button class="btn btn-primary" id="add_car" type="submit" name="add_car">Сохранить</button>
 													</div>
 												</div>
 											</div>
@@ -201,7 +201,32 @@
 								</form>
 								<!-- Форма добавления информации по ТС -->
 								
-								
+								<script type="text/javascript">
+									$("#add_car").submit(function(e) {
+
+									    var url = "/add_car";
+
+									    $.ajax({
+									           type: "POST",
+									           url: url,
+									           data: $("#add_car").serialize(),
+									           success: function(data)
+									           {
+									           		var xhttp = new XMLHttpRequest();
+									           		xhttp.open("POST", "/login", false);
+													xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+													xhttp.send($("#add_car").serialize());
+													window.location="/ts";
+									           },
+									           error: function(data)
+									           {
+									                alert("ERROR: " + JSON.parse(data.responseText).message);
+									           }
+									         });
+
+									    e.preventDefault();
+									});
+								</script>
 							</div>
 						</div> <!-- END row -->
 

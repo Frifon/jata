@@ -53,10 +53,10 @@
 							<div class="panel-heading font-18">
 								<div class="row">
 									<div id="page-settings" class="col-xs-7">
-										Информация по Mercedes-Benz AMG GLE Coupe
+										{{car.car_brand}} {{car.car_model}}
 									</div>
 									<div id="page-settings" class="col-xs-5 centering-y text-right">
-										<a href="{{url_for('edit_ts')}}" class="font-14 margin-right-21">
+										<a href="{{url_for('edit_ts', car_id=car.id)}}" method="post" class="font-14 margin-right-21">
 											<i class="glyphicon glyphicon-cog"></i>
 												Изменить
 										</a>
@@ -74,24 +74,24 @@
 									</div>
 									<div class="col-xs-8">
 										<div class="row padding-bottom-21 font-18 b ts-name">
-											<div class="col-xs-12">Mercedes-Benz AMG GLE Coupe 2016 г.</div>
+											<div class="col-xs-12">{{car.car_brand}} {{car.car_model}}</div>
 										</div>
 										<div class="row padding-bottom-7 ts-type">
 											<div class="col-xs-5 color-555">Тип транспорта:</div>
-											<div class="col-xs-7">легковое авто</div>
+											<div class="col-xs-7">{{car.car_type}}</div>
 										</div>
 										<div class="row padding-bottom-7 ts-usagetype">
 											<div class="col-xs-5 color-555">Тип пользования:</div>
-											<div class="col-xs-7">личный</div>
+											<div class="col-xs-7">{{car.car_usage_type}}</div>
 										</div>
 										<div class="row padding-bottom-7 ts-activities">
 											<div class="col-xs-5 color-555">Род деятельности:</div>
-											<div class="col-xs-7">работаю в доставке грузов</div>
+											<div class="col-xs-7">{{car.car_activities}}</div>
 										</div>
 										<div class="row padding-bottom-7 ts_color">
 											<div class="col-xs-5 color-555">Цвет:</div>
 											<div class="col-xs-7">
-												<span class="ts-color-block" style="background-color: #dc2127;"></span>
+												<span class="ts-color-block" style="background-color: {{car.car_color}};"></span>
 											</div>
 										</div>
 									</div>
@@ -104,10 +104,10 @@
 						<!-- Форма редактироания информации по ТС (доступна при нажатии на ссылку "Изменить") -->
 							<!-- Текущие значения полей (т.е. которые вв базе) отображаем через атрибут checked -->
 							<!-- Для цвета: поставить "галку" на текущем цвете можно в скриптах в подвале - $('select[name="ts_color"]').simplecolorpicker('selectColor', '#dc2127'); -->
-							<form action="">
+							<form action="{{url_for('change_car', car_id=car.id)}}" method="post" id="change_car", name="change_car">
 								<div class="panel panel-default">
 									<div class="panel-heading font-18">
-										Редактирование информации по Mercedes-Benz AMG GLE Coupe
+										Редактирование информации по {{car.car_brand}} {{car.car_model}}
 									</div>
 									<div class="panel-body">
 										<div class="row padding-bottom-21 message-before-content">
@@ -119,67 +119,68 @@
 										</div>
 										<div class="row padding-bottom-21 ">
 											<div class="col-xs-6">
-												<label for="ts_type">Выберите тип ТС</label>
+												<label for="ts_type">Выберите тип ТС *</label>
 												<div class="input-group field padding-bottom-14">
 													<select class="input-sm form-control" name="ts_type">
-														<option selected>Легковое авто</option>
-														<option>Микроавтобус</option>
-														<option>Автобус</option>
-														<option>Грузовое авто (менее 3,5т)</option>
-														<option>Грузовое авто (более 3,5т)</option>
+														<option selected value="Легковое авто">Легковое авто</option>
+														<option value="Микроавтобус">Микроавтобус</option>
+														<option value="Автобус">Автобус</option>
+														<option value="Грузовое авто (менее 3,5т)">Грузовое авто (менее 3,5т)</option>
+														<option value="Грузовое авто (более 3,5т)">Грузовое авто (более 3,5т)</option>
 													</select>
+													<span class="show_on_blured_and_invalid hide">Выберите тип ТС</span>
 												</div>
-												<label for="ts_usagetype">Тип пользования</label>
+												<label for="ts_usagetype">Тип пользования *</label>
 												<div class="input-group field field padding-bottom-14">
 													<select class="input-sm form-control" name="ts_usagetype">
-														<option selected>Личный</option>
-														<option>Служебный</option>
-														<option>Коммерческий</option>
+														<option selected value="Личный">Личный</option>
+														<option value="Служебный">Служебный</option>
+														<option value="Коммерческий">Коммерческий</option>
 													</select>
+													<span class="show_on_blured_and_invalid hide">Укажите тип пользования</span>
 												</div>
 												<div class="radio">
 													<label>
-														<input type="radio" name="ts_activities" value="ts_taxi">
+														<input type="radio" name="ts_activities" value="Такси">
 														Работаю в такси
 													</label>
 												</div>
 												<div class="radio">
 													<label>
-														<input type="radio" name="ts_activities" value="ts_cargo_delivery" checked>														Работаю в доставке грузов
+														<input type="radio" name="ts_activities" value="Доставка грузов">
+														Работаю в доставке грузов
 													</label>
 												</div>
 												<div class="radio">
 													<label>
-														<input type="radio" name="ts_activities" value="ts_freight">
+														<input type="radio" name="ts_activities" value="Перевозка грузов">
 														Работаю в перевозке грузов
 													</label>
 												</div>
-																										
+												<span class="show_on_blured_and_invalid hide">Укажите род деятельности</span>												
 											</div>
 											<div class="col-xs-6">
-												<label for="ts_make">Марка ТС</label>
+												<label for="ts_make">Марка ТС *</label>
 												<div class="field padding-bottom-14">
 													<select class="input-sm form-control width-50" name="ts_make">
 														<option value>марка</option>
-														<option value="001">Alfa Romeo</option>
-														<option value="002">Audi</option>
-														<option value="003">Bentley</option>
-														<option value="004" selected>Mercedes-Benz</option>
+														<option value="Alfa Romeo">Alfa Romeo</option>
+														<option value="Audi">Audi</option>
+														<option value="Bentley">Bentley</option>
 													</select>
-													<span class="show_on_blured_and_invalid hide">Марка ТС не выбрана</span>
+													<span class="show_on_blured_and_invalid hide">Марка ТС не указана</span>
 												</div>
-												<label for="ts_model">Модель ТС</label>
+												<label for="ts_model">Модель ТС *</label>
 												<div class="field padding-bottom-14">
-												<select class="input-sm form-control width-50" name="ts_model"  data-xp="enabled: '[name=ts_make]'">
+													<select class="input-sm form-control width-50" name="ts_model"  data-xp="enabled: '[name=ts_make]'">
 														<option value>модель</option>
-														<option value="004_1">Модель 1</option>
-														<option value="004_2">Модель 2</option>
-														<option value="004_3">Модель 3</option>
-														<option value="004_4" selected>AMG GLE Coupe</option>
+														<option value="Модель 1">Модель 1</option>
+														<option value="Модель 2">Модель 2</option>
+														<option value="Модель 3">Модель 3</option>
 													</select>
-													<span class="show_on_blured_and_invalid hide">Модель ТС не выбрана</span>
+													<span class="show_on_blured_and_invalid hide">Выберите модель ТС</span>
 												</div>
-												<label for="ts_made">Год выпуска ТС</label>
+												<label for="ts_made">Год выпуска ТС *</label>
 												<div class="field padding-bottom-14">
 													<select class="input-sm form-control width-50" name="ts_made"  data-xp="enabled: '[name=ts_model]'">
 														<option value>год выпуска</option>
@@ -188,12 +189,12 @@
 														<option value="1997">1997</option>
 														<option>... </option>
 														<option value="2015">2015</option>
-														<option value="2016" selected>2016</option>
+														<option value="2016">2016</option>
 													</select>
-													<span class="show_on_blured_and_invalid hide">Год выпуска ТС не выбран</span>
+													<span class="show_on_blured_and_invalid hide">год выпуска ТС не указан</span>
 												</div>
-														
-												<label for="ts_color">Цвет ТС</label>
+												
+												<label for="ts_color">Цвет ТС *</label>
 												<div class="input-group field padding-bottom-14">
 													<select name="ts_color">
 														<option value="#ffffff">Белый</option>
@@ -208,7 +209,7 @@
 														<option value="#00A4FF">Светло-синий</option>
 														<option value="#004F95">Синий</option>
 													</select>
-													<span class="show_on_blured_and_invalid hide">Цвет ТС не указан</span>
+													<span class="show_on_blured_and_invalid hide">Укажите цвет вашего ТС</span>
 												</div>
 											</div>
 										</div>
@@ -247,7 +248,33 @@
 								</div>
 							</form>
 						<!-- / Форма добавления информации по ТС -->
-						
+						<script type="text/javascript">
+							$("#change_car").submit(function(e) {
+
+							    var url = "/change_car/{{car.id}}";
+
+							    $.ajax({
+							           type: "POST",
+							           url: url,
+							           data: $("#change_car").serialize(),
+							           success: function(data)
+							           {
+							           		var xhttp = new XMLHttpRequest();
+							           		xhttp.open("POST", "/login", false);
+											xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+											xhttp.send($("#change_car").serialize());
+											window.location="/ts";
+							           },
+							           error: function(data)
+							           {
+							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           }
+							         });
+
+							    e.preventDefault();
+							});
+						</script>
+
 						<!-- / Content -->  
 	
 					</div>

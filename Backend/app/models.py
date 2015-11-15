@@ -98,6 +98,17 @@ class Representative(db.Model):
         return 'Id: {0} Email: {1}'.format(self.id, self.email)
 
 
+class Car(db.Model):
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    car_type = db.Column(db.String(30), index=True)
+    car_usage_type = db.Column(db.String(30), index=True)
+    car_activities = db.Column(db.String(30), index=True)
+    car_brand = db.Column(db.String(30), index=True)
+    car_model = db.Column(db.String(30), index=True)
+    car_year = db.Column(db.String(30), index=True)
+    car_color = db.Column(db.String(30), index=True)
+    user_id = db.Column(db.Integer, index=True)
+
 
 ######################### GPS ##########################
 
@@ -118,6 +129,7 @@ class Point(db.Model):
                 "Altitude: {}\n".format(str(self.altitude)) +
                 "Accuracy: {}\n".format(str(self.accuracy)) +
                 "Timestamp: {}\n".format(str(self.timestamp)))
+
     def __repr__(self):
         return ("Point id: {}\n".format(str(self.id)) +
                 "User id: {}\n".format(str(self.user_id)) +

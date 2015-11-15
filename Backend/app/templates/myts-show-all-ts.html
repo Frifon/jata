@@ -66,11 +66,13 @@
 									 * Если пользователь случайно попал на данную страницу и у него в базе нет ни одного ТС, 
 									 * то показываем сообщение-предупреждение с кнопкой "Добавить ТС", в ином случае, просто кнопку
 									 */	-->
-								
-								<div class="alert alert-warning alert-dismissible">
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-									<i class="glyphicon glyphicon glyphicon-info-sign padding-right-7"></i>Вы пока что не создали ни одного транспортного средства. 
-								</div>
+							
+								{% if cars == [] %}
+									<div class="alert alert-warning alert-dismissible">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+										<i class="glyphicon glyphicon glyphicon-info-sign padding-right-7"></i>Вы пока что не создали ни одного транспортного средства. 
+									</div>
+								{% endif %}
 								
 								<div class="col-sm-12 centering-y text-right add-ts-link ">
 									<a href="{{url_for('add_ts')}}">
@@ -80,44 +82,20 @@
 								</div>
 								
 								
-								<div class="col-xs-6 ts-parametrs padding-bottom-21">
-									<div class="row">
-										<a href="{{url_for('edit_ts')}}" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
-										<div class="col-xs-8">
-											<div class="ts-title">
-												<a href="{{url_for('edit_ts')}}">Mercedes-Benz AMG GLE Coupe</a>
+								{% for car in cars %}
+									<div class="col-xs-6 ts-parametrs padding-bottom-21">
+										<div class="row">
+											<a href="{{url_for('edit_ts', car_id=car.id)}}" method="post" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
+											<div class="col-xs-8">
+												<div class="ts-title">
+													<a href="{{url_for('edit_ts', car_id=car.id)}}" method="post">{{car.car_brand}} {{car.car_model}}</a>
+												</div>
+												<div class="ts-description">Тип:&nbsp;<span>{{car.car_usage_type}}</span></div>
+												<!-- <div class="ts-proposals">Заявок:&nbsp;<a href="#">57</a> </div> -->
 											</div>
-											<div class="ts-description">Тип:&nbsp;<span>личное ТС</span></div>
-											<div class="ts-proposals">Заявок:&nbsp;<a href="#">57</a> </div>
 										</div>
 									</div>
-								</div>
-								
-								<div class="col-xs-6 ts-parametrs padding-bottom-21">
-									<div class="row">
-										<a href="{{url_for('edit_ts')}}" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
-										<div class="col-xs-8">
-											<div class="ts-title">
-												<a href="{{url_for('edit_ts')}}">Mercedes-Benz CC</a>
-											</div>
-											<div class="ts-description">Тип:&nbsp;<span>личное ТС</span></div>
-											<div class="ts-proposals">Заявок:&nbsp;<a href="#">57</a> </div>
-										</div>
-									</div>
-								</div>
-								
-								<div class="col-xs-6 ts-parametrs padding-bottom-21">
-									<div class="row">
-										<a href="{{url_for('edit_ts')}}" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
-										<div class="col-xs-8">
-											<div class="ts-title">
-												<a href="{{url_for('edit_ts')}}">AMG GLE Coupe</a>
-											</div>
-											<div class="ts-description">Тип:&nbsp;<span>личное ТС</span></div>
-											<div class="ts-proposals">Заявок:&nbsp;<a href="#">57</a> </div>
-										</div>
-									</div>
-								</div>
+								{% endfor %}
 								
 								
 							</div>

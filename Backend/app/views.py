@@ -5,9 +5,8 @@ import datetime, json, sys, inspect
 
 from app import app, db
 from app.forms import RegForm
-from app.models import User, Representative
+from app.models import User, Representative, Car
 from app.decorators import login_required, after_this_request
-
 
 
 # def make_internal_redirect(path, method, data):
@@ -18,7 +17,7 @@ from app.decorators import login_required, after_this_request
 #         return app.full_dispatch_request()
 
 
-@app.route('/login', methods = ['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
@@ -34,27 +33,29 @@ def login():
     return redirect(url_for('index'))
 
 
-@app.route('/logout', methods = ['GET'])
+@app.route('/logout', methods=['GET'])
 def logout():
     rv = app.test_client().post('/api/auth/logout', data={'token': g.token}, follow_redirects=True)
     result = json.loads(rv.data.decode('unicode_escape'))
     return redirect(url_for('index'))
 
 
-@app.route('/index', methods = ['GET', 'POST'])
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     return base_render("index.html", title=u"Jata")
 
 
-@app.route('/change_password', methods = ['POST'])
+@app.route('/change_password', methods=['POST'])
 @login_required
 def change_password():
 
     def construct_response(code, message):
         return {'code': code, 'message': message}
+
     def incorrect_param(p):
         return construct_response(1, 'Incorrect parameter: {0}'.format(p))
+
     def missing_param(p):
         return construct_response(1, 'Missing parameter: {0}'.format(p))
 
@@ -89,22 +90,26 @@ def profile():
     else:
         return render_template('profile.html')
 
+
 @app.route('/favicon.ico')
 def favicon_ico():
     return ''
+
 
 def base_render(*args, **kwargs):
     return render_template(*args, reg_form=RegForm(), **kwargs)
 
 
-@app.route('/update_profile/<int:role>', methods = ['POST'])
+@app.route('/update_profile/<int:role>', methods=['POST'])
 @login_required
 def update_profile(role):
-    
+
     def construct_response(code, message):
         return {'code': code, 'message': message}
+
     def incorrect_param(p):
         return construct_response(1, 'Incorrect parameter: {0}'.format(p))
+
     def missing_param(p):
         return construct_response(1, 'Missing parameter: {0}'.format(p))
 
@@ -115,7 +120,7 @@ def update_profile(role):
         birthday = request.form.get('user-birthday')
         tel_number = request.form.get('user-phone')
         email = request.form.get('user-email')
-        
+
         if not surname:
             return make_response(jsonify(missing_param('surname')), 400)
         if not name:
@@ -171,6 +176,58 @@ def update_profile(role):
         return make_response(jsonify(incorrect_param('role')), 400)
 
 
+@app.route('/add_car', methods=['POST'])
+@login_required
+def add_car():
+
+    def construct_response(code, message):
+        return {'code': code, 'message': message}
+
+    def incorrect_param(p):
+        return construct_response(1, 'Incorrect parameter: {0}'.format(p))
+
+    def missing_param(p):
+        return construct_response(1, 'Missing parameter: {0}'.format(p))
+
+    car_type = request.form.get('ts_type')
+    car_usage_type = request.form.get('ts_usagetype')
+    car_activities = request.form.get('ts_activities')
+    car_brand = request.form.get('ts_make')
+    car_model = request.form.get('ts_model')
+    car_year = request.form.get('ts_made')
+    car_color = request.form.get('ts_color')
+
+    if not car_type:
+        return make_response(jsonify(missing_param('car_type')), 400)
+    if not car_usage_type:
+        return make_response(jsonify(missing_param('car_usage_type')), 400)
+    if not car_activities:
+        return make_response(jsonify(missing_param('car_activities')), 400)
+    if not car_brand:
+        return make_response(jsonify(missing_param('car_brand')), 400)
+    if not car_model:
+        return make_response(jsonify(missing_param('car_model')), 400)
+    if not car_year:
+        return make_response(jsonify(missing_param('car_year')), 400)
+    if not car_color:
+        return make_response(jsonify(missing_param('car_color')), 400)
+
+    new_car = Car(
+        car_type=car_type,
+        car_usage_type=car_usage_type,
+        car_activities=car_activities,
+        car_brand=car_brand,
+        car_model=car_model,
+        car_year=car_year,
+        car_color=car_color,
+        user_id=g.user.id)
+
+    db.session.add(new_car)
+    db.session.commit()
+
+    return make_response(jsonify(construct_response(0, 'OK')), 200)
+
+
 @app.route('/chat')
 @login_required
 def chat():
@@ -182,20 +239,78 @@ def chat():
             users = [u"Техническая поддержка"]
     return render_template('chat.html', users=users)
 
+
 @app.route('/ts')
 @login_required
 def ts():
-    return render_template('myts-show-all-ts.html')
+    cars = Car.query.filter_by(user_id=g.session.id).all()
+    return render_template('myts-show-all-ts.html', cars=cars)
+
 
 @app.route('/add_ts')
 @login_required
 def add_ts():
     return render_template('myts-add-ts.html')
 
-@app.route('/edit_ts')
+
+@app.route('/edit_ts/<int:car_id>')
 @login_required
-def edit_ts():
-    return render_template('myts-show-edit-ts.html')
+def edit_ts(car_id):
+    car = Car.query.filter_by(id=car_id).all()[0]
+    return render_template('myts-show-edit-ts.html', car=car)
+
+
+@app.route('/change_car/<int:car_id>', methods=['POST'])
+@login_required
+def change_car(car_id):
+
+    def construct_response(code, message):
+        return {'code': code, 'message': message}
+
+    def incorrect_param(p):
+        return construct_response(1, 'Incorrect parameter: {0}'.format(p))
+
+    def missing_param(p):
+        return construct_response(1, 'Missing parameter: {0}'.format(p))
+
+    car_type = request.form.get('ts_type')
+    car_usage_type = request.form.get('ts_usagetype')
+    car_activities = request.form.get('ts_activities')
+    car_brand = request.form.get('ts_make')
+    car_model = request.form.get('ts_model')
+    car_year = request.form.get('ts_made')
+    car_color = request.form.get('ts_color')
+
+    if not car_type:
+        return make_response(jsonify(missing_param('car_type')), 400)
+    if not car_usage_type:
+        return make_response(jsonify(missing_param('car_usage_type')), 400)
+    if not car_activities:
+        return make_response(jsonify(missing_param('car_activities')), 400)
+    if not car_brand:
+        return make_response(jsonify(missing_param('car_brand')), 400)
+    if not car_model:
+        return make_response(jsonify(missing_param('car_model')), 400)
+    if not car_year:
+        return make_response(jsonify(missing_param('car_year')), 400)
+    if not car_color:
+        return make_response(jsonify(missing_param('car_color')), 400)
+
+    car = Car.query.filter_by(id=car_id).all()[0]
+
+    car.car_type = car_type
+    car.car_usage_type = car_usage_type
+    car.car_activities = car_activities
+    car.car_brand = car_brand
+    car.car_model = car_model
+    car.car_year = car_year
+    car.car_color = car_color
+    car.user_id = g.user.id
+
+    db.session.commit()
+
+    return make_response(jsonify(construct_response(0, 'OK')), 200)
+
 
 @app.route('/db')
 def db_admin():
@@ -206,9 +321,7 @@ def db_admin():
     return render_template('db_admin.html', tables=tables)
 
 
-
 #################### ERROR HANDLERS ####################
-
 @app.errorhandler(405)
 def error405(error):
     url = str(request.base_url)
