@@ -312,15 +312,6 @@ def change_car(car_id):
     return make_response(jsonify(construct_response(0, 'OK')), 200)
 
 
-@app.route('/db')
-def db_admin():
-    tables = []
-    for name, obj in inspect.getmembers(sys.modules['app.models']):
-        if inspect.isclass(obj) and hasattr(obj, 'query'):
-            tables.append([obj.__name__, obj.query.all()])
-    return render_template('db_admin.html', tables=tables)
-
-
 #################### ERROR HANDLERS ####################
 @app.errorhandler(405)
 def error405(error):
