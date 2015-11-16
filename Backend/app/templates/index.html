@@ -158,7 +158,23 @@
 		<script type="text/javascript">
 			$("#reg").submit(function(e) {
 
-			    var url = "/api/auth/reg";
+			    var url = "/api/sms/send_sms";
+
+			    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#reg").serialize(),
+			           success: function(data)
+			           {
+			           },
+			           error: function(data)
+			           {
+			                alert("ERROR: " + JSON.parse(data.responseText).message);
+			           }
+			         });
+
+
+			    url = "/api/auth/reg";
 
 			    $.ajax({
 			           type: "POST",

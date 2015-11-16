@@ -1,4 +1,4 @@
-import os
+import os, sys
 from config import basedir
 
 from flask import Flask
@@ -16,6 +16,10 @@ app.register_blueprint(api_chat)
 
 from app.api.gps import api_gps
 app.register_blueprint(api_gps)
+
+if sys.version_info[0] == 3:
+    from app.api.sms import api_sms
+    app.register_blueprint(api_sms)
 
 # lm = LoginManager()
 # lm.init_app(app)
