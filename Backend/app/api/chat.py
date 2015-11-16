@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, g, request, jsonify, make_response
 from sqlalchemy import or_, and_
+from sqlalchemy.orm.exc import NoResultFound
+import datetime
 
 from app import db
 from app.models import Message, MessageHistory
