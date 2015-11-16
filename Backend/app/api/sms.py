@@ -13,14 +13,14 @@ api_sms = Blueprint('api_sms', __name__)
 def SendSms():
     
     tel_number = request.form.get('tel_number')
-    
-    if not tel_number:
+    email = request.form.get('email')
+    if not tel_number or not email:
         return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameter (tel_number)'}),
+                                      'message': 'Missing parameters (tel_number or email)'}),
                              400)
     tel_number = tel_number.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
     tel_number = '+7' + tel_number
-    seed(tel_number)
+    seed(tel_number + email)
     number = randint(10000, 99999)
 
 
