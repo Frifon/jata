@@ -200,7 +200,6 @@ def add_car():
     car_year = request.form.get('ts_made')
     car_color = request.form.get('ts_color')
 
-    print(request.files)
     car_photo = request.files['file']
 
     if not car_type:
@@ -297,6 +296,8 @@ def change_car(car_id):
     car_year = request.form.get('ts_made')
     car_color = request.form.get('ts_color')
 
+    car_photo = request.files['file']
+
     if not car_type:
         return make_response(jsonify(missing_param('car_type')), 400)
     if not car_usage_type:
@@ -312,6 +313,15 @@ def change_car(car_id):
     if not car_color:
         return make_response(jsonify(missing_param('car_color')), 400)
 
+    if not car_photo:
+        return make_response(jsonify(missing_param('car_photo')), 400)
+
+    if not allowed_file(car_photo.filename):
+        return make_response(jsonify(incorrect_param('car_photo')), 400)
+
+    filename = secure_filename(car_photo.filename)
+    car_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     car = Car.query.filter_by(id=car_id).all()[0]
 
     car.car_type = car_type
@@ -322,6 +332,7 @@ def change_car(car_id):
     car.car_year = car_year
     car.car_color = car_color
     car.user_id = g.user.id
+    car.car_photo = 'img/' + filename
 
     db.session.commit()
 
