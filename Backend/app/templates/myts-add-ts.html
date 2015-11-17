@@ -55,7 +55,7 @@
 								
 								
 								<!-- Форма добавления информации по ТС -->
-								<form action="{{url_for('add_car')}}" method="post" id="add_car", name="add_car">
+								<form action="{{url_for('add_car')}}" method=post id="add_car" name="add_car" enctype=multipart/form-data>
 									<div class="panel panel-default">
 											<div class="panel-heading font-18">
 													Заполните, пожалуйста, информацию о Вашем ТС
@@ -204,18 +204,22 @@
 								<script type="text/javascript">
 									$("#add_car").submit(function(e) {
 
-									    var url = "/add_car";
+									    var formData = new FormData($(this)[0]);
 
 									    $.ajax({
 									           type: "POST",
-									           url: url,
-									           data: $("#add_car").serialize(),
+									           url: "/add_car",
+									           data: formData,
+									           async: false,
+    										   cache: false,
+    										   contentType: false,
+    										   processData: false,
 									           success: function(data)
 									           {
 									           		var xhttp = new XMLHttpRequest();
 									           		xhttp.open("POST", "/login", false);
 													xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-													xhttp.send($("#add_car").serialize());
+													xhttp.send(data);
 													window.location="/ts";
 									           },
 									           error: function(data)

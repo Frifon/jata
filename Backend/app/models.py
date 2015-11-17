@@ -9,9 +9,10 @@ ROLE_CAR = 1
 ROLE_ADD = 2
 ROLE_ADMIN = 4
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    
+
     email = db.Column(db.String(120), index=True, unique=True)
     password = db.Column(db.String(30), index=True)
     tel_number = db.Column(db.String(30), index=True)
@@ -108,6 +109,7 @@ class Car(db.Model):
     car_year = db.Column(db.String(30), index=True)
     car_color = db.Column(db.String(30), index=True)
     user_id = db.Column(db.Integer, index=True)
+    car_photo = db.Column(db.String(30), index=True)
 
 
 ######################### GPS ##########################

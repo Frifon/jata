@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, request, g, jsonify, make_response, abort
-from werkzeug import datastructures
-import datetime, json, sys, inspect
 
-from app import app, db
+import os
+import json
+import datetime
+from werkzeug import secure_filename
+from flask import render_template, redirect, url_for, request, g, jsonify, make_response
+
+from app import app, db, allowed_file
 from app.forms import RegForm
 from app.models import User, Representative, Car
 from app.decorators import login_required, after_this_request
@@ -35,8 +38,8 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    rv = app.test_client().post('/api/auth/logout', data={'token': g.token}, follow_redirects=True)
-    result = json.loads(rv.data.decode('unicode_escape'))
+    # rv = app.test_client().post('/api/auth/logout', data={'token': g.token}, follow_redirects=True)
+    # result = json.loads(rv.data.decode('unicode_escape'))
     return redirect(url_for('index'))
 
 
@@ -197,6 +200,9 @@ def add_car():
     car_year = request.form.get('ts_made')
     car_color = request.form.get('ts_color')
 
+    print(request.files)
+    car_photo = request.files['file']
+
     if not car_type:
         return make_response(jsonify(missing_param('car_type')), 400)
     if not car_usage_type:
@@ -212,6 +218,15 @@ def add_car():
     if not car_color:
         return make_response(jsonify(missing_param('car_color')), 400)
 
+    if not car_photo:
+        return make_response(jsonify(missing_param('car_photo')), 400)
+
+    if not allowed_file(car_photo.filename):
+        return make_response(jsonify(incorrect_param('car_photo')), 400)
+
+    filename = secure_filename(car_photo.filename)
+    car_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     new_car = Car(
         car_type=car_type,
         car_usage_type=car_usage_type,
@@ -220,7 +235,8 @@ def add_car():
         car_model=car_model,
         car_year=car_year,
         car_color=car_color,
-        user_id=g.user.id)
+        user_id=g.user.id,
+        car_photo='img/' + filename)
 
     db.session.add(new_car)
     db.session.commit()
