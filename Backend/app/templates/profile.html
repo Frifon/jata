@@ -82,7 +82,34 @@
 											<img src="http://dreempics.com/img/picture/Apr/30/ce9442d5944bfb3ac3fa6385552c7580/7.jpg" data-caption="Последний слайд. Можно закрывать слайдер, если нужно">
 										</div>
 									</div>								
-										
+								
+								{% if not g.user.verified %}
+									<!-- Ввод кода подтверждения по СМС -->
+						      		<form action="/api/sms/check" method="post" id="check_code">
+						      			<div class="panel panel-default">
+											<div class="row register-form-sms-block">
+												<div class="col-xs-12">
+													<label for="code">Введите код подтверждения из SMS *
+														<div class="input-group field">
+															<input type="text" id="code" name="code" placeholder="SMS-код" class="input-sm">
+														</div>
+														<span class="show_on_blured_and_invalid hide">СМС-код введен неверно</span>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button class="btn btn-primary" value="" type="submit" style="vertical-align:middle">Подтвердить</button>
+										</div>
+						      		</form>
+						      		<form action="/api/sms/send" method="post" id="send_code">
+						      				<button class="btn btn-transparent" value="" type="submit" style="vertical-align:middle">
+												<i class="glyphicon glyphicon-repeat"></i>
+												Смс не пришло
+											</button>
+									</form>
+						      		<!-- / Ввод кода подтверждения по СМС -->
+						      	{% endif %}
 																				
 								{% if g.user.role == 1 %}								
 									<!-- заполняем Данные для ФизЛИЦА -->
@@ -559,6 +586,47 @@
 						</div> <!-- END row -->
 
 						<script type="text/javascript">
+							$("#check_code").submit(function(e) {
+
+							    url = "/api/sms/check";
+
+							    $.ajax({
+							           type: "POST",
+							           url: url,
+							           data: $("#check_code").serialize(),
+							           success: function(data)
+							           {
+											window.location="/";
+							           },
+							           error: function(data)
+							           {
+							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           }
+							         });
+
+							    e.preventDefault();
+							});
+
+							$("#send_code").submit(function(e) {
+
+							    url = "/api/sms/send";
+
+							    $.ajax({
+							           type: "POST",
+							           url: url,
+							           data: '',
+							           success: function(data)
+							           {
+							           },
+							           error: function(data)
+							           {
+							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           }
+							         });
+
+							    e.preventDefault();
+							});
+
 							$("#update_profile_1").submit(function(e) {
 
 							    var url = "/update_profile/1";

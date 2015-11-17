@@ -104,7 +104,7 @@ def reg():
         userrole = ROLE_ADD
     else:
         userrole = ROLE_CAR
-    new_user = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole)
+    new_user = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole, verified=False)
     db.session.add(new_user)
     db.session.commit()
     return make_response(jsonify(construct_response(0, 'OK')), 200)

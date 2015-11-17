@@ -24,6 +24,7 @@ class User(db.Model):
     birthday = db.Column(db.Date, index=True)
     company_name = db.Column(db.String(120), index=True)
     contract_number = db.Column(db.String(60), index=True)
+    verified = db.Column(db.Boolean, index=True)
 
     def is_admin(self):
         return self.email == 'admin'

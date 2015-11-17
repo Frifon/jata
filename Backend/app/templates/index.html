@@ -158,22 +158,6 @@
 		<script type="text/javascript">
 			$("#reg").submit(function(e) {
 
-			    var url = "/api/sms/send_sms";
-
-			    $.ajax({
-			           type: "POST",
-			           url: url,
-			           data: $("#reg").serialize(),
-			           success: function(data)
-			           {
-			           },
-			           error: function(data)
-			           {
-			                alert("ERROR: " + JSON.parse(data.responseText).message);
-			           }
-			         });
-
-
 			    url = "/api/auth/reg";
 
 			    $.ajax({
@@ -182,10 +166,16 @@
 			           data: $("#reg").serialize(),
 			           success: function(data)
 			           {
-			           		var xhttp = new XMLHttpRequest();
+							var xhttp = new XMLHttpRequest();
 			           		xhttp.open("POST", "/login", false);
 							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							xhttp.send($("#reg").serialize());
+
+							xhttp = new XMLHttpRequest();
+			           		xhttp.open("POST", "/api/sms/send", false);
+							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhttp.send('');
+
 							window.location="/";
 			           },
 			           error: function(data)
