@@ -1,8 +1,14 @@
-import os, sys
-from config import basedir
+import sys
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 app = Flask(__name__)
 app.config.from_object('config')

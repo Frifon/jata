@@ -70,7 +70,7 @@
 							<div class="panel-footer">
 								<div class="row ts-display-summary">
 									<div class="col-xs-4 ts-photo">
-										<img src="{{url_for('static', filename='img/anonim.jpg')}}" width="100%">
+										<img src="{{url_for('static', filename=car.car_photo)}}" width="100%">
 									</div>
 									<div class="col-xs-8">
 										<div class="row padding-bottom-21 font-18 b ts-name">
@@ -216,7 +216,7 @@
 										<div class="row padding-bottom-21 ts-photo-change">
 											<div class="col-xs-6">
 												<div class="padding-bottom-7">Текущее изображение ТС</div>
-												<div class="tek-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}});" >
+												<div class="tek-photo" style="background-image: url({{url_for('static', filename=car.car_photo)}});" >
 													
 												</div>
 											</div>
@@ -248,21 +248,26 @@
 								</div>
 							</form>
 						<!-- / Форма добавления информации по ТС -->
+
 						<script type="text/javascript">
 							$("#change_car").submit(function(e) {
 
-							    var url = "/change_car/{{car.id}}";
+							    var formData = new FormData($(this)[0]);
 
 							    $.ajax({
 							           type: "POST",
-							           url: url,
-							           data: $("#change_car").serialize(),
+							           url: "/change_car/{{car.id}}",
+							           data: formData,
+							           async: false,
+									   cache: false,
+									   contentType: false,
+									   processData: false,
 							           success: function(data)
 							           {
 							           		var xhttp = new XMLHttpRequest();
 							           		xhttp.open("POST", "/login", false);
 											xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-											xhttp.send($("#change_car").serialize());
+											xhttp.send(data);
 											window.location="/ts";
 							           },
 							           error: function(data)
@@ -294,7 +299,7 @@
 	
 	
 <div id="Modal-delete-ts" class="modal fade">
-	<form action="" method="post">
+	<form action="{{url_for('delete_car', car_id=car.id)}}" method="post" id="delete_car", name="delete_car">
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">
@@ -314,7 +319,7 @@
 		<div class="modal-footer">
 			<div class="row">
 				<div class="col-xs-12">
-					<button class="btn btn-primary" name="action_ts" value="delete_ts" style="vertical-align:middle">Да, удалить ТС</button>
+					<button class="btn btn-primary" id="delete_car" type="submit" name="delete_car" style="vertical-align:middle">Да, удалить ТС</button>
 					<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Отмена</button>
 				</div>
 
@@ -322,7 +327,39 @@
 		</div>
 	  </div>
 	</div>
-	</form>	
+	</form>
+
+	<script type="text/javascript">
+		$("#delete_car").submit(function(e) {
+
+		    var formData = new FormData($(this)[0]);
+
+		    $.ajax({
+		           type: "POST",
+		           url: "/delete_car/{{car.id}}",
+		           data: formData,
+		           async: false,
+				   cache: false,
+				   contentType: false,
+				   processData: false,
+		           success: function(data)
+		           {
+		           		var xhttp = new XMLHttpRequest();
+		           		xhttp.open("POST", "/login", false);
+						xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						xhttp.send(data);
+						window.location="/ts";
+		           },
+		           error: function(data)
+		           {
+		                alert("ERROR: " + JSON.parse(data.responseText).message);
+		           }
+		         });
+
+		    e.preventDefault();
+		});
+	</script>
+
 </div>
 	
 	

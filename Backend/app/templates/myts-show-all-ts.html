@@ -85,7 +85,7 @@
 								{% for car in cars %}
 									<div class="col-xs-6 ts-parametrs padding-bottom-21">
 										<div class="row">
-											<a href="{{url_for('edit_ts', car_id=car.id)}}" method="post" class="col-xs-4 ts-photo" style="background-image: url({{url_for('static', filename='img/anonim.jpg')}})"></a>
+											<a href="{{url_for('edit_ts', car_id=car.id)}}" method="post" class="col-xs-4 ts-photo" style="background-image: url('{{url_for('static', filename=car.car_photo)}}')"></a>
 											<div class="col-xs-8">
 												<div class="ts-title">
 													<a href="{{url_for('edit_ts', car_id=car.id)}}" method="post">{{car.car_brand}} {{car.car_model}}</a>
