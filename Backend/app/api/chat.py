@@ -18,15 +18,23 @@ def addMessage():
     receiver = request.form.get('to')
     message = request.form.get('message')
     if not receiver or not message:
-        return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (to or message)'}),
-                             400)
+        return make_response(jsonify(
+            {'code': 0, 'message': 'Missing parameters (to or message)'}), 400)
     try:
-        mes_hist = MessageHistory.query.filter(MessageHistory.user_email == g.user.email, MessageHistory.dest_email == receiver).one()
+        mes_hist = MessageHistory.query.filter(
+            MessageHistory.user_email == g.user.email,
+            MessageHistory.dest_email == receiver).one()
     except NoResultFound:
-        db.session.add(MessageHistory(user_email=g.user.email, dest_email=receiver, timestamp=0))
+        db.session.add(MessageHistory(
+            user_email=g.user.email, dest_email=receiver, timestamp=0))
     timestamp = datetime.datetime.utcnow().timestamp()
-    new_message = Message(user_email=g.user.email, dest_email=receiver, message=message, timestamp=timestamp)
+
+    new_message = Message(
+        user_email=g.user.email,
+        dest_email=receiver,
+        message=message,
+        timestamp=timestamp)
+
     db.session.add(new_message)
     db.session.commit()
     return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
@@ -38,15 +46,18 @@ def getMessages():
     timestamp = request.args['timestamp']
     author = request.args['user']
     if not author:
-        author = "qkjbdlkjndflkjsbdlfk"       # Well designed by Artem (OK, at least it's surely not an e-mail)
+        author = "qkjbdlkjndflkjsbdlfk"
     if not timestamp:
-        return make_response(jsonify({'code': 0,
-                                      'message': 'Missing parameters (timestamp)'}),
-                             400)
+        return make_response(jsonify(
+            {'code': 0, 'message': 'Missing parameters (timestamp)'}), 400)
     messages = Message.query.filter(or_(
-                                        and_(Message.user_email == g.user.email, Message.dest_email == author), 
-                                        and_(Message.dest_email == g.user.email, Message.user_email == author)
-                                        ), Message.timestamp >= timestamp).order_by(Message.timestamp).all()
+                                    and_(Message.user_email == g.user.email,
+                                         Message.dest_email == author),
+                                    and_(Message.dest_email == g.user.email,
+                                         Message.user_email == author)
+                                    ),
+                                    Message.timestamp >= timestamp).order_by(
+        Message.timestamp).all()
     return make_response(
         jsonify({
             'code': 0,
@@ -67,7 +78,9 @@ def manageSeenMessages():
                 'message': 'Missing parameters (user or timestamp)'}),
             400)
     try:
-        mes_hist = MessageHistory.query.filter(MessageHistory.dest_email == g.user.email, MessageHistory.user_email == user).one()
+        mes_hist = MessageHistory.query.filter(
+            MessageHistory.dest_email == g.user.email,
+            MessageHistory.user_email == user).one()
         mes_hist.timestamp = timestamp
         db.session.commit()
     except NoResultFound:
@@ -80,7 +93,10 @@ def manageSeenMessages():
 def getSeenTimestamps():
     ans = []
     for mh in g.user.send_to_me_history:
-        new = len(Message.query.filter(Message.dest_email == mh.dest_email, Message.user_email == mh.user_email, Message.timestamp > mh.timestamp).all())
+        new = len(Message.query.filter(
+            Message.dest_email == mh.dest_email,
+            Message.user_email == mh.user_email,
+            Message.timestamp > mh.timestamp).all())
         if new != 0:
             ans.append({'new': new, 'from': mh.user_email})
     return make_response(jsonify({

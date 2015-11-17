@@ -10,9 +10,11 @@ error_log = 'error'
 start_admin = 'db_admin.py'
 error_log_admin = 'db_error'
 
+
 def run(command):
     print (command)
     system(command)
+
 
 def is_lin():
     return _platform != "win32"
@@ -25,14 +27,20 @@ if __name__ == "__main__":
     if args.database:
         if is_lin():
             run("rm {0}/{1}".format(project_dir, database_name))
-            run("python3 {0}/{1}".format(project_dir, database_create_script))
+            run("python3 {0}/{1}".format(
+                project_dir, database_create_script))
         else:
             run("del {0}\\{1}".format(project_dir, database_name))
-            run("py -3 {0}\\{1}".format(project_dir, database_create_script))          
+            run("py -3 {0}\\{1}".format(project_dir, database_create_script))
 
     if is_lin():
-        run("nohup python3 {0}/{1} 1>{0}/{2} 2>&1 &".format(project_dir, start_script, error_log))
-        run("nohup python2.7 {0}/{1} 1>{0}/{2} 2>&1 &".format(project_dir, start_admin, error_log_admin))
+        run("nohup python3 {0}/{1} 1>{0}/{2} 2>&1 &".format(
+            project_dir, start_script, error_log))
+
+        run("nohup python2.7 {0}/{1} 1>{0}/{2} 2>&1 &".format(
+            project_dir, start_admin, error_log_admin))
     else:
-        run("start py -3 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(project_dir, start_script, error_log))
-        run("start py -2 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(project_dir, start_admin, error_log_admin))
+        run("start py -3 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(
+            project_dir, start_script, error_log))
+        run("start py -2 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(
+            project_dir, start_admin, error_log_admin))

@@ -10,7 +10,7 @@ from app.models import User, Session, ROLE_CAR, ROLE_ADD
 api_auth = Blueprint('api_auth', __name__)
 
 
-@api_auth.route('/api/auth/login', methods = ['POST'])
+@api_auth.route('/api/auth/login', methods=['POST'])
 def login():
     response = {'code': 0,
                 'message': 'Missing parameters (email or password)'}
@@ -20,7 +20,8 @@ def login():
         return make_response(jsonify(response), 400)
     user = User.query.filter_by(email=email, password=password).first()
     if user is not None:
-        timestamp = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).timestamp()
+        timestamp = (datetime.datetime.utcnow() +
+                     datetime.timedelta(days=1)).timestamp()
         token = make_secure_token(email, password, str(timestamp))
         timestamp = int(timestamp)
         db.session.add(Session(id=user.id, timestamp=timestamp, token=token))
@@ -42,7 +43,7 @@ def login():
     return make_response(jsonify(response), 401)
 
 
-@api_auth.route('/api/auth/check', methods = ['POST'])
+@api_auth.route('/api/auth/check', methods=['POST'])
 def check():
     response = {'code': 0,
                 'message': 'Token expired or does not exist'}
@@ -58,7 +59,7 @@ def check():
     return make_response(jsonify(response), 401)
 
 
-@api_auth.route('/api/auth/logout', methods = ['POST'])
+@api_auth.route('/api/auth/logout', methods=['POST'])
 def logout():
     response = {'code': 0,
                 'message': 'Already not authorized (or token forgotten)'}
@@ -75,6 +76,7 @@ def logout():
 def reg():
     def construct_response(code, message):
         return {'code': code, 'message': message}
+
     def missing_param(p):
         return construct_response(1, 'Missing parameter: {0}'.format(p))
     email = request.form.get('email')
@@ -97,14 +99,24 @@ def reg():
         return make_response(jsonify(missing_param('userrole')), 400)
     user = User.query.filter_by(email=email).first()
     if password != confirm_password:
-        return make_response(jsonify(construct_response(2, 'Passwords do not match up')), 400)
+        return make_response(
+            jsonify(construct_response(2, 'Passwords do not match up')), 400)
     if user is not None:
-        return make_response(jsonify(construct_response(3, 'User with this e-mail already exists')), 400)
+        return make_response(jsonify(construct_response(
+            3, 'User with this e-mail already exists')), 400)
     if userrole == "reklamodatel":
         userrole = ROLE_ADD
     else:
         userrole = ROLE_CAR
-    new_user = User(email=email, password=password, tel_number=tel_number, city=city, role=userrole, verified=False)
+
+    new_user = User(
+        email=email,
+        password=password,
+        tel_number=tel_number,
+        city=city,
+        role=userrole,
+        verified=False)
+
     db.session.add(new_user)
     db.session.commit()
     return make_response(jsonify(construct_response(0, 'OK')), 200)

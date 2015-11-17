@@ -1,4 +1,5 @@
-import sys, inspect
+import sys
+import inspect
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 import app.models

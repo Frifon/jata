@@ -4,7 +4,8 @@ import os
 import json
 import datetime
 from werkzeug import secure_filename
-from flask import render_template, redirect, url_for, request, g, jsonify, make_response
+from flask import render_template, redirect, url_for, request, g, jsonify
+from flask import make_response
 
 from app import app, db, allowed_file
 from app.forms import RegForm
@@ -16,7 +17,8 @@ from app.decorators import login_required, after_this_request
 #     headers = datastructures.Headers()
 #     if method is 'POST':
 #         headers.add('Content-Type', 'application/x-www-form-urlencoded')
-#     with app.test_request_context(path, method=method, data=data, headers=headers):
+#     with app.test_request_context(
+#             path, method=method, data=data, headers=headers):
 #         return app.full_dispatch_request()
 
 
@@ -24,9 +26,14 @@ from app.decorators import login_required, after_this_request
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
-    rv = app.test_client().post('/api/auth/login', data={'email': email, 'password': password}, follow_redirects=True)
+
+    rv = app.test_client().post(
+        '/api/auth/login',
+        data={'email': email, 'password': password},
+        follow_redirects=True)
+
     result = json.loads(rv.data.decode('unicode_escape'))
-    if result is None or not 'data' in result:
+    if result is None or 'data' not in result:
         return redirect(url_for('index'))
 
     @after_this_request
@@ -38,7 +45,8 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    # rv = app.test_client().post('/api/auth/logout', data={'token': g.token}, follow_redirects=True)
+    # rv = app.test_client().post(
+    #     '/api/auth/logout', data={'token': g.token}, follow_redirects=True)
     # result = json.loads(rv.data.decode('unicode_escape'))
     return redirect(url_for('index'))
 
@@ -71,12 +79,14 @@ def change_password():
     if not new_password:
         return make_response(jsonify(missing_param('new_password')), 400)
     if not new_password_confirmation:
-        return make_response(jsonify(missing_param('new_password_confirmation')), 400)
+        return make_response(
+            jsonify(missing_param('new_password_confirmation')), 400)
 
     if old_password != g.user.password:
         return make_response(jsonify(incorrect_param('old_password')), 400)
     if new_password != new_password_confirmation:
-        return make_response(jsonify(incorrect_param('new_password_confirmation')), 400)
+        return make_response(
+            jsonify(incorrect_param('new_password_confirmation')), 400)
 
     g.user.password = new_password
     db.session.commit()
@@ -88,7 +98,8 @@ def change_password():
 @login_required
 def profile():
     if g.user.role == 2:
-        representatives = Representative.query.filter_by(company_id=g.session.id).all()
+        representatives = Representative.query.filter_by(
+            company_id=g.session.id).all()
         return render_template('profile.html', representatives=representatives)
     else:
         return render_template('profile.html')
@@ -149,18 +160,24 @@ def update_profile(role):
 
     elif role == 2:
         company_name = request.form.get('company-name')
-        company_representative_name = request.form.get('company-representative-name')
-        company_representative_email = request.form.get('company-representative-email')
-        company_representative_phone = request.form.get('company-representative-phone')
+        company_representative_name = request.form.get(
+            'company-representative-name')
+        company_representative_email = request.form.get(
+            'company-representative-email')
+        company_representative_phone = request.form.get(
+            'company-representative-phone')
 
         if not company_name:
             return make_response(jsonify(missing_param('company_name')), 400)
         if not company_representative_name:
-            return make_response(jsonify(missing_param('company_representative_name')), 400)
+            return make_response(
+                jsonify(missing_param('company_representative_name')), 400)
         if not company_representative_phone:
-            return make_response(jsonify(missing_param('company_representative_phone')), 400)
+            return make_response(
+                jsonify(missing_param('company_representative_phone')), 400)
         if not company_representative_email:
-            return make_response(jsonify(missing_param('company_representative_email')), 400)
+            return make_response(
+                jsonify(missing_param('company_representative_email')), 400)
         if not company_name:
             return make_response(jsonify(missing_param('company_name')), 400)
 
@@ -249,7 +266,8 @@ def chat():
     users = []
     if g.user:
         if g.user.is_admin():
-            users = [user.email for user in User.query.all() if not(user.is_admin())]
+            all_users = User.query.all()
+            users = [user.email for user in all_users if not(user.is_admin())]
         else:
             users = [u"Техническая поддержка"]
     return render_template('chat.html', users=users)
@@ -359,11 +377,11 @@ def change_car(car_id):
     return make_response(jsonify(construct_response(0, 'OK')), 200)
 
 
-#################### ERROR HANDLERS ####################
+# ################### ERROR HANDLERS ####################
 @app.errorhandler(405)
 def error405(error):
     url = str(request.base_url)
-    if not 'api' in url:
+    if 'api' not in url:
         return redirect(url_for('index'))
     return make_response(jsonify({'error': 'Method not allowed',
                                   'code': 405}))
@@ -372,7 +390,7 @@ def error405(error):
 @app.errorhandler(404)
 def error404(error):
     url = str(request.base_url)
-    if not 'api' in url:
+    if 'api' not in url:
         return redirect(url_for('index'))
     return make_response(jsonify({'error': 'Method not found',
                                   'code': 404}))

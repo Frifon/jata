@@ -38,13 +38,22 @@ class Message(db.Model):
     __table_args__ = {'sqlite_autoincrement': True}
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    user_email = db.Column(db.String(120), db.ForeignKey(User.email), index=True)
-    dest_email = db.Column(db.String(120), db.ForeignKey(User.email), index=True)
+    user_email = db.Column(
+        db.String(120), db.ForeignKey(User.email), index=True)
+    dest_email = db.Column(
+        db.String(120), db.ForeignKey(User.email), index=True)
     message = db.Column(db.String(3000), index=True)
     timestamp = db.Column(db.Float, index=True)
 
-    user = relationship('User', backref=backref('send_by_me_messages', order_by=timestamp), primaryjoin='Message.user_email == User.email')
-    dest = relationship('User', backref=backref('send_to_me_messages', order_by=timestamp), primaryjoin='Message.dest_email == User.email')
+    user = relationship(
+        'User',
+        backref=backref('send_by_me_messages', order_by=timestamp),
+        primaryjoin='Message.user_email == User.email')
+
+    dest = relationship(
+        'User',
+        backref=backref('send_to_me_messages', order_by=timestamp),
+        primaryjoin='Message.dest_email == User.email')
 
     def serialize(self):
         return {
@@ -55,29 +64,50 @@ class Message(db.Model):
         }
 
     def __repr__(self):
-        return u'{0} ==> {1} : {2} ({3} : {4})'.format(self.user, self.dest, self.message, self.id, self.timestamp)
+        return u'{0} ==> {1} : {2} ({3} : {4})'.format(
+            self.user, self.dest, self.message, self.id, self.timestamp)
 
 
 class Session(db.Model):
-    token = db.Column(db.String(128), primary_key=True, index=True, unique=True)
+    token = db.Column(
+        db.String(128), primary_key=True, index=True, unique=True)
     timestamp = db.Column(db.Integer)
     id = db.Column(db.Integer, db.ForeignKey(User.id), index=True)
-    user = relationship('User', backref=backref('sessions', order_by=timestamp))
+    user = relationship(
+        'User', backref=backref('sessions', order_by=timestamp))
 
     def is_valid(self):
         return self.timestamp >= int(datetime.utcnow().timestamp())
 
     def __repr__(self):
-        return '<Session token: {0} timestamp: {1} id: {2} user: {3}>'.format(self.token, self.timestamp, self.id, self.user)
+        return '<Session token: {0} timestamp: {1} id: {2} user: {3}>'.format(
+            self.token, self.timestamp, self.id, self.user)
 
 
 class MessageHistory(db.Model):
-    user_email = db.Column(db.String(120), db.ForeignKey(User.email), primary_key=True, index=True)
-    dest_email = db.Column(db.String(120), db.ForeignKey(User.email), primary_key=True, index=True)
+    user_email = db.Column(
+        db.String(120),
+        db.ForeignKey(User.email),
+        primary_key=True,
+        index=True)
+
+    dest_email = db.Column(
+        db.String(120),
+        db.ForeignKey(User.email),
+        primary_key=True,
+        index=True)
+
     timestamp = db.Column(db.Float)
 
-    user = relationship('User', backref=backref('send_by_me_history', order_by=dest_email), primaryjoin='MessageHistory.user_email == User.email')
-    dest = relationship('User', backref=backref('send_to_me_history', order_by=user_email), primaryjoin='MessageHistory.dest_email == User.email')
+    user = relationship(
+        'User',
+        backref=backref('send_by_me_history', order_by=dest_email),
+        primaryjoin='MessageHistory.user_email == User.email')
+
+    dest = relationship(
+        'User',
+        backref=backref('send_to_me_history', order_by=user_email),
+        primaryjoin='MessageHistory.dest_email == User.email')
 
     def serialize(self):
         return {
@@ -113,7 +143,7 @@ class Car(db.Model):
     car_photo = db.Column(db.String(30), index=True)
 
 
-######################### GPS ##########################
+# ######################## GPS ##########################
 
 class Point(db.Model):
     id = db.Column(db.Integer, primary_key=True)

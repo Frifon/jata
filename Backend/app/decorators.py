@@ -7,9 +7,9 @@ from app import app
 from app.models import Session, User
 
 
-###################### CONSTANTS #######################
+# ##################### CONSTANTS #######################
 default_user = User(id=12345678987654321)   # DEPRECATED
-################## ################# ###################
+# ################# ################# ###################
 
 
 @app.before_request
@@ -65,6 +65,7 @@ def api_login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not g.auth:
-            return make_response(jsonify({'code': 0, 'message': 'Not authorized'}), 401)
+            return make_response(jsonify(
+                {'code': 0, 'message': 'Not authorized'}), 401)
         return f(*args, **kwargs)
     return decorated_function

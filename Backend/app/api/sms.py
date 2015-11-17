@@ -8,7 +8,7 @@ from app import db
 from app.decorators import api_login_required
 
 
-ACCOUNT_SID = 'AC3bb495add54775d115ea318db0ea9a66' 
+ACCOUNT_SID = 'AC3bb495add54775d115ea318db0ea9a66'
 AUTH_TOKEN = '3d7be37e37ba9f0e0f1a08b3069da139'
 secret_salt = 's3CrET_*_5a|T___fuk7h43f78g743fhkusehf74vufdhgk'
 
@@ -16,7 +16,8 @@ api_sms = Blueprint('api_sms', __name__)
 
 
 def preparePhoneNumber():
-    return '+7' + g.user.tel_number.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+    return '+7' + g.user.tel_number.replace(
+        ' ', '').replace('-', '').replace('(', '').replace(')', '')
 
 
 def genCode():
@@ -32,11 +33,12 @@ def sendSms():
 
     code = genCode()
 
-    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN) 
+    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(
-        to=preparePhoneNumber(), 
-        from_="+18582174804", 
-        body=u"Здравствуйте.\nВаш код подтверждения: {0}\nJata.ru".format(str(code)),
+        to=preparePhoneNumber(),
+        from_="+18582174804",
+        body=u"Здравствуйте.\nВаш код подтверждения: {0}\nJata.ru".format(
+            str(code)),
     )
     return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
 

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, g, request, jsonify, make_response
 from sqlalchemy import desc
-import json, datetime
+import json
+import datetime
 
 from app import db
 from app.models import Point
@@ -34,7 +35,8 @@ def apiGPS():
                           longtitude=raw_point['longtitude'],
                           altitude=raw_point['altitude'],
                           accuracy=raw_point['accuracy'],
-                          timestamp=int(datetime.datetime.utcnow().timestamp()))
+                          timestamp=int(
+                              datetime.datetime.utcnow().timestamp()))
             db.session.add(point)
             db.session.commit()
 
@@ -53,9 +55,15 @@ def apiGPS():
         if not timestamp_start:
             timestamp_start = 0
         if not timestamp_end:
-            timestamp_end = int((datetime.datetime.utcnow() + datetime.timedelta(weeks=1000)).timestamp())
+            timestamp_end = int(
+                (datetime.datetime.utcnow() +
+                    datetime.timedelta(weeks=1000)).timestamp())
 
-        query = db.session.query(Point).filter(Point.user_id == user_id, Point.timestamp >= timestamp_start, Point.timestamp <= timestamp_start).order_by(desc('timestamp')).all()
+        query = db.session.query(Point).filter(
+            Point.user_id == user_id,
+            Point.timestamp >= timestamp_start,
+            Point.timestamp <= timestamp_start).order_by(
+            desc('timestamp')).all()
 
         response = {'code': 1,
                     'message': json.dumps(query)}
