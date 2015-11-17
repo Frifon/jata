@@ -275,6 +275,26 @@ def edit_ts(car_id):
     return render_template('myts-show-edit-ts.html', car=car)
 
 
+@app.route('/delete_car/<int:car_id>', methods=['POST'])
+@login_required
+def delete_car(car_id):
+
+    def construct_response(code, message):
+        return {'code': code, 'message': message}
+
+    def incorrect_param(p):
+        return construct_response(1, 'Incorrect parameter: {0}'.format(p))
+
+    def missing_param(p):
+        return construct_response(1, 'Missing parameter: {0}'.format(p))
+
+    car = Car.query.filter_by(id=car_id).all()[0]
+    db.session.delete(car)
+    db.session.commit()
+
+    return make_response(jsonify(construct_response(0, 'OK')), 200)
+
+
 @app.route('/change_car/<int:car_id>', methods=['POST'])
 @login_required
 def change_car(car_id):

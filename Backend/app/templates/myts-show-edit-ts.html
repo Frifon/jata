@@ -299,7 +299,7 @@
 	
 	
 <div id="Modal-delete-ts" class="modal fade">
-	<form action="" method="post">
+	<form action="{{url_for('delete_car', car_id=car.id)}}" method="post" id="delete_car", name="delete_car">
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">
@@ -319,7 +319,7 @@
 		<div class="modal-footer">
 			<div class="row">
 				<div class="col-xs-12">
-					<button class="btn btn-primary" name="action_ts" value="delete_ts" style="vertical-align:middle">Да, удалить ТС</button>
+					<button class="btn btn-primary" id="delete_car" type="submit" name="delete_car" style="vertical-align:middle">Да, удалить ТС</button>
 					<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Отмена</button>
 				</div>
 
@@ -327,7 +327,39 @@
 		</div>
 	  </div>
 	</div>
-	</form>	
+	</form>
+
+	<script type="text/javascript">
+		$("#delete_car").submit(function(e) {
+
+		    var formData = new FormData($(this)[0]);
+
+		    $.ajax({
+		           type: "POST",
+		           url: "/delete_car/{{car.id}}",
+		           data: formData,
+		           async: false,
+				   cache: false,
+				   contentType: false,
+				   processData: false,
+		           success: function(data)
+		           {
+		           		var xhttp = new XMLHttpRequest();
+		           		xhttp.open("POST", "/login", false);
+						xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						xhttp.send(data);
+						window.location="/ts";
+		           },
+		           error: function(data)
+		           {
+		                alert("ERROR: " + JSON.parse(data.responseText).message);
+		           }
+		         });
+
+		    e.preventDefault();
+		});
+	</script>
+
 </div>
 	
 	
