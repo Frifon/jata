@@ -52,6 +52,9 @@ html {
 .margin-top-0 {
 	margin-top: 0;
 	}
+.margin-top-5 {
+	margin-top: 5px;
+	}
 .margin-top-7 {
 	margin-top: 7px;
 	}
@@ -78,6 +81,9 @@ html {
 	}
 .margin-left-50 {
 	margin-left: 50px;
+	}
+.margin-bottom-0 {
+	margin-bottom: 0px;
 	}
 .margin-bottom-7 {
 	margin-bottom: 7px;
@@ -116,6 +122,9 @@ html {
 .padding-left-14 {
 	padding-left: 14px;
 	}
+.padding-left-15 {
+	padding-left: 15px;
+	}
 .padding-left-21 {
 	padding-left: 21px;
 	}
@@ -127,6 +136,9 @@ html {
 	}
 .padding-right-14 {
 	padding-right: 14px;
+	}
+.padding-right-15 {
+	padding-right: 15px;
 	}
 .padding-right-21 {
 	padding-right: 21px;
@@ -186,6 +198,7 @@ html {
     text-decoration: none;
     text-align: center;
     background: rgb(0, 51, 102);
+	border-color: #ccc;
     border-radius: 3px;
 	}
 	.btn:hover {
@@ -232,7 +245,63 @@ input {
 	height: 34px;
 	font-size: 14px;
 	}
-	
+
+.input-group-btn .repeat_remove_button:not(:last-child),
+.input-group-btn .repeat_append_button:not(:last-child) {
+	border-left-width: 0;
+	border-right-width: 0;
+	}
+	.input-group-btn .repeat_append_button,
+	.input-group-btn .repeat_remove_button {
+		border-top-color: #036;
+		border-bottom-color: #036;
+		}
+		.input-group-btn .repeat_append_button:hover,
+		.input-group-btn .repeat_remove_button:hover {
+			background-color: #00468C;
+			color: #fff;
+			}
+	.repeat_remove_button.disabled {
+		display: none;
+		}
+	.form-control.disabled .input-group-btn btn,
+	.form-control[disabled="disabled"] + .input-group-btn .btn {
+		color: #aaa;
+		background-color: #eee;
+		border-top-color: #ccc;
+		border-bottom-color: #ccc;
+		}
+
+
+
+
+
+/*
+ *	Кнопка очистки инпута
+ */.input-with-x {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTQzOEVEQkZFMjRDMTFFM0JDMDVDMjFEMDk4MTc0QTMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTQzOEVEQzBFMjRDMTFFM0JDMDVDMjFEMDk4MTc0QTMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBNDM4RURCREUyNEMxMUUzQkMwNUMyMUQwOTgxNzRBMyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBNDM4RURCRUUyNEMxMUUzQkMwNUMyMUQwOTgxNzRBMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pqwf5ocAAACpSURBVHjaYvT09GRjYGAQAuIXDISBBBC/3rZt219cCpighq0GYjkChslB1YniU8QEdVk0EC/FY6gcVD6akE+YoPQjPIYiG/aIUJgwIbGxGUqSYegGohtqQ6phIMCCRQykuRKIDwOxLSmGYXMhzJvtUMPaiYh9vAYih9kRImIfr4HYIuARqYYyERGbJBnKBM1OhGIT2VAJQrH8DohDicjLj6DqXuNTBBBgAL/OL+VnHD9pAAAAAElFTkSuQmCC');
+    background-position: 150% 50%;
+    background-repeat: no-repeat;
+    transition: background 0.4s;
+    padding-right: 27px !important;
+	}
+.input-with-x__x {
+    /* когда нужно отобразить крестик, перемещаем в правый конец инпута */
+    background-position: 100% 50%;
+	}
+.input-with-x__x-over {
+    /* и подготовим стиль для ховера по крестику */
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QkI2QjEyRDJFMjRDMTFFMzgyRUZCRkUwOTc4ODc4NzUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QkI2QjEyRDNFMjRDMTFFMzgyRUZCRkUwOTc4ODc4NzUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCQjZCMTJEMEUyNEMxMUUzODJFRkJGRTA5Nzg4Nzg3NSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCQjZCMTJEMUUyNEMxMUUzODJFRkJGRTA5Nzg4Nzg3NSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiaX4hIAAACpSURBVHjaYvwVws7GwMAgBMQvGAgDCSB+zbr6x19cCpighq0GYjkChslB1YniU8QEdVk0EC/FY6gcVD6akE+YoPQjPIYiG/aIUJgwIbGxGUqSYegGohtqQ6phIMCCRQykuRKIDwOxLSmGYXMhzJvtUMPaiYh9vAYih9kRImIfr4HYIuARqYYyERGbJBnKBM1OhGIT2VAJQrH8DohDicjLj6DqXuNTBBBgANiWL+VbATXyAAAAAElFTkSuQmCC');
+    cursor: pointer;
+	}
+.input-with-x::-ms-clear {
+    /* убираем родной крестик очистки в IE */
+    display: none;
+	}
+
+
+
+
 /*
  * Вертикальное выравнивание
  */
@@ -516,6 +585,168 @@ input {
 
 
 
+
+/*
+ *	Выбор времени - циферблат
+ */
+.bootstrap-timepicker {
+  position: relative;
+}
+.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown-menu {
+  left: auto;
+  right: 0;
+}
+.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown-menu:before {
+  left: auto;
+  right: 12px;
+}
+.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown-menu:after {
+  left: auto;
+  right: 13px;
+}
+.bootstrap-timepicker .input-group-addon {
+  cursor: pointer;
+}
+.bootstrap-timepicker .input-group-addon i {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+.bootstrap-timepicker .timepicker-input-start,
+.bootstrap-timepicker .timepicker-input-end {
+	padding-left: 7px;
+	padding-right: 7px;
+	}
+.bootstrap-timepicker .timepicker-input-start + .input-group-addon,
+.bootstrap-timepicker .timepicker-input-end + .input-group-addon {
+    color: #fff;
+	background: #036;
+    border: 1px solid #036;
+	}
+	.bootstrap-timepicker .timepicker-input-start.disabled + .input-group-addon,
+	.bootstrap-timepicker .timepicker-input-end.disabled + .input-group-addon {
+		color: #ccc;
+		background: #eee;
+		border: 1px solid #ccc;
+		}
+.bootstrap-timepicker-widget.dropdown-menu {
+  padding: 4px;
+}
+.bootstrap-timepicker-widget.dropdown-menu.open {
+  display: inline-block;
+}
+.bootstrap-timepicker-widget.dropdown-menu:before {
+  border-bottom: 7px solid rgba(0, 0, 0, 0.2);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+}
+.bootstrap-timepicker-widget.dropdown-menu:after {
+  border-bottom: 6px solid #FFFFFF;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+}
+.bootstrap-timepicker-widget.timepicker-orient-left:before {
+  left: 6px;
+}
+.bootstrap-timepicker-widget.timepicker-orient-left:after {
+  left: 7px;
+}
+.bootstrap-timepicker-widget.timepicker-orient-right:before {
+  right: 6px;
+}
+.bootstrap-timepicker-widget.timepicker-orient-right:after {
+  right: 7px;
+}
+.bootstrap-timepicker-widget.timepicker-orient-top:before {
+  top: -7px;
+}
+.bootstrap-timepicker-widget.timepicker-orient-top:after {
+  top: -6px;
+}
+.bootstrap-timepicker-widget.timepicker-orient-bottom:before {
+  bottom: -7px;
+  border-bottom: 0;
+  border-top: 7px solid #999;
+}
+.bootstrap-timepicker-widget.timepicker-orient-bottom:after {
+  bottom: -6px;
+  border-bottom: 0;
+  border-top: 6px solid #ffffff;
+}
+.bootstrap-timepicker-widget a.btn,
+.bootstrap-timepicker-widget input {
+  border-radius: 4px;
+}
+.bootstrap-timepicker-widget table {
+  width: 100%;
+  margin: 0;
+}
+.bootstrap-timepicker-widget table td {
+  text-align: center;
+  height: 30px;
+  margin: 0;
+  padding: 2px;
+}
+.bootstrap-timepicker-widget table td:not(.separator) {
+  min-width: 30px;
+}
+.bootstrap-timepicker-widget table td span {
+  width: 100%;
+  padding-right: 0;
+}
+.bootstrap-timepicker-widget table td a {
+  border: 1px transparent solid;
+  width: 100%;
+  display: inline-block;
+  margin: 0;
+  padding: 8px 0;
+  outline: 0;
+  color: #333;
+}
+.bootstrap-timepicker-widget table td a:hover {
+  text-decoration: none;
+  background-color: #eee;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border-color: #ddd;
+}
+.bootstrap-timepicker-widget table td a i {
+  margin-top: 2px;
+  font-size: 18px;
+}
+.bootstrap-timepicker-widget table td input {
+  width: 25px;
+  margin: 0;
+  text-align: center;
+}
+.bootstrap-timepicker-widget .modal-content {
+  padding: 4px;
+}
+@media (min-width: 767px) {
+  .bootstrap-timepicker-widget.modal {
+    width: 200px;
+    margin-left: -100px;
+  }
+}
+@media (max-width: 767px) {
+  .bootstrap-timepicker {
+    width: 100%;
+  }
+  .bootstrap-timepicker .dropdown-menu {
+    width: 100%;
+  }
+}
+
+
+
+
 /*
  *	Выбор цвета - палитра
  */
@@ -686,7 +917,16 @@ input {
 	.glyphicon {
 		padding-right: 7px;
 		}
-
+		.input-group-addon .glyphicon {
+			padding-right: 0;
+			line-height: 1;
+			}
+			.input-group-sm .input-group-addon {
+				line-height: 1;
+				}
+			.input-group-sm .input-group-addon .glyphicon {
+				font-size: 14px;
+				}
 						
 	#page-wrapper {
     	position: relative !important;
@@ -922,18 +1162,41 @@ input {
 
 
 
+#map {
+	width: 100%;
+}
+.map-movement {
+	height: 400px;
+}
+.form-with-map-right .row .dropdown-menu {
+	top: initial;
+	max-width: 350px;
+	margin: 0 7px 0 15px;
+	}
+	.form-with-map-right .row .dropdown-menu a {
+		white-space: normal;
+		}
+
+	.form-with-map-right .input-group-btn .btn {
+		margin: 0;
+		}
 
 
-
-
-
-
-
-
-
-
-
-
+.form-with-map-right .row .select-dropdown {
+	min-width: 160px;
+	max-width: 300px;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+	}
+	.form-with-map-right .row .select-dropdown option {
+		padding: 3px 7px;
+		white-space: normal;
+		font-size: 14px;
+		border-bottom: 1px solid #eee;
+		overflow-y: auto !important;
+		}
+		.form-with-map-right .row .select-dropdown option:hover {
+			background-color: #eee;
+			}
 
 
 
