@@ -45,9 +45,9 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    # rv = app.test_client().post(
-    #     '/api/auth/logout', data={'token': g.token}, follow_redirects=True)
-    # result = json.loads(rv.data.decode('unicode_escape'))
+    rv = app.test_client().post(
+        '/api/auth/logout', data={'token': g.token}, follow_redirects=True)
+    result = json.loads(rv.data.decode('unicode_escape'))
     return redirect(url_for('index'))
 
 
