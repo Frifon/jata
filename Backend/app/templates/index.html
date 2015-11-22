@@ -201,6 +201,12 @@
 			});
 
 			$("#login").submit(function(e) {
+				if (document.getElementById("login_error") {
+			    	document.getElementById("login_error").className =
+					   document.getElementById("login_error").className.replace
+					      ( /(?:^|\s)hide(?!\S)/g , '' );
+					document.getElementById("login_error").className += " hide";
+				}
 				var url = "/api/auth/login";
 			    $.ajax({
 			           type: "POST",
