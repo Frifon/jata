@@ -23,11 +23,11 @@
 		<div class="welcome">
 			<div class="welcome-c">
 				<form action="{{url_for('login')}}" id="login" method="post" name="login">
+						<span class="show_on_blured_and_invalid hide" id="login_error">Введите корректные данные</span>
 						<input type="text" id="email" name="email" placeholder="Email:" style="vertical-align:middle" class="input-sm">
 						<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
 						<button class="btn btn-primary" type="submit" name="submit" value="login" style="vertical-align:middle">Войти</button>
 						<a href="#myModal" data-toggle="modal">Регистрация</a>
-
 				</form>	
 			</div>
 		</div>
@@ -43,12 +43,13 @@
 		        <form action="/api/auth/reg" id="reg" method="post" name="register">
 		        	<div class="modal-body">
 						<div class="row register-form-left-block">
+							<span class="show_on_blured_and_invalid hide" id="reg_error_1">Заполните все поля</span>
 							<div class="col-xs-6">
 								<label for="email">Введите E-mail *
 									<div class="input-group field">
 										<input type="text" id="email" name="email" placeholder="Email:" class="input-sm">
 									</div>
-									<span class="show_on_blured_and_invalid hide">Введите корректный E-mail</span>
+									<span class="show_on_blured_and_invalid hide" id="reg_error_4">Введите корректный E-mail</span>
 								</label>
 								
 								<label for="password">Введите пароль *
@@ -60,7 +61,7 @@
 									<div class="input-group field">
 										<input type="password" id="confirm_password" name="confirm_password" placeholder="Password:" class="input-sm">
 									</div>
-									<span class="show_on_blured_and_invalid hide">Пароли не совпадают</span>
+									<span class="show_on_blured_and_invalid hide" id="reg_error_2">Пароли не совпадают</span>
 								</label>
 									
 								<label for="tel_number">Введите номер телефона *
@@ -68,7 +69,6 @@
 										<span class="input-group-addon">+7</span>
 										<input type="text" id="tel_number" name="tel_number" class="input-sm tel-number" placeholder="(___) ___-__-__" class="input-sm" data-xp="type: 'phone'">
 									</div>
-									<span class="show_on_blured_and_invalid hide">Номер телефона не указан</span>
 								</label>
 								
 								<label for="city">Город проживания/передвижения *
@@ -160,6 +160,14 @@
 
 			    url = "/api/auth/reg";
 
+			    for (var i = 0; i < 10; i++) {
+			    	if (document.getElementById("reg_error_" + i.toString())) {
+				    	document.getElementById("reg_error_" + i.toString()).className =
+						   document.getElementById("reg_error_" + i.toString()).className.replace
+						      ( /(?:^|\s)hide(?!\S)/g , '' );
+						document.getElementById("reg_error_" + i.toString()).className += " hide";
+					}
+			    }
 			    $.ajax({
 			           type: "POST",
 			           url: url,
@@ -180,7 +188,12 @@
 			           },
 			           error: function(data)
 			           {
-			                alert("ERROR: " + JSON.parse(data.responseText).message);
+			           		var div = document.getElementById("reg_error_" + JSON.parse(data.responseText).code);
+			           		if (div) {
+			           			document.getElementById("reg_error_" + JSON.parse(data.responseText).code).className =
+								   document.getElementById("reg_error_" + JSON.parse(data.responseText).code).className.replace
+								      ( /(?:^|\s)hide(?!\S)/g , '' );
+			           		}
 			           }
 			         });
 
@@ -188,8 +201,6 @@
 			});
 
 			$("#login").submit(function(e) {
-
-			    var url = "/api/auth/login";
 
 			    $.ajax({
 			           type: "POST",
@@ -202,7 +213,10 @@
 			           },
 			           error: function(data)
 			           {
-			                alert("ERROR: " + JSON.parse(data.responseText).message);
+			           		document.getElementById("login_error").className =
+							   document.getElementById("login_error").className.replace
+							      ( /(?:^|\s)hide(?!\S)/g , '' );
+			                // alert("ERROR: " + JSON.parse(data.responseText).message);
 			           }
 			         });
 

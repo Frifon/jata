@@ -6,6 +6,7 @@ import datetime
 from app import db
 from app.models import User, Session, ROLE_CAR, ROLE_ADD
 
+from validate_email import validate_email
 
 api_auth = Blueprint('api_auth', __name__)
 
@@ -104,6 +105,9 @@ def reg():
     if user is not None:
         return make_response(jsonify(construct_response(
             3, 'User with this e-mail already exists')), 400)
+    if not validate_email(email):
+        return make_response(
+            jsonify(construct_response(4, 'Email is not valid')), 400)
     if userrole == "reklamodatel":
         userrole = ROLE_ADD
     else:
