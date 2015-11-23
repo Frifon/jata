@@ -111,7 +111,7 @@
 						      		<!-- / Ввод кода подтверждения по СМС -->
 						      	{% endif %}
 																				
-								{% if g.user.role == 1 %}								
+								{% if g.user.role == 1 and not g.user.surname %}								
 									<!-- заполняем Данные для ФизЛИЦА -->
 									<form action="{{url_for('update_profile', role=1)}}" method="post" id="update_profile_1", name="update_profile_1">
 										<div class="panel panel-default">
@@ -136,7 +136,7 @@
 														<div class="font-16">Телефон *</div>
 														<span class="input-group">
 																<span class="input-group-addon">+7</span>
-																<input name="user-phone" placeholder="(___) ___-__-__"  data-xp="type: 'phone', required: true" class="tel-number form-control" />
+																<input name="user-phone" placeholder="(___) ___-__-__"  data-xp="type: 'phone', required: true" class="tel-number form-control" value="{{g.user.tel_number}}"/>
 														</span>
 														<span class="show_on_blured_and_invalid">Укажите контактный телефон</span>	
 													</div>
@@ -151,7 +151,7 @@
 														<div class="font-16">E-mail *</div>
 														<span class="input-group">
 																<span class="input-group-addon">@</span>
-																<input  id="user-email" name="user-email" placeholder="E-mail"  data-xp="type: 'email', required: true" class="form-control" />
+																<input  id="user-email" name="user-email" placeholder="E-mail"  data-xp="type: 'email', required: true" class="form-control" value="{{g.user.email}}"/>
 														</span>
 														<span class="show_on_blured_and_invalid">Укажите контактный e-mail</span>
 													</div>
@@ -206,7 +206,7 @@
 
 									
 									
-								{% elif g.user.role == 2%}	
+								{% elif g.user.role == 2 and not g.user.surname %}	
 									<!-- заполняем Данные для ЮрЛИЦА -->
 									<form action="{{url_for('update_profile', role=2)}}" method="post" id="update_profile_2", name="update_profile_2">
 										<div class="panel panel-default">
@@ -307,59 +307,11 @@
 									<!-- / заполняем Данные для ЮрЛИЦА -->
 								{% endif %}
 							
-									<!-- смена пароля -->
-									<form action="{{url_for('change_password')}}" method='post' id='change_password'>
-										<div class="panel panel-default">
-											<div class="panel-heading font-18">
-												Изменение пароля
-											</div>
-											<div class="panel-body">
-												<div class="row padding-bottom-7 message-before-content">
-													<div class="col-xs-12 font-14 clear">
-														Используя данную форму, Вы можете поменять пароль от своего кабинета
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12 clear">
-														<label for="old-password">Введите старый пароль</label>
-														<div class="input-group field">
-															<input type="password" name="old-password" class="input-sm old-password">
-														</div>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12 clear">
-														<label for="new-password">Введите новый пароль</label>
-														<div class="input-group field">
-															<input type="password" name="new-password" class="input-sm new-password">
-														</div>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12 clear">
-														<label for="new-password-confirmation">Повторите новый пароль</label>
-														<div class="input-group field">
-															<input type="password" name="new-password-confirmation" class="input-sm new-password-confirmation">
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="panel-footer">
-												<div class="row">
-													<div class="col-xs-8"></div>
-													<div class="col-xs-4 text-right">
-														<button class="btn btn-primary" id="change_password" type="submit" name="submit" data-xp="enabled_on_completed: true">Сменить пароль</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</form>
-									<!-- / смена пароля -->
 									
 								<!-- /заполнение профиля -->
 								
 								
-								{% if g.user.role == 1 %}
+								{% if g.user.role == 1 and g.user.surname%}
 									<!-- отображение заполненного профиля -->
 									<!-- 
 									{% if g.user.surname != None %}
@@ -495,7 +447,7 @@
 									</div>
 								
 							
-								{% elif g.user.role == 2 %}	
+								{% elif g.user.role == 2 and g.user.surname%}	
 								
 									<!-- отображаем Данные для ЮрЛИЦА -->
 									<div class="alert alert-success alert-dismissible">
@@ -556,6 +508,55 @@
 								<!-- /отображение заполненого профиля -->
 								{% endif %}	
 								
+								<!-- смена пароля -->
+									<form action="{{url_for('change_password')}}" method='post' id='change_password'>
+										<div class="panel panel-default">
+											<div class="panel-heading font-18">
+												Изменение пароля
+											</div>
+											<div class="panel-body">
+												<div class="row padding-bottom-7 message-before-content">
+													<div class="col-xs-12 font-14 clear">
+														Используя данную форму, Вы можете поменять пароль от своего кабинета
+													</div>
+												</div>
+												<span class="show_on_blured_and_invalid hide" id="pass_change_error"></span>
+												<div class="row">
+													<div class="col-xs-12 clear">
+														<label for="old-password">Введите старый пароль</label>
+														<div class="input-group field">
+															<input type="password" name="old-password" class="input-sm old-password">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 clear">
+														<label for="new-password">Введите новый пароль</label>
+														<div class="input-group field">
+															<input type="password" name="new-password" class="input-sm new-password">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 clear">
+														<label for="new-password-confirmation">Повторите новый пароль</label>
+														<div class="input-group field">
+															<input type="password" name="new-password-confirmation" class="input-sm new-password-confirmation">
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="panel-footer">
+												<div class="row">
+													<div class="col-xs-8"></div>
+													<div class="col-xs-4 text-right">
+														<button class="btn btn-primary" id="change_password" type="submit" name="submit" data-xp="enabled_on_completed: true">Сменить пароль</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</form>
+									<!-- / смена пароля -->
 								
 								
 						
@@ -631,7 +632,6 @@
 							$("#update_profile_1").submit(function(e) {
 
 							    var url = "/update_profile/1";
-
 							    $.ajax({
 							           type: "POST",
 							           url: url,
@@ -646,7 +646,7 @@
 							           },
 							           error: function(data)
 							           {
-							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           		alert("ERROR: " + JSON.parse(data.responseText).message);
 							           }
 							         });
 
@@ -681,7 +681,13 @@
 							$("#change_password").submit(function(e) {
 
 							    var url = "/change_password";
-
+							    var div_err_id = "pass_change_error";
+							    if (document.getElementById(div_err_id)) {
+							    	document.getElementById(div_err_id).className =
+									   document.getElementById(div_err_id).className.replace
+									      ( /(?:^|\s)hide(?!\S)/g , '' );
+									document.getElementById(div_err_id).className += " hide";
+								}
 							    $.ajax({
 							           type: "POST",
 							           url: url,
@@ -696,7 +702,10 @@
 							           },
 							           error: function(data)
 							           {
-							                alert("ERROR: " + JSON.parse(data.responseText).message);
+							           		document.getElementById(div_err_id).className =
+											   document.getElementById(div_err_id).className.replace
+											      ( /(?:^|\s)hide(?!\S)/g , '' );
+											document.getElementById(div_err_id).innerHTML = JSON.parse(data.responseText).message;
 							           }
 							         });
 

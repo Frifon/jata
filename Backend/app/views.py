@@ -377,8 +377,8 @@ def change_car(car_id):
     return make_response(jsonify(construct_response(0, 'OK')), 200)
 
 
-@app.route('/ma')
-def ma():
+@app.route('/paths')
+def paths():
     return render_template('marshruty.html')
 
 # ################### ERROR HANDLERS ####################
