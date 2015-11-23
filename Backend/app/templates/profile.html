@@ -167,7 +167,7 @@
 																<span class="input-group-addon">
 																	<i class="glyphicon glyphicon-map-marker"></i>
 																</span>
-																<input id="user-city" name="user-city"  data-xp="required: true" class="input-sm form-control" />
+																<input id="user-city" name="user-city"  data-xp="required: true" class="input-sm form-control" value="{%if g.user.city == 'msk' %}Москва{%else%}Санкт-Петербург{%endif%}"/>
 														</span>
 													</div>
 												</div>
