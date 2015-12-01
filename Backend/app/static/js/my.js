@@ -30,6 +30,12 @@
 							}
 					});
 				
+				$('#modal_how_it_work').on('fotorama:show', function (e, fotorama) {
+						if(fotorama.activeIndex+1 == fotorama.size) {
+							$('.close-modal--how-it-work').attr('data-dismiss', 'modal').removeAttr("disabled");
+							}
+					});
+				
 				$('select[name="ts_color"]').simplecolorpicker({
   					theme: 'glyphicons'
 					});
@@ -141,35 +147,50 @@
 				
 				
 				
+			
 				
+				$('.date-select').daterangepicker({
+					"singleDatePicker": true,
+					"showDropdowns": true,
+					"autoApply": true,
+					"linkedCalendars": false,
+					"drops": "up",
+					"locale": {
+						"format": "DD-MM-YYYY",
+						"separator": " ; ",
+						"applyLabel": "Apply",
+						"cancelLabel": "Cancel",
+						"fromLabel": "From",
+						"toLabel": "To",
+						"customRangeLabel": "Custom",
+						"daysOfWeek": ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
+						"monthNames": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+						"firstDay": 1
+					}
+				});
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				$('.date-select').pickmeup_twitter_bootstrap({
-    				format		: 'd-m-Y',
-					position	: 'top',
-					prev		: '',
-					next		: '',
-					separator	: ';',
-					locale		: {
-									days: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
-									daysShort: ["Вск", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Суб"],
-									daysMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-									months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-									monthsShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
-									}
-					});
+				$('.date-select-person').daterangepicker({
+					"singleDatePicker": true,
+					"minDate": moment().subtract('years', 60),
+					"maxDate": moment().subtract('years', 18),
+					"startDate": "01/01/1980",
+					"showDropdowns": true,
+					"autoApply": true,
+					"linkedCalendars": false,
+					"drops": "up",
+					"locale": {
+						"format": "DD-MM-YYYY",
+						"separator": " ; ",
+						"applyLabel": "Apply",
+						"cancelLabel": "Cancel",
+						"fromLabel": "From",
+						"toLabel": "To",
+						"customRangeLabel": "Custom",
+						"daysOfWeek": ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
+						"monthNames": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+						"firstDay": 1
+					}
+				});
 				
 				
 				
