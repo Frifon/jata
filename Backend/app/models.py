@@ -24,7 +24,8 @@ class DefaultUser():
         raise self.DefaultUserException(name + ' attribute does not exist')
 
     def __setattr__(self, name):
-        raise self.DefaultUserException('manipulating the DefaultUser instance is forbidden')
+        raise self.DefaultUserException(
+            'manipulating the DefaultUser instance is forbidden')
 
     @staticmethod
     def is_admin(self):
@@ -141,7 +142,8 @@ class MessageHistory(db.Model):
         }
 
     def __repr__(self):
-        return '{0} ==> {1} : {2}'.format(self.user_id, self.dest_id, self.timestamp)
+        return '{0} ==> {1} : {2}'.format(
+            self.user_id, self.dest_id, self.timestamp)
 
 
 class Representative(db.Model):
@@ -207,13 +209,17 @@ class Route(db.Model):
     car_id = db.Column(db.Integer, index=True)
     route_name = db.Column(db.String(30), index=True)
 
-    route_type = db.Column(db.Integer, index=True)  # 0 - fixed, 1 - neighbourhood, 2 - random
-    route_fixed_type = db.Column(db.Integer, index=True)  # 0 - one way, 1 - return
+    # 0 - fixed, 1 - neighbourhood, 2 - random
+    route_type = db.Column(db.Integer, index=True)
+
+    # 0 - one way, 1 - return
+    route_fixed_type = db.Column(db.Integer, index=True)
 
     start_point_id = db.Column(db.Integer, index=True)
     finish_point_id = db.Column(db.Integer, index=True)
 
-    route_days = db.Column(db.Integer, index=True)  # 0 - working days, 1 - all days, 2 - weekends, 3 - random
+    # 0 - working days, 1 - all days, 2 - weekends, 3 - random
+    route_days = db.Column(db.Integer, index=True)
 
     route_time_start = db.Column(db.String(30), index=True)
     route_time_end = db.Column(db.String(30), index=True)
