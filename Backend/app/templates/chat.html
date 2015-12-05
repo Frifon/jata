@@ -101,7 +101,7 @@
 								<div class="panel-body">
 									<ul>
                                         {% for item in users %}
-                                            <li><span class="online"></span><a id="__{{item}}" class="change_chat" href="{{item}}">{{item}}</a></li>
+                                            <li><span class="online"></span><a id="__{{item['id']}}" class="change_chat" href="{{item['email']}}">{{item['email']}}</a></li>
                                         {% endfor %}
 										<!-- <li><span class="online"><a href="#">222</a></li>
 										<li><span class="online"><a href="#">333</a></li>
@@ -296,7 +296,7 @@
                     return false;
                 });  
             {% else %}
-                to = 0;
+                to = 1;
                 $('.change_chat').click(function(){ 
                     return false;
                 });  
@@ -319,7 +319,7 @@
                         max = messages[i].timestamp;
                     }
                     var div = document.getElementById('message_box');
-                    if ("{{g.user.is_admin()}}" == "False" ? messages[i].from == "{{g.user.id}}" : !(messages[i].from == "{{g.user.id}}")) {
+                    if ("{{g.user.is_admin()}}" == "False" ? messages[i].from == "{{g.user.id}}" : messages[i].to == "{{g.user.id}}") {
                         div.innerHTML = div.innerHTML + "<div class=\"row massage\">\
                                                             <div class=\"float-right text-center col-xs-2 avatar-block\">\
                                                                 <div class=\"avatar\" style=\"background-image: url('{{url_for('static', filename='img/anonim.jpg')}}'); \"></div>\
@@ -328,7 +328,7 @@
                                                                 <div class=\"container-fluid\">\
                                                                     <div class=\"row-fluid\">\
                                                                         <div class=\"col-xs-4 centering-y padding-left-0 font-12\">" + timeConverter(messages[i].timestamp) + "</div> \
-                                                                        <div class=\"col-xs-8 text-right centering-y padding-right-0 font-14 b nick\"><span class=\"offline\"></span>" + {% if g.user.is_admin() %}to{% else %} "{{g.user.id}}" {% endif %} + "</div>\
+                                                                        <div class=\"col-xs-8 text-right centering-y padding-right-0 font-14 b nick\"><span class=\"offline\"></span>" + {% if g.user.is_admin() %}messages[i].from_email{% else %} "{{g.user.email}}" {% endif %} + "</div>\
                                                                     </div>\
                                                                 </div>\
                                                                 <div class=\"row padding-top-7\">\

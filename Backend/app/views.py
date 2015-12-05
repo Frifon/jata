@@ -264,12 +264,11 @@ def add_car():
 @login_required
 def chat():
     users = []
-    if g.user:
-        if g.user.is_admin():
-            all_users = User.query.all()
-            users = [user.email for user in all_users if not(user.is_admin())]
-        else:
-            users = [u"Техническая поддержка"]
+    all_users = User.query.all()
+    if g.user.is_admin():
+        users = [{'id': user.id, 'email': user.email} for user in all_users if not user.is_admin()]
+    else:
+        users = [{'id': user.id, 'email': u'Техническая поддержка'} for user in all_users if user.is_admin()]
     return render_template('chat.html', users=users)
 
 
@@ -385,7 +384,7 @@ def routes():
 
 @app.route('/add_route', methods=['POST'])
 @login_required
-def add_route():
+def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
 
     def construct_response(code, message):
         return {'code': code, 'message': message}

@@ -54,7 +54,7 @@ class User(db.Model):
     verified = db.Column(db.Boolean, index=True)
 
     def is_admin(self):
-        return self.role & Role.admin
+        return (self.role & Role.admin) > 0
 
     def __repr__(self):
         return '{0}:{1}'.format(self.id, self.email)
@@ -83,6 +83,8 @@ class Message(db.Model):
         return {
             'from': self.user_id,
             'to': self.dest_id,
+            'from_email': self.user.email,
+            'to_email':self.dest.email,
             'timestamp': self.timestamp,
             'message': self.message
         }
