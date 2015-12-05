@@ -411,7 +411,8 @@ def add_route():
 
         route_fixed_type = request.form.get('ts_route_direction')
         if not route_fixed_type:
-            return make_response(jsonify(missing_param('route_fixed_type')), 400)
+            return make_response(
+                jsonify(missing_param('route_fixed_type')), 400)
 
         if route_fixed_type == "one_direction":
             route_fixed_type = 0
@@ -422,15 +423,18 @@ def add_route():
 
             start_point_id = request.form.get('ts_route_start_var')
             if not start_point_id:
-                return make_response(jsonify(missing_param('start_point_id')), 400)
+                return make_response(
+                    jsonify(missing_param('start_point_id')), 400)
 
             finish_point_id = request.form.get('ts_route_finish_var')
             if not finish_point_id:
-                return make_response(jsonify(missing_param('finish_point_id')), 400)
+                return make_response(
+                    jsonify(missing_param('finish_point_id')), 400)
 
             route_days = request.form.get('ts_route_days')
             if not route_days:
-                return make_response(jsonify(missing_param('route_days')), 400)
+                return make_response(
+                    jsonify(missing_param('route_days')), 400)
 
             if route_days == "ts_route_days_weekdays":
                 route_days = 0
@@ -443,37 +447,60 @@ def add_route():
 
             if route_days == 3:
 
-                route_monday = request.form.getlist('ts_route_days_custom_mon')
-                route_monday_start = request.form.get('days_mon_start')
-                route_monday_end = request.form.get('days_mon_end')
+                route_monday = request.form.getlist(
+                    'ts_route_days_custom_mon')
+                route_monday_start = request.form.get(
+                    'days_mon_start')
+                route_monday_end = request.form.get(
+                    'days_mon_end')
 
-                route_tuesday = request.form.getlist('ts_route_days_custom_tue')
-                route_tuesday_start = request.form.get('days_tue_start')
-                route_tuesday_end = request.form.get('days_tue_end')
+                route_tuesday = request.form.getlist(
+                    'ts_route_days_custom_tue')
+                route_tuesday_start = request.form.get(
+                    'days_tue_start')
+                route_tuesday_end = request.form.get(
+                    'days_tue_end')
 
-                route_wednesday = request.form.getlist('ts_route_days_custom_wed')
-                route_wednesday_start = request.form.get('days_wed_start')
-                route_wednesday_end = request.form.get('days_wed_end')
+                route_wednesday = request.form.getlist(
+                    'ts_route_days_custom_wed')
+                route_wednesday_start = request.form.get(
+                    'days_wed_start')
+                route_wednesday_end = request.form.get(
+                    'days_wed_end')
 
-                route_thursday = request.form.getlist('ts_route_days_custom_thu')
-                route_thursday_start = request.form.get('days_thu_start')
-                route_thursday_end = request.form.get('days_thu_end')
+                route_thursday = request.form.getlist(
+                    'ts_route_days_custom_thu')
+                route_thursday_start = request.form.get(
+                    'days_thu_start')
+                route_thursday_end = request.form.get(
+                    'days_thu_end')
 
-                route_friday = request.form.getlist('ts_route_days_custom_fri')
-                route_friday_start = request.form.get('days_fri_start')
-                route_friday_end = request.form.get('days_fri_end')
+                route_friday = request.form.getlist(
+                    'ts_route_days_custom_fri')
+                route_friday_start = request.form.get(
+                    'days_fri_start')
+                route_friday_end = request.form.get(
+                    'days_fri_end')
 
-                route_saturday = request.form.getlist('ts_route_days_custom_sat')
-                route_saturday_start = request.form.get('days_sat_start')
-                route_saturday_end = request.form.get('days_sat_end')
+                route_saturday = request.form.getlist(
+                    'ts_route_days_custom_sat')
+                route_saturday_start = request.form.get(
+                    'days_sat_start')
+                route_saturday_end = request.form.get(
+                    'days_sat_end')
 
-                route_sunday = request.form.getlist('ts_route_days_custom_sun')
-                route_sunday_start = request.form.get('days_sun_start')
-                route_sunday_end = request.form.get('days_sun_end')
+                route_sunday = request.form.getlist(
+                    'ts_route_days_custom_sun')
+                route_sunday_start = request.form.get(
+                    'days_sun_start')
+                route_sunday_end = request.form.get(
+                    'days_sun_end')
 
-                comment = request.form.get('ts_route_comment')
+                comment = request.form.get(
+                    'ts_route_comment')
                 if not comment:
-                    return make_response(jsonify(missing_param('comment')), 400)
+                    return make_response(
+                        jsonify(missing_param('comment')), 400)
 
                 new_route = Route(
                     user_id=g.user.id,
@@ -513,15 +540,18 @@ def add_route():
             else:
                 route_time_start = request.form.get('route_time_start')
                 if not route_time_start:
-                    return make_response(jsonify(missing_param('route_time_start')), 400)
+                    return make_response(
+                        jsonify(missing_param('route_time_start')), 400)
 
                 route_time_end = request.form.get('route_time_end')
                 if not route_time_end:
-                    return make_response(jsonify(missing_param('route_time_end')), 400)
+                    return make_response(
+                        jsonify(missing_param('route_time_end')), 400)
 
                 comment = request.form.get('ts_route_comment')
                 if not comment:
-                    return make_response(jsonify(missing_param('comment')), 400)
+                    return make_response(
+                        jsonify(missing_param('comment')), 400)
 
                 new_route = Route(
                     user_id=g.user.id,
@@ -541,15 +571,18 @@ def add_route():
         else:
             start_point_id = request.form.get('ts_route_start_var')
             if not start_point_id:
-                return make_response(jsonify(missing_param('start_point_id')), 400)
+                return make_response(
+                    jsonify(missing_param('start_point_id')), 400)
 
             finish_point_id = request.form.get('ts_route_finish_var')
             if not finish_point_id:
-                return make_response(jsonify(missing_param('finish_point_id')), 400)
+                return make_response(
+                    jsonify(missing_param('finish_point_id')), 400)
 
             route_days = request.form.get('ts_route_days')
             if not route_days:
-                return make_response(jsonify(missing_param('route_days')), 400)
+                return make_response(
+                    jsonify(missing_param('route_days')), 400)
 
             if route_days == "ts_route_days_weekdays":
                 route_days = 0
@@ -562,65 +595,109 @@ def add_route():
 
             if route_days == 3:
 
-                route_monday = request.form.getlist('ts_route_days_custom_mon')
-                route_monday_start = request.form.get('days_mon_start')
-                route_monday_end = request.form.get('days_mon_end')
+                route_monday = request.form.getlist(
+                    'ts_route_days_custom_mon')
+                route_monday_start = request.form.get(
+                    'days_mon_start')
+                route_monday_end = request.form.get(
+                    'days_mon_end')
 
-                route_tuesday = request.form.getlist('ts_route_days_custom_tue')
-                route_tuesday_start = request.form.get('days_tue_start')
-                route_tuesday_end = request.form.get('days_tue_end')
+                route_tuesday = request.form.getlist(
+                    'ts_route_days_custom_tue')
+                route_tuesday_start = request.form.get(
+                    'days_tue_start')
+                route_tuesday_end = request.form.get(
+                    'days_tue_end')
 
-                route_wednesday = request.form.getlist('ts_route_days_custom_wed')
-                route_wednesday_start = request.form.get('days_wed_start')
-                route_wednesday_end = request.form.get('days_wed_end')
+                route_wednesday = request.form.getlist(
+                    'ts_route_days_custom_wed')
+                route_wednesday_start = request.form.get(
+                    'days_wed_start')
+                route_wednesday_end = request.form.get(
+                    'days_wed_end')
 
-                route_thursday = request.form.getlist('ts_route_days_custom_thu')
-                route_thursday_start = request.form.get('days_thu_start')
-                route_thursday_end = request.form.get('days_thu_end')
+                route_thursday = request.form.getlist(
+                    'ts_route_days_custom_thu')
+                route_thursday_start = request.form.get(
+                    'days_thu_start')
+                route_thursday_end = request.form.get(
+                    'days_thu_end')
 
-                route_friday = request.form.getlist('ts_route_days_custom_fri')
-                route_friday_start = request.form.get('days_fri_start')
-                route_friday_end = request.form.get('days_fri_end')
+                route_friday = request.form.getlist(
+                    'ts_route_days_custom_fri')
+                route_friday_start = request.form.get(
+                    'days_fri_start')
+                route_friday_end = request.form.get(
+                    'days_fri_end')
 
-                route_saturday = request.form.getlist('ts_route_days_custom_sat')
-                route_saturday_start = request.form.get('days_sat_start')
-                route_saturday_end = request.form.get('days_sat_end')
+                route_saturday = request.form.getlist(
+                    'ts_route_days_custom_sat')
+                route_saturday_start = request.form.get(
+                    'days_sat_start')
+                route_saturday_end = request.form.get(
+                    'days_sat_end')
 
-                route_sunday = request.form.getlist('ts_route_days_custom_sun')
-                route_sunday_start = request.form.get('days_sun_start')
-                route_sunday_end = request.form.get('days_sun_end')
+                route_sunday = request.form.getlist(
+                    'ts_route_days_custom_sun')
+                route_sunday_start = request.form.get(
+                    'days_sun_start')
+                route_sunday_end = request.form.get(
+                    'days_sun_end')
 
-                route_monday_back = request.form.getlist('ts_reverse_route_days_custom_mon')
-                route_monday_start_back = request.form.get('days_mon_start_2')
-                route_monday_end_back = request.form.get('days_mon_end_2')
+                route_monday_back = request.form.getlist(
+                    'ts_reverse_route_days_custom_mon')
+                route_monday_start_back = request.form.get(
+                    'days_mon_start_2')
+                route_monday_end_back = request.form.get(
+                    'days_mon_end_2')
 
-                route_tuesday_back = request.form.getlist('ts_reverse_route_days_custom_tue')
-                route_tuesday_start_back = request.form.get('days_tue_start_2')
-                route_tuesday_end_back = request.form.get('days_tue_end_2')
+                route_tuesday_back = request.form.getlist(
+                    'ts_reverse_route_days_custom_tue')
+                route_tuesday_start_back = request.form.get(
+                    'days_tue_start_2')
+                route_tuesday_end_back = request.form.get(
+                    'days_tue_end_2')
 
-                route_wednesday_back = request.form.getlist('ts_reverse_route_days_custom_wed')
-                route_wednesday_start_back = request.form.get('days_wed_start_2')
-                route_wednesday_end_back = request.form.get('days_wed_end_2')
+                route_wednesday_back = request.form.getlist(
+                    'ts_reverse_route_days_custom_wed')
+                route_wednesday_start_back = request.form.get(
+                    'days_wed_start_2')
+                route_wednesday_end_back = request.form.get(
+                    'days_wed_end_2')
 
-                route_thursday_back = request.form.getlist('ts_reverse_route_days_custom_thu')
-                route_thursday_start_back = request.form.get('days_thu_start_2')
-                route_thursday_end_back = request.form.get('days_thu_end_2')
+                route_thursday_back = request.form.getlist(
+                    'ts_reverse_route_days_custom_thu')
+                route_thursday_start_back = request.form.get(
+                    'days_thu_start_2')
+                route_thursday_end_back = request.form.get(
+                    'days_thu_end_2')
 
-                route_friday_back = request.form.getlist('ts_reverse_route_days_custom_fri')
-                route_friday_start_back = request.form.get('days_fri_start_2')
-                route_friday_end_back = request.form.get('days_fri_end_2')
+                route_friday_back = request.form.getlist(
+                    'ts_reverse_route_days_custom_fri')
+                route_friday_start_back = request.form.get(
+                    'days_fri_start_2')
+                route_friday_end_back = request.form.get(
+                    'days_fri_end_2')
 
-                route_saturday_back = request.form.getlist('ts_reverse_route_days_custom_sat')
-                route_saturday_start_back = request.form.get('days_sat_start_2')
-                route_saturday_end_back = request.form.get('days_sat_end_2')
+                route_saturday_back = request.form.getlist(
+                    'ts_reverse_route_days_custom_sat')
+                route_saturday_start_back = request.form.get(
+                    'days_sat_start_2')
+                route_saturday_end_back = request.form.get(
+                    'days_sat_end_2')
 
-                route_sunday_back = request.form.getlist('ts_reverse_route_days_custom_sun')
-                route_sunday_start_back = request.form.get('days_sun_start_2')
-                route_sunday_end_back = request.form.get('days_sun_end_2')
+                route_sunday_back = request.form.getlist(
+                    'ts_reverse_route_days_custom_sun')
+                route_sunday_start_back = request.form.get(
+                    'days_sun_start_2')
+                route_sunday_end_back = request.form.get(
+                    'days_sun_end_2')
 
-                comment = request.form.get('ts_route_comment')
+                comment = request.form.get(
+                    'ts_route_comment')
                 if not comment:
-                    return make_response(jsonify(missing_param('comment')), 400)
+                    return make_response(
+                        jsonify(missing_param('comment')), 400)
 
                 new_route = Route(
                     user_id=g.user.id,
@@ -679,25 +756,35 @@ def add_route():
                 db.session.commit()
 
             else:
-                route_time_start = request.form.get('route_time_start')
+                route_time_start = request.form.get(
+                    'route_time_start')
                 if not route_time_start:
-                    return make_response(jsonify(missing_param('route_time_start')), 400)
+                    return make_response(
+                        jsonify(missing_param('route_time_start')), 400)
 
-                route_time_end = request.form.get('route_time_end')
+                route_time_end = request.form.get(
+                    'route_time_end')
                 if not route_time_end:
-                    return make_response(jsonify(missing_param('route_time_end')), 400)
+                    return make_response(
+                        jsonify(missing_param('route_time_end')), 400)
 
-                route_time_start_back = request.form.get('route_time_start_back')
+                route_time_start_back = request.form.get(
+                    'route_time_start_back')
                 if not route_time_start_back:
-                    return make_response(jsonify(missing_param('route_time_start_back')), 400)
+                    return make_response(
+                        jsonify(missing_param('route_time_start_back')), 400)
 
-                route_time_end_back = request.form.get('route_time_end_back')
+                route_time_end_back = request.form.get(
+                    'route_time_end_back')
                 if not route_time_end_back:
-                    return make_response(jsonify(missing_param('route_time_end_back')), 400)
+                    return make_response(
+                        jsonify(missing_param('route_time_end_back')), 400)
 
-                comment = request.form.get('ts_route_comment')
+                comment = request.form.get(
+                    'ts_route_comment')
                 if not comment:
-                    return make_response(jsonify(missing_param('comment')), 400)
+                    return make_response(
+                        jsonify(missing_param('comment')), 400)
 
                 new_route = Route(
                     user_id=g.user.id,
@@ -739,6 +826,8 @@ def add_route():
     return make_response(jsonify(construct_response(0, 'OK')), 200)
 
 # ################### ERROR HANDLERS ####################
+
+
 @app.errorhandler(405)
 def error405(error):
     url = str(request.base_url)
