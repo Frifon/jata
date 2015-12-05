@@ -153,6 +153,7 @@ class Point(db.Model):
     altitude = db.Column(db.Float, index=True)
     accuracy = db.Column(db.SmallInteger, index=True)
     timestamp = db.Column(db.Integer, index=True)
+    name = db.Column(db.String(30), index=True)
 
     def __str__(self):
         return ("Point id: {}\n".format(str(self.id)) +
@@ -161,6 +162,7 @@ class Point(db.Model):
                                                   str(self.longtitude)) +
                 "Altitude: {}\n".format(str(self.altitude)) +
                 "Accuracy: {}\n".format(str(self.accuracy)) +
+                "Name: {}\n".format(str(self.name)) +
                 "Timestamp: {}\n".format(str(self.timestamp)))
 
     def __repr__(self):
@@ -170,4 +172,17 @@ class Point(db.Model):
                                                   str(self.longtitude)) +
                 "Altitude: {}\n".format(str(self.altitude)) +
                 "Accuracy: {}\n".format(str(self.accuracy)) +
+                "Name: {}\n".format(str(self.name)) +
                 "Timestamp: {}\n".format(str(self.timestamp)))
+
+
+class Route(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, index=True)
+    car_id = db.Column(db.Integer, index=True)
+    route_name = db.Column(db.String(30), index=True)
+    route_type = db.Column(db.Integer, index=True) # 0 - fixed, 1 - neighbourhood, 2 - random
+    route_fixed_type = db.Column(db.Integer, index=True) # 0 - one way, 1 - return
+    start_point_id = db.Column(db.Integer, index=True)
+    finish_point_id = db.Column(db.Integer, index=True)
+    route_days = db.Column(db.Integer, index=True) # 0 - working days, 1 - all days, 2 - weekends, 3 - random
