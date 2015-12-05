@@ -274,3 +274,5 @@ class Route(db.Model):
     route_sunday_end_back = db.Column(db.String(30), index=True)
 
     comment = db.Column(db.String(300), index=True)
+
+    district = db.Column(db.String(30), index=True)
