@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from app import db
 from flask import g
 from hashlib import md5

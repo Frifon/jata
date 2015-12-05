@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from flask import Blueprint, g, request, jsonify, make_response
 from sqlalchemy import desc
 import json

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from flask import g, request, redirect, url_for, make_response, jsonify
 from functools import wraps
 from sqlalchemy.orm.exc import NoResultFound

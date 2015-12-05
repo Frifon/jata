@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from os import system
 from sys import platform as _platform
 
