@@ -1283,7 +1283,7 @@
 
 		    $.ajax({
 		           type: "POST",
-		           url: "/add_route",
+		           url: "/api/routes/add",
 		           data: formData,
 		           async: false,
 				   cache: false,
@@ -1295,7 +1295,7 @@
 		           		xhttp.open("POST", "/login", false);
 						xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 						xhttp.send(data);
-						window.location="/routes";
+						window.location="/api/routes/show";
 		           },
 		           error: function(data)
 		           {
