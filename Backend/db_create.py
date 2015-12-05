@@ -12,6 +12,6 @@ db.session.add(models.User(
 	password='pass',
 	tel_number='88005553535',
 	city='DC',
-	role=models.Role['admin'] | models.Role['car'],
+	role=models.Role.admin | models.Role.car,
 	verified=True))
 db.session.commit()
