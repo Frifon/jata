@@ -98,7 +98,10 @@ def getSeenTimestamps():
             Message.user_id == mh.user_id,
             Message.timestamp > mh.timestamp).all())
         if new != 0:
-            ans.append({'new': new, 'from': mh.user_id})
+            if mh.user.is_admin():
+                ans.append({'new': new, 'from': mh.user_id, 'email': u'Техническая поддержка'})
+            else:
+                ans.append({'new': new, 'from': mh.user_id, 'email': mh.user.email})
     return make_response(jsonify({
         'code': 0,
         'message': 'OK',
