@@ -192,7 +192,7 @@ def update_profile(role):
         db.session.add(new_representative)
         db.session.commit()
         return make_response(jsonify(construct_response(0, 'OK')), 200)
-    else:       
+    else:
         return make_response(jsonify(incorrect_param('role')), 400)
 
 
@@ -441,21 +441,281 @@ def add_route():
             else:
                 route_days = 3
 
-            new_route = Route(
-                user_id=g.user.id,
-                car_id=int(car_id),
-                route_name=route_name,
-                route_type=int(route_type),
-                route_fixed_type=route_fixed_type,
-                start_point_id=int(start_point_id),
-                finish_point_id=int(finish_point_id),
-                route_days=route_days)
+            if route_days == 3:
 
-            db.session.add(new_route)
-            db.session.commit()
+                route_monday = request.form.getlist('ts_route_days_custom_mon')
+                route_monday_start = request.form.get('days_mon_start')
+                route_monday_end = request.form.get('days_mon_end')
 
+                route_tuesday = request.form.getlist('ts_route_days_custom_tue')
+                route_tuesday_start = request.form.get('days_tue_start')
+                route_tuesday_end = request.form.get('days_tue_end')
+
+                route_wednesday = request.form.getlist('ts_route_days_custom_wed')
+                route_wednesday_start = request.form.get('days_wed_start')
+                route_wednesday_end = request.form.get('days_wed_end')
+
+                route_thursday = request.form.getlist('ts_route_days_custom_thu')
+                route_thursday_start = request.form.get('days_thu_start')
+                route_thursday_end = request.form.get('days_thu_end')
+
+                route_friday = request.form.getlist('ts_route_days_custom_fri')
+                route_friday_start = request.form.get('days_fri_start')
+                route_friday_end = request.form.get('days_fri_end')
+
+                route_saturday = request.form.getlist('ts_route_days_custom_sat')
+                route_saturday_start = request.form.get('days_sat_start')
+                route_saturday_end = request.form.get('days_sat_end')
+
+                route_sunday = request.form.getlist('ts_route_days_custom_sun')
+                route_sunday_start = request.form.get('days_sun_start')
+                route_sunday_end = request.form.get('days_sun_end')
+
+                comment = request.form.get('ts_route_comment')
+                if not comment:
+                    return make_response(jsonify(missing_param('comment')), 400)
+
+                new_route = Route(
+                    user_id=g.user.id,
+                    car_id=int(car_id),
+                    route_name=route_name,
+                    route_type=int(route_type),
+                    route_fixed_type=route_fixed_type,
+                    start_point_id=int(start_point_id),
+                    finish_point_id=int(finish_point_id),
+                    route_days=route_days,
+                    route_monday=int(bool(route_monday)),
+                    route_monday_start=route_monday_start,
+                    route_monday_end=route_monday_end,
+                    route_tuesday=int(bool(route_tuesday)),
+                    route_tuesday_start=route_tuesday_start,
+                    route_tuesday_end=route_tuesday_end,
+                    route_wednesday=int(bool(route_wednesday)),
+                    route_wednesday_start=route_wednesday_start,
+                    route_wednesday_end=route_wednesday_end,
+                    route_thursday=int(bool(route_thursday)),
+                    route_thursday_start=route_thursday_start,
+                    route_thursday_end=route_thursday_end,
+                    route_friday=int(bool(route_friday)),
+                    route_friday_start=route_friday_start,
+                    route_friday_end=route_friday_end,
+                    route_saturday=int(bool(route_saturday)),
+                    route_saturday_start=route_saturday_start,
+                    route_saturday_end=route_saturday_end,
+                    route_sunday=int(bool(route_sunday)),
+                    route_sunday_start=route_sunday_start,
+                    route_sunday_end=route_sunday_end,
+                    comment=comment)
+
+                db.session.add(new_route)
+                db.session.commit()
+
+            else:
+                route_time_start = request.form.get('route_time_start')
+                if not route_time_start:
+                    return make_response(jsonify(missing_param('route_time_start')), 400)
+
+                route_time_end = request.form.get('route_time_end')
+                if not route_time_end:
+                    return make_response(jsonify(missing_param('route_time_end')), 400)
+
+                comment = request.form.get('ts_route_comment')
+                if not comment:
+                    return make_response(jsonify(missing_param('comment')), 400)
+
+                new_route = Route(
+                    user_id=g.user.id,
+                    car_id=int(car_id),
+                    route_name=route_name,
+                    route_type=int(route_type),
+                    route_fixed_type=route_fixed_type,
+                    start_point_id=int(start_point_id),
+                    finish_point_id=int(finish_point_id),
+                    route_days=route_days,
+                    route_time_start=route_time_start,
+                    route_time_end=route_time_end,
+                    comment=comment)
+
+                db.session.add(new_route)
+                db.session.commit()
         else:
-            pass
+            start_point_id = request.form.get('ts_route_start_var')
+            if not start_point_id:
+                return make_response(jsonify(missing_param('start_point_id')), 400)
+
+            finish_point_id = request.form.get('ts_route_finish_var')
+            if not finish_point_id:
+                return make_response(jsonify(missing_param('finish_point_id')), 400)
+
+            route_days = request.form.get('ts_route_days')
+            if not route_days:
+                return make_response(jsonify(missing_param('route_days')), 400)
+
+            if route_days == "ts_route_days_weekdays":
+                route_days = 0
+            elif route_days == "ts_route_days_weekend":
+                route_days = 1
+            elif route_days == "ts_route_days_alldays":
+                route_days = 2
+            else:
+                route_days = 3
+
+            if route_days == 3:
+
+                route_monday = request.form.getlist('ts_route_days_custom_mon')
+                route_monday_start = request.form.get('days_mon_start')
+                route_monday_end = request.form.get('days_mon_end')
+
+                route_tuesday = request.form.getlist('ts_route_days_custom_tue')
+                route_tuesday_start = request.form.get('days_tue_start')
+                route_tuesday_end = request.form.get('days_tue_end')
+
+                route_wednesday = request.form.getlist('ts_route_days_custom_wed')
+                route_wednesday_start = request.form.get('days_wed_start')
+                route_wednesday_end = request.form.get('days_wed_end')
+
+                route_thursday = request.form.getlist('ts_route_days_custom_thu')
+                route_thursday_start = request.form.get('days_thu_start')
+                route_thursday_end = request.form.get('days_thu_end')
+
+                route_friday = request.form.getlist('ts_route_days_custom_fri')
+                route_friday_start = request.form.get('days_fri_start')
+                route_friday_end = request.form.get('days_fri_end')
+
+                route_saturday = request.form.getlist('ts_route_days_custom_sat')
+                route_saturday_start = request.form.get('days_sat_start')
+                route_saturday_end = request.form.get('days_sat_end')
+
+                route_sunday = request.form.getlist('ts_route_days_custom_sun')
+                route_sunday_start = request.form.get('days_sun_start')
+                route_sunday_end = request.form.get('days_sun_end')
+
+                route_monday_back = request.form.getlist('ts_reverse_route_days_custom_mon')
+                route_monday_start_back = request.form.get('days_mon_start_2')
+                route_monday_end_back = request.form.get('days_mon_end_2')
+
+                route_tuesday_back = request.form.getlist('ts_reverse_route_days_custom_tue')
+                route_tuesday_start_back = request.form.get('days_tue_start_2')
+                route_tuesday_end_back = request.form.get('days_tue_end_2')
+
+                route_wednesday_back = request.form.getlist('ts_reverse_route_days_custom_wed')
+                route_wednesday_start_back = request.form.get('days_wed_start_2')
+                route_wednesday_end_back = request.form.get('days_wed_end_2')
+
+                route_thursday_back = request.form.getlist('ts_reverse_route_days_custom_thu')
+                route_thursday_start_back = request.form.get('days_thu_start_2')
+                route_thursday_end_back = request.form.get('days_thu_end_2')
+
+                route_friday_back = request.form.getlist('ts_reverse_route_days_custom_fri')
+                route_friday_start_back = request.form.get('days_fri_start_2')
+                route_friday_end_back = request.form.get('days_fri_end_2')
+
+                route_saturday_back = request.form.getlist('ts_reverse_route_days_custom_sat')
+                route_saturday_start_back = request.form.get('days_sat_start_2')
+                route_saturday_end_back = request.form.get('days_sat_end_2')
+
+                route_sunday_back = request.form.getlist('ts_reverse_route_days_custom_sun')
+                route_sunday_start_back = request.form.get('days_sun_start_2')
+                route_sunday_end_back = request.form.get('days_sun_end_2')
+
+                comment = request.form.get('ts_route_comment')
+                if not comment:
+                    return make_response(jsonify(missing_param('comment')), 400)
+
+                new_route = Route(
+                    user_id=g.user.id,
+                    car_id=int(car_id),
+                    route_name=route_name,
+                    route_type=int(route_type),
+                    route_fixed_type=route_fixed_type,
+                    start_point_id=int(start_point_id),
+                    finish_point_id=int(finish_point_id),
+                    route_days=route_days,
+                    route_monday=int(bool(route_monday)),
+                    route_monday_start=route_monday_start,
+                    route_monday_end=route_monday_end,
+                    route_tuesday=int(bool(route_tuesday)),
+                    route_tuesday_start=route_tuesday_start,
+                    route_tuesday_end=route_tuesday_end,
+                    route_wednesday=int(bool(route_wednesday)),
+                    route_wednesday_start=route_wednesday_start,
+                    route_wednesday_end=route_wednesday_end,
+                    route_thursday=int(bool(route_thursday)),
+                    route_thursday_start=route_thursday_start,
+                    route_thursday_end=route_thursday_end,
+                    route_friday=int(bool(route_friday)),
+                    route_friday_start=route_friday_start,
+                    route_friday_end=route_friday_end,
+                    route_saturday=int(bool(route_saturday)),
+                    route_saturday_start=route_saturday_start,
+                    route_saturday_end=route_saturday_end,
+                    route_sunday=int(bool(route_sunday)),
+                    route_sunday_start=route_sunday_start,
+                    route_sunday_end=route_sunday_end,
+                    route_monday_back=int(bool(route_monday_back)),
+                    route_monday_start_back=route_monday_start_back,
+                    route_monday_end_back=route_monday_end_back,
+                    route_tuesday_back=int(bool(route_tuesday_back)),
+                    route_tuesday_start_back=route_tuesday_start_back,
+                    route_tuesday_end_back=route_tuesday_end_back,
+                    route_wednesday_back=int(bool(route_wednesday_back)),
+                    route_wednesday_start_back=route_wednesday_start_back,
+                    route_wednesday_end_back=route_wednesday_end_back,
+                    route_thursday_back=int(bool(route_thursday_back)),
+                    route_thursday_start_back=route_thursday_start_back,
+                    route_thursday_end_back=route_thursday_end_back,
+                    route_friday_back=int(bool(route_friday_back)),
+                    route_friday_start_back=route_friday_start_back,
+                    route_friday_end_back=route_friday_end_back,
+                    route_saturday_back=int(bool(route_saturday_back)),
+                    route_saturday_start_back=route_saturday_start_back,
+                    route_saturday_end_back=route_saturday_end_back,
+                    route_sunday_back=int(bool(route_sunday_back)),
+                    route_sunday_start_back=route_sunday_start_back,
+                    route_sunday_end_back=route_sunday_end_back,
+                    comment=comment)
+
+                db.session.add(new_route)
+                db.session.commit()
+
+            else:
+                route_time_start = request.form.get('route_time_start')
+                if not route_time_start:
+                    return make_response(jsonify(missing_param('route_time_start')), 400)
+
+                route_time_end = request.form.get('route_time_end')
+                if not route_time_end:
+                    return make_response(jsonify(missing_param('route_time_end')), 400)
+
+                route_time_start_back = request.form.get('route_time_start_back')
+                if not route_time_start_back:
+                    return make_response(jsonify(missing_param('route_time_start_back')), 400)
+
+                route_time_end_back = request.form.get('route_time_end_back')
+                if not route_time_end_back:
+                    return make_response(jsonify(missing_param('route_time_end_back')), 400)
+
+                comment = request.form.get('ts_route_comment')
+                if not comment:
+                    return make_response(jsonify(missing_param('comment')), 400)
+
+                new_route = Route(
+                    user_id=g.user.id,
+                    car_id=int(car_id),
+                    route_name=route_name,
+                    route_type=int(route_type),
+                    route_fixed_type=route_fixed_type,
+                    start_point_id=int(start_point_id),
+                    finish_point_id=int(finish_point_id),
+                    route_days=route_days,
+                    route_time_start=route_time_start,
+                    route_time_end=route_time_end,
+                    route_time_start_back=route_time_start,
+                    route_time_end_back=route_time_end,
+                    comment=comment)
+
+                db.session.add(new_route)
+                db.session.commit()
 
     elif route_type == "2":
         new_route = Route(

@@ -204,8 +204,67 @@ class Route(db.Model):
     user_id = db.Column(db.Integer, index=True)
     car_id = db.Column(db.Integer, index=True)
     route_name = db.Column(db.String(30), index=True)
-    route_type = db.Column(db.Integer, index=True) # 0 - fixed, 1 - neighbourhood, 2 - random
-    route_fixed_type = db.Column(db.Integer, index=True) # 0 - one way, 1 - return
+
+    route_type = db.Column(db.Integer, index=True)  # 0 - fixed, 1 - neighbourhood, 2 - random
+    route_fixed_type = db.Column(db.Integer, index=True)  # 0 - one way, 1 - return
+
     start_point_id = db.Column(db.Integer, index=True)
     finish_point_id = db.Column(db.Integer, index=True)
-    route_days = db.Column(db.Integer, index=True) # 0 - working days, 1 - all days, 2 - weekends, 3 - random
+
+    route_days = db.Column(db.Integer, index=True)  # 0 - working days, 1 - all days, 2 - weekends, 3 - random
+
+    route_time_start = db.Column(db.String(30), index=True)
+    route_time_end = db.Column(db.String(30), index=True)
+
+    route_monday = db.Column(db.Integer, index=True)
+    route_tuesday = db.Column(db.Integer, index=True)
+    route_wednesday = db.Column(db.Integer, index=True)
+    route_thursday = db.Column(db.Integer, index=True)
+    route_friday = db.Column(db.Integer, index=True)
+    route_saturday = db.Column(db.Integer, index=True)
+    route_sunday = db.Column(db.Integer, index=True)
+
+    route_monday_start = db.Column(db.String(30), index=True)
+    route_tuesday_start = db.Column(db.String(30), index=True)
+    route_wednesday_start = db.Column(db.String(30), index=True)
+    route_thursday_start = db.Column(db.String(30), index=True)
+    route_friday_start = db.Column(db.String(30), index=True)
+    route_saturday_start = db.Column(db.String(30), index=True)
+    route_sunday_start = db.Column(db.String(30), index=True)
+
+    route_monday_end = db.Column(db.String(30), index=True)
+    route_tuesday_end = db.Column(db.String(30), index=True)
+    route_wednesday_end = db.Column(db.String(30), index=True)
+    route_thursday_end = db.Column(db.String(30), index=True)
+    route_friday_end = db.Column(db.String(30), index=True)
+    route_saturday_end = db.Column(db.String(30), index=True)
+    route_sunday_end = db.Column(db.String(30), index=True)
+
+    route_time_start_back = db.Column(db.String(30), index=True)
+    route_time_end_back = db.Column(db.String(30), index=True)
+
+    route_monday_back = db.Column(db.Integer, index=True)
+    route_tuesday_back = db.Column(db.Integer, index=True)
+    route_wednesday_back = db.Column(db.Integer, index=True)
+    route_thursday_back = db.Column(db.Integer, index=True)
+    route_friday_back = db.Column(db.Integer, index=True)
+    route_saturday_back = db.Column(db.Integer, index=True)
+    route_sunday_back = db.Column(db.Integer, index=True)
+
+    route_monday_start_back = db.Column(db.String(30), index=True)
+    route_tuesday_start_back = db.Column(db.String(30), index=True)
+    route_wednesday_start_back = db.Column(db.String(30), index=True)
+    route_thursday_start_back = db.Column(db.String(30), index=True)
+    route_friday_start_back = db.Column(db.String(30), index=True)
+    route_saturday_start_back = db.Column(db.String(30), index=True)
+    route_sunday_start_back = db.Column(db.String(30), index=True)
+
+    route_monday_end_back = db.Column(db.String(30), index=True)
+    route_tuesday_end_back = db.Column(db.String(30), index=True)
+    route_wednesday_end_back = db.Column(db.String(30), index=True)
+    route_thursday_end_back = db.Column(db.String(30), index=True)
+    route_friday_end_back = db.Column(db.String(30), index=True)
+    route_saturday_end_back = db.Column(db.String(30), index=True)
+    route_sunday_end_back = db.Column(db.String(30), index=True)
+
+    comment = db.Column(db.String(300), index=True)
