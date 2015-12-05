@@ -42,7 +42,7 @@ class User(db.Model):
     password = db.Column(db.String(30), index=True)
     tel_number = db.Column(db.String(30), index=True)
     city = db.Column(db.String(60), index=True)
-    role = db.Column(db.SmallInteger, default=Role['car'], index=True)
+    role = db.Column(db.SmallInteger, default=Role.car, index=True)
 
     name = db.Column(db.String(60), index=True)
     surname = db.Column(db.String(60), index=True)
