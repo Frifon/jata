@@ -533,6 +533,8 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                     route_sunday_end=route_sunday_end,
                     comment=comment)
 
+                print(str(new_route))
+
                 db.session.add(new_route)
                 db.session.commit()
 
@@ -564,6 +566,8 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                     route_time_start=route_time_start,
                     route_time_end=route_time_end,
                     comment=comment)
+
+                print(str(new_route))
 
                 db.session.add(new_route)
                 db.session.commit()
@@ -751,6 +755,8 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                     route_sunday_end_back=route_sunday_end_back,
                     comment=comment)
 
+                print(str(new_route))
+
                 db.session.add(new_route)
                 db.session.commit()
 
@@ -799,6 +805,8 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                     route_time_start_back=route_time_start,
                     route_time_end_back=route_time_end,
                     comment=comment)
+
+                print(str(new_route))
 
                 db.session.add(new_route)
                 db.session.commit()
@@ -911,6 +919,8 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                 route_sunday_end=route_sunday_end,
                 comment=comment)
 
+            print(str(new_route))
+
             db.session.add(new_route)
             db.session.commit()
 
@@ -940,6 +950,8 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                 route_time_start=route_time_start,
                 route_time_end=route_time_end,
                 comment=comment)
+
+            print(str(new_route))
 
             db.session.add(new_route)
             db.session.commit()
@@ -979,6 +991,8 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
             route_time_end=route_time_end,
             comment=comment,
             km=int(km))
+
+        print(str(new_route))
 
         db.session.add(new_route)
         db.session.commit()
