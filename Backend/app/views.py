@@ -384,7 +384,7 @@ def routes():
 
 @app.route('/add_route', methods=['POST'])
 @login_required
-def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
+def add_route():
 
     def construct_response(code, message):
         return {'code': code, 'message': message}

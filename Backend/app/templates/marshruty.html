@@ -1276,7 +1276,36 @@
 	
 	
 	
-			
+	<script type="text/javascript">
+		$("#add_route").submit(function(e) {
+
+		    var formData = new FormData($(this)[0]);
+
+		    $.ajax({
+		           type: "POST",
+		           url: "/add_route",
+		           data: formData,
+		           async: false,
+				   cache: false,
+				   contentType: false,
+				   processData: false,
+		           success: function(data)
+		           {
+		           		var xhttp = new XMLHttpRequest();
+		           		xhttp.open("POST", "/login", false);
+						xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						xhttp.send(data);
+						window.location="/routes";
+		           },
+		           error: function(data)
+		           {
+		                alert("ERROR: " + JSON.parse(data.responseText).message);
+		           }
+		         });
+
+		    e.preventDefault();
+		});
+	</script>	
 	
 	
 </body>
