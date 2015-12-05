@@ -109,9 +109,9 @@ def reg():
         return make_response(
             jsonify(construct_response(4, 'Email is not valid')), 400)
     if userrole == "reklamodatel":
-        userrole = Role['add']
+        userrole = Role.add
     else:
-        userrole = Role['car']
+        userrole = Role.car
 
     new_user = User(
         email=email,

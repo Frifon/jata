@@ -97,7 +97,7 @@ def change_password():
 @app.route('/profile')
 @login_required
 def profile():
-    if g.user.role & Role['add']:
+    if g.user.role & Role.add:
         representatives = Representative.query.filter_by(
             company_id=g.session.id).all()
         return render_template('profile.html', representatives=representatives)
@@ -127,7 +127,7 @@ def update_profile(role):
     def missing_param(p):
         return construct_response(1, 'Missing parameter: {0}'.format(p))
 
-    if role & Role['car']:
+    if role & Role.car:
         surname = request.form.get('user-lastname')
         name = request.form.get('user-firstname')
         middle_name = request.form.get('user-middlename')
@@ -158,7 +158,7 @@ def update_profile(role):
         db.session.commit()
         return make_response(jsonify(construct_response(0, 'OK')), 200)
 
-    elif role & Role['add']:
+    elif role & Role.add:
         company_name = request.form.get('company-name')
         company_representative_name = request.form.get(
             'company-representative-name')

@@ -1,5 +1,4 @@
 from app import db
-from enum import IntEnum
 from flask import g
 from hashlib import md5
 from random import randint
@@ -7,7 +6,7 @@ from datetime import datetime
 from sqlalchemy.orm import relationship, backref
 
 
-class Role(IntEnum):
+class Role():
     car = 1
     add = 2
     admin = 4
@@ -54,7 +53,7 @@ class User(db.Model):
     verified = db.Column(db.Boolean, index=True)
 
     def is_admin(self):
-        return self.role & Role['admin']
+        return self.role & Role.admin
 
     def __repr__(self):
         return '{0}:{1}'.format(self.id, self.email)
