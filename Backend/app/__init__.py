@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 
 from flask import Flask
@@ -23,6 +25,9 @@ app.register_blueprint(api_chat)
 
 from app.api.gps import api_gps
 app.register_blueprint(api_gps)
+
+from app.api.routes import api_routes
+app.register_blueprint(api_routes)
 
 if sys.version_info[0] == 3:
     from app.api.sms import api_sms

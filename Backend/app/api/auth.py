@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+
 from flask import Blueprint, g, request, jsonify, make_response
 from flask.ext.login import make_secure_token
 import datetime
 
 from app import db
-from app.models import User, Session, ROLE_CAR, ROLE_ADD
+from app.models import User, Session, Role
 
 from validate_email import validate_email
 
@@ -109,9 +110,9 @@ def reg():
         return make_response(
             jsonify(construct_response(4, 'Email is not valid')), 400)
     if userrole == "reklamodatel":
-        userrole = ROLE_ADD
+        userrole = Role.add
     else:
-        userrole = ROLE_CAR
+        userrole = Role.car
 
     new_user = User(
         email=email,

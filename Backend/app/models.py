@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from app import db
 from flask import g
 from hashlib import md5
@@ -5,9 +7,35 @@ from random import randint
 from datetime import datetime
 from sqlalchemy.orm import relationship, backref
 
-ROLE_CAR = 1
-ROLE_ADD = 2
-ROLE_ADMIN = 4
+
+class Role():
+    car = 1
+    add = 2
+    admin = 4
+
+
+class DefaultUser():
+    class DefaultUserException(Exception):
+        def __init__(self, value):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
+
+    def __getattr__(self, name):
+        raise self.DefaultUserException(name + ' attribute does not exist')
+
+    def __setattr__(self, name):
+        raise self.DefaultUserException(
+            'manipulating the DefaultUser instance is forbidden')
+
+    @staticmethod
+    def is_admin(self):
+        return False
+
+    @staticmethod
+    def __repr__(self):
+        return 'None:None'
 
 
 class User(db.Model):
@@ -17,7 +45,7 @@ class User(db.Model):
     password = db.Column(db.String(30), index=True)
     tel_number = db.Column(db.String(30), index=True)
     city = db.Column(db.String(60), index=True)
-    role = db.Column(db.SmallInteger, default=ROLE_CAR, index=True)
+    role = db.Column(db.SmallInteger, default=Role.car, index=True)
 
     name = db.Column(db.String(60), index=True)
     surname = db.Column(db.String(60), index=True)
@@ -28,7 +56,7 @@ class User(db.Model):
     verified = db.Column(db.Boolean, index=True)
 
     def is_admin(self):
-        return self.email == 'admin'
+        return (self.role & Role.admin) > 0
 
     def __repr__(self):
         return '{0}:{1}'.format(self.id, self.email)
@@ -38,34 +66,34 @@ class Message(db.Model):
     __table_args__ = {'sqlite_autoincrement': True}
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    user_email = db.Column(
-        db.String(120), db.ForeignKey(User.email), index=True)
-    dest_email = db.Column(
-        db.String(120), db.ForeignKey(User.email), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), index=True)
+    dest_id = db.Column(db.Integer, db.ForeignKey(User.id), index=True)
     message = db.Column(db.String(3000), index=True)
     timestamp = db.Column(db.Float, index=True)
 
     user = relationship(
         'User',
         backref=backref('send_by_me_messages', order_by=timestamp),
-        primaryjoin='Message.user_email == User.email')
+        primaryjoin='Message.user_id == User.id')
 
     dest = relationship(
         'User',
         backref=backref('send_to_me_messages', order_by=timestamp),
-        primaryjoin='Message.dest_email == User.email')
+        primaryjoin='Message.dest_id == User.id')
 
     def serialize(self):
         return {
-            'from': self.user_email,
-            'to': self.dest_email,
+            'from': self.user_id,
+            'to': self.dest_id,
+            'from_email': self.user.email,
+            'to_email':self.dest.email,
             'timestamp': self.timestamp,
             'message': self.message
         }
 
     def __repr__(self):
         return u'{0} ==> {1} : {2} ({3} : {4})'.format(
-            self.user, self.dest, self.message, self.id, self.timestamp)
+            self.user_id, self.dest_id, self.message, self.id, self.timestamp)
 
 
 class Session(db.Model):
@@ -85,15 +113,15 @@ class Session(db.Model):
 
 
 class MessageHistory(db.Model):
-    user_email = db.Column(
-        db.String(120),
-        db.ForeignKey(User.email),
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey(User.id),
         primary_key=True,
         index=True)
 
-    dest_email = db.Column(
-        db.String(120),
-        db.ForeignKey(User.email),
+    dest_id = db.Column(
+        db.Integer,
+        db.ForeignKey(User.id),
         primary_key=True,
         index=True)
 
@@ -101,22 +129,23 @@ class MessageHistory(db.Model):
 
     user = relationship(
         'User',
-        backref=backref('send_by_me_history', order_by=dest_email),
-        primaryjoin='MessageHistory.user_email == User.email')
+        backref=backref('send_by_me_history', order_by=dest_id),
+        primaryjoin='MessageHistory.user_id == User.id')
 
     dest = relationship(
         'User',
-        backref=backref('send_to_me_history', order_by=user_email),
-        primaryjoin='MessageHistory.dest_email == User.email')
+        backref=backref('send_to_me_history', order_by=user_id),
+        primaryjoin='MessageHistory.dest_id == User.id')
 
     def serialize(self):
         return {
-            'email': self.user_email,
+            'id': self.user_id,
             'timestamp': self.timestamp
         }
 
     def __repr__(self):
-        return '{0} ==> {1} : {2}'.format(self.user, self.dest, self.timestamp)
+        return '{0} ==> {1} : {2}'.format(
+            self.user_id, self.dest_id, self.timestamp)
 
 
 class Representative(db.Model):
@@ -181,8 +210,198 @@ class Route(db.Model):
     user_id = db.Column(db.Integer, index=True)
     car_id = db.Column(db.Integer, index=True)
     route_name = db.Column(db.String(30), index=True)
-    route_type = db.Column(db.Integer, index=True) # 0 - fixed, 1 - neighbourhood, 2 - random
-    route_fixed_type = db.Column(db.Integer, index=True) # 0 - one way, 1 - return
+
+    # 0 - fixed, 1 - neighbourhood, 2 - random
+    route_type = db.Column(db.Integer, index=True)
+
+    # 0 - one way, 1 - return
+    route_fixed_type = db.Column(db.Integer, index=True)
+
     start_point_id = db.Column(db.Integer, index=True)
     finish_point_id = db.Column(db.Integer, index=True)
-    route_days = db.Column(db.Integer, index=True) # 0 - working days, 1 - all days, 2 - weekends, 3 - random
+
+    # 0 - working days, 1 - all days, 2 - weekends, 3 - random
+    route_days = db.Column(db.Integer, index=True)
+
+    route_time_start = db.Column(db.String(30), index=True)
+    route_time_end = db.Column(db.String(30), index=True)
+
+    route_monday = db.Column(db.Integer, index=True)
+    route_tuesday = db.Column(db.Integer, index=True)
+    route_wednesday = db.Column(db.Integer, index=True)
+    route_thursday = db.Column(db.Integer, index=True)
+    route_friday = db.Column(db.Integer, index=True)
+    route_saturday = db.Column(db.Integer, index=True)
+    route_sunday = db.Column(db.Integer, index=True)
+
+    route_monday_start = db.Column(db.String(30), index=True)
+    route_tuesday_start = db.Column(db.String(30), index=True)
+    route_wednesday_start = db.Column(db.String(30), index=True)
+    route_thursday_start = db.Column(db.String(30), index=True)
+    route_friday_start = db.Column(db.String(30), index=True)
+    route_saturday_start = db.Column(db.String(30), index=True)
+    route_sunday_start = db.Column(db.String(30), index=True)
+
+    route_monday_end = db.Column(db.String(30), index=True)
+    route_tuesday_end = db.Column(db.String(30), index=True)
+    route_wednesday_end = db.Column(db.String(30), index=True)
+    route_thursday_end = db.Column(db.String(30), index=True)
+    route_friday_end = db.Column(db.String(30), index=True)
+    route_saturday_end = db.Column(db.String(30), index=True)
+    route_sunday_end = db.Column(db.String(30), index=True)
+
+    route_time_start_back = db.Column(db.String(30), index=True)
+    route_time_end_back = db.Column(db.String(30), index=True)
+
+    route_monday_back = db.Column(db.Integer, index=True)
+    route_tuesday_back = db.Column(db.Integer, index=True)
+    route_wednesday_back = db.Column(db.Integer, index=True)
+    route_thursday_back = db.Column(db.Integer, index=True)
+    route_friday_back = db.Column(db.Integer, index=True)
+    route_saturday_back = db.Column(db.Integer, index=True)
+    route_sunday_back = db.Column(db.Integer, index=True)
+
+    route_monday_start_back = db.Column(db.String(30), index=True)
+    route_tuesday_start_back = db.Column(db.String(30), index=True)
+    route_wednesday_start_back = db.Column(db.String(30), index=True)
+    route_thursday_start_back = db.Column(db.String(30), index=True)
+    route_friday_start_back = db.Column(db.String(30), index=True)
+    route_saturday_start_back = db.Column(db.String(30), index=True)
+    route_sunday_start_back = db.Column(db.String(30), index=True)
+
+    route_monday_end_back = db.Column(db.String(30), index=True)
+    route_tuesday_end_back = db.Column(db.String(30), index=True)
+    route_wednesday_end_back = db.Column(db.String(30), index=True)
+    route_thursday_end_back = db.Column(db.String(30), index=True)
+    route_friday_end_back = db.Column(db.String(30), index=True)
+    route_saturday_end_back = db.Column(db.String(30), index=True)
+    route_sunday_end_back = db.Column(db.String(30), index=True)
+
+    comment = db.Column(db.String(300), index=True)
+
+    district = db.Column(db.Integer, index=True)
+
+    borders = db.Column(db.Integer, index=True)
+    km = db.Column(db.Integer, index=True)
+
+    def __str__(self):
+        return ("id: {}\n".format(str(self.id)) +
+                "user_id: {}\n".format(str(self.user_id)) +
+                "car_id: {}\n".format(str(self.car_id)) +
+                "route_name: {}\n".format(str(self.route_name)) +
+                "route_type: {}\n".format(str(self.route_type)) +
+                "route_fixed_type: {}\n".format(str(self.route_fixed_type)) +
+                "start_point_id: {}\n".format(str(self.start_point_id)) +
+                "finish_point_id: {}\n".format(str(self.finish_point_id)) +
+                "route_days: {}\n".format(str(self.route_days)) +
+                "route_time_start_back: {}\n".format(str(self.route_time_start_back)) +
+                "route_time_end_back: {}\n".format(str(self.route_time_end_back)) +
+                "route_monday_back: {}\n".format(str(self.route_monday_back)) +
+                "route_tuesday_back: {}\n".format(str(self.route_tuesday_back)) +
+                "route_wednesday_back: {}\n".format(str(self.route_wednesday_back)) +
+                "route_thursday_back: {}\n".format(str(self.route_thursday_back)) +
+                "route_friday_back: {}\n".format(str(self.route_friday_back)) +
+                "route_saturday_back: {}\n".format(str(self.route_saturday_back)) +
+                "route_sunday_back: {}\n".format(str(self.route_sunday_back)) +
+                "route_monday_start_back: {}\n".format(str(self.route_monday_start_back)) +
+                "route_tuesday_start_back: {}\n".format(str(self.route_tuesday_start_back)) +
+                "route_wednesday_start_back: {}\n".format(str(self.route_wednesday_start_back)) +
+                "route_thursday_start_back: {}\n".format(str(self.route_thursday_start_back)) +
+                "route_friday_start_back: {}\n".format(str(self.route_friday_start_back)) +
+                "route_saturday_start_back: {}\n".format(str(self.route_saturday_start_back)) +
+                "route_sunday_start_back: {}\n".format(str(self.route_sunday_start_back)) +
+                "route_monday_end_back: {}\n".format(str(self.route_monday_end_back)) +
+                "route_tuesday_end_back: {}\n".format(str(self.route_tuesday_end_back)) +
+                "route_wednesday_end_back: {}\n".format(str(self.route_wednesday_end_back)) +
+                "route_thursday_end_back: {}\n".format(str(self.route_thursday_end_back)) +
+                "route_friday_end_back: {}\n".format(str(self.route_friday_end_back)) +
+                "route_saturday_end_back: {}\n".format(str(self.route_saturday_end_back)) +
+                "route_sunday_end_back: {}\n".format(str(self.route_sunday_end_back)) +
+                "route_time_start_back: {}\n".format(str(self.route_time_start_back)) +
+                "route_time_end_back: {}\n".format(str(self.route_time_end_back)) +
+                "route_monday_back: {}\n".format(str(self.route_monday_back)) +
+                "route_tuesday_back: {}\n".format(str(self.route_tuesday_back)) +
+                "route_wednesday_back: {}\n".format(str(self.route_wednesday_back)) +
+                "route_thursday_back: {}\n".format(str(self.route_thursday_back)) +
+                "route_friday_back: {}\n".format(str(self.route_friday_back)) +
+                "route_saturday_back: {}\n".format(str(self.route_saturday_back)) +
+                "route_sunday_back: {}\n".format(str(self.route_sunday_back)) +
+                "route_monday_start_back: {}\n".format(str(self.route_monday_start_back)) +
+                "route_tuesday_start_back: {}\n".format(str(self.route_tuesday_start_back)) +
+                "route_wednesday_start_back: {}\n".format(str(self.route_wednesday_start_back)) +
+                "route_thursday_start_back: {}\n".format(str(self.route_thursday_start_back)) +
+                "route_friday_start_back: {}\n".format(str(self.route_friday_start_back)) +
+                "route_saturday_start_back: {}\n".format(str(self.route_saturday_start_back)) +
+                "route_sunday_start_back: {}\n".format(str(self.route_sunday_start_back)) +
+                "route_monday_end_back: {}\n".format(str(self.route_monday_end_back)) +
+                "route_tuesday_end_back: {}\n".format(str(self.route_tuesday_end_back)) +
+                "route_wednesday_end_back: {}\n".format(str(self.route_wednesday_end_back)) +
+                "route_thursday_end_back: {}\n".format(str(self.route_thursday_end_back)) +
+                "route_friday_end_back: {}\n".format(str(self.route_friday_end_back)) +
+                "route_saturday_end_back: {}\n".format(str(self.route_saturday_end_back)) +
+                "route_sunday_end_back: {}\n".format(str(self.route_sunday_end_back)) +
+                "comment: {}\n".format(str(self.comment)) +
+                "district: {}\n".format(str(self.district)) +
+                "borders: {}\n".format(str(self.borders)) +
+                "km: {}\n".format(str(self.km)))
+
+    def __repr__(self):
+        return ("id: {}\n".format(str(self.id)) +
+                "user_id: {}\n".format(str(self.user_id)) +
+                "car_id: {}\n".format(str(self.car_id)) +
+                "route_name: {}\n".format(str(self.route_name)) +
+                "route_type: {}\n".format(str(self.route_type)) +
+                "route_fixed_type: {}\n".format(str(self.route_fixed_type)) +
+                "start_point_id: {}\n".format(str(self.start_point_id)) +
+                "finish_point_id: {}\n".format(str(self.finish_point_id)) +
+                "route_days: {}\n".format(str(self.route_days)) +
+                "route_time_start_back: {}\n".format(str(self.route_time_start_back)) +
+                "route_time_end_back: {}\n".format(str(self.route_time_end_back)) +
+                "route_monday_back: {}\n".format(str(self.route_monday_back)) +
+                "route_tuesday_back: {}\n".format(str(self.route_tuesday_back)) +
+                "route_wednesday_back: {}\n".format(str(self.route_wednesday_back)) +
+                "route_thursday_back: {}\n".format(str(self.route_thursday_back)) +
+                "route_friday_back: {}\n".format(str(self.route_friday_back)) +
+                "route_saturday_back: {}\n".format(str(self.route_saturday_back)) +
+                "route_sunday_back: {}\n".format(str(self.route_sunday_back)) +
+                "route_monday_start_back: {}\n".format(str(self.route_monday_start_back)) +
+                "route_tuesday_start_back: {}\n".format(str(self.route_tuesday_start_back)) +
+                "route_wednesday_start_back: {}\n".format(str(self.route_wednesday_start_back)) +
+                "route_thursday_start_back: {}\n".format(str(self.route_thursday_start_back)) +
+                "route_friday_start_back: {}\n".format(str(self.route_friday_start_back)) +
+                "route_saturday_start_back: {}\n".format(str(self.route_saturday_start_back)) +
+                "route_sunday_start_back: {}\n".format(str(self.route_sunday_start_back)) +
+                "route_monday_end_back: {}\n".format(str(self.route_monday_end_back)) +
+                "route_tuesday_end_back: {}\n".format(str(self.route_tuesday_end_back)) +
+                "route_wednesday_end_back: {}\n".format(str(self.route_wednesday_end_back)) +
+                "route_thursday_end_back: {}\n".format(str(self.route_thursday_end_back)) +
+                "route_friday_end_back: {}\n".format(str(self.route_friday_end_back)) +
+                "route_saturday_end_back: {}\n".format(str(self.route_saturday_end_back)) +
+                "route_sunday_end_back: {}\n".format(str(self.route_sunday_end_back)) +
+                "route_time_start_back: {}\n".format(str(self.route_time_start_back)) +
+                "route_time_end_back: {}\n".format(str(self.route_time_end_back)) +
+                "route_monday_back: {}\n".format(str(self.route_monday_back)) +
+                "route_tuesday_back: {}\n".format(str(self.route_tuesday_back)) +
+                "route_wednesday_back: {}\n".format(str(self.route_wednesday_back)) +
+                "route_thursday_back: {}\n".format(str(self.route_thursday_back)) +
+                "route_friday_back: {}\n".format(str(self.route_friday_back)) +
+                "route_saturday_back: {}\n".format(str(self.route_saturday_back)) +
+                "route_sunday_back: {}\n".format(str(self.route_sunday_back)) +
+                "route_monday_start_back: {}\n".format(str(self.route_monday_start_back)) +
+                "route_tuesday_start_back: {}\n".format(str(self.route_tuesday_start_back)) +
+                "route_wednesday_start_back: {}\n".format(str(self.route_wednesday_start_back)) +
+                "route_thursday_start_back: {}\n".format(str(self.route_thursday_start_back)) +
+                "route_friday_start_back: {}\n".format(str(self.route_friday_start_back)) +
+                "route_saturday_start_back: {}\n".format(str(self.route_saturday_start_back)) +
+                "route_sunday_start_back: {}\n".format(str(self.route_sunday_start_back)) +
+                "route_monday_end_back: {}\n".format(str(self.route_monday_end_back)) +
+                "route_tuesday_end_back: {}\n".format(str(self.route_tuesday_end_back)) +
+                "route_wednesday_end_back: {}\n".format(str(self.route_wednesday_end_back)) +
+                "route_thursday_end_back: {}\n".format(str(self.route_thursday_end_back)) +
+                "route_friday_end_back: {}\n".format(str(self.route_friday_end_back)) +
+                "route_saturday_end_back: {}\n".format(str(self.route_saturday_end_back)) +
+                "route_sunday_end_back: {}\n".format(str(self.route_sunday_end_back)) +
+                "comment: {}\n".format(str(self.comment)) +
+                "district: {}\n".format(str(self.district)) +
+                "borders: {}\n".format(str(self.borders)) +
+                "km: {}\n".format(str(self.km)))

@@ -101,20 +101,20 @@
         var tmp = {};
         var tmp_arr = [];
         for (i = 0; i < data.data.arr.length; i++) {
-            var key = data.data.arr[i].from;
+            var key = data.data.arr[i];
             tmp.key = 1;
             tmp_arr.push(key);
-            var div = document.getElementById('__' + key);
+            var div = document.getElementById('__' + key.from);
             sum += data.data.arr[i].new;
             if (div) {
-                div.innerHTML = '<span class="badge">' + data.data.arr[i].new.toString() + '</span> ' + key;
+                div.innerHTML = '<span class="badge">' + data.data.arr[i].new.toString() + '</span> ' + key.email;
             }
         }
         for (i = 0; i < last_names.length; i++) {
-            if (last_names[i] == to && !(tmp['last_names[i]'])) {
-                var div = document.getElementById('__' + last_names[i]);
+            if (last_names[i].from == to && !(tmp['last_names[i]'])) {
+                var div = document.getElementById('__' + last_names[i].from);
                 if (div) {
-                    div.innerHTML = last_names[i];
+                    div.innerHTML = last_names[i].email;
                 }
             }
         }

@@ -9,7 +9,7 @@ from flask import make_response
 
 from app import app, db, allowed_file
 from app.forms import RegForm
-from app.models import User, Representative, Car, Route
+from app.models import User, Representative, Car, Role
 from app.decorators import login_required, after_this_request
 
 
@@ -97,7 +97,7 @@ def change_password():
 @app.route('/profile')
 @login_required
 def profile():
-    if g.user.role == 2:
+    if g.user.role & Role.add:
         representatives = Representative.query.filter_by(
             company_id=g.session.id).all()
         return render_template('profile.html', representatives=representatives)
@@ -127,7 +127,7 @@ def update_profile(role):
     def missing_param(p):
         return construct_response(1, 'Missing parameter: {0}'.format(p))
 
-    if role == 1:
+    if role & Role.car:
         surname = request.form.get('user-lastname')
         name = request.form.get('user-firstname')
         middle_name = request.form.get('user-middlename')
@@ -158,7 +158,7 @@ def update_profile(role):
         db.session.commit()
         return make_response(jsonify(construct_response(0, 'OK')), 200)
 
-    elif role == 2:
+    elif role & Role.add:
         company_name = request.form.get('company-name')
         company_representative_name = request.form.get(
             'company-representative-name')
@@ -264,12 +264,11 @@ def add_car():
 @login_required
 def chat():
     users = []
-    if g.user:
-        if g.user.is_admin():
-            all_users = User.query.all()
-            users = [user.email for user in all_users if not(user.is_admin())]
-        else:
-            users = [u"Техническая поддержка"]
+    all_users = User.query.all()
+    if g.user.is_admin():
+        users = [{'id': user.id, 'email': user.email} for user in all_users if not user.is_admin()]
+    else:
+        users = [{'id': user.id, 'email': u'Техническая поддержка'} for user in all_users if user.is_admin()]
     return render_template('chat.html', users=users)
 
 
@@ -376,109 +375,9 @@ def change_car(car_id):
 
     return make_response(jsonify(construct_response(0, 'OK')), 200)
 
-
-@app.route('/routes')
-def routes():
-    cars = Car.query.filter_by(user_id=g.session.id).all()
-    return render_template('marshruty.html', cars=cars)
-
-
-@app.route('/add_route', methods=['POST'])
-@login_required
-def add_route():
-
-    def construct_response(code, message):
-        return {'code': code, 'message': message}
-
-    def incorrect_param(p):
-        return construct_response(1, 'Incorrect parameter: {0}'.format(p))
-
-    def missing_param(p):
-        return construct_response(1, 'Missing parameter: {0}'.format(p))
-
-    car_id = request.form.get('car_id')
-    route_name = request.form.get('route_name')
-    route_type = request.form.get('route_type')
-
-    if not car_id:
-        return make_response(jsonify(missing_param('car_id')), 400)
-    if not route_name:
-        return make_response(jsonify(missing_param('route_name')), 400)
-    if not route_type:
-        return make_response(jsonify(missing_param('route_type')), 400)
-
-    if route_type == "1":
-
-        route_fixed_type = request.form.get('ts_route_direction')
-        if not route_fixed_type:
-            return make_response(jsonify(missing_param('route_fixed_type')), 400)
-
-        if route_fixed_type == "one_direction":
-            route_fixed_type = 0
-        else:
-            route_fixed_type = 1
-
-        if route_fixed_type == 0:
-
-            start_point_id = request.form.get('ts_route_start_var')
-            if not start_point_id:
-                return make_response(jsonify(missing_param('start_point_id')), 400)
-
-            finish_point_id = request.form.get('ts_route_finish_var')
-            if not finish_point_id:
-                return make_response(jsonify(missing_param('finish_point_id')), 400)
-
-            route_days = request.form.get('ts_route_days')
-            if not route_days:
-                return make_response(jsonify(missing_param('route_days')), 400)
-
-            if route_days == "ts_route_days_weekdays":
-                route_days = 0
-            elif route_days == "ts_route_days_weekend":
-                route_days = 1
-            elif route_days == "ts_route_days_alldays":
-                route_days = 2
-            else:
-                route_days = 3
-
-            new_route = Route(
-                user_id=g.user.id,
-                car_id=int(car_id),
-                route_name=route_name,
-                route_type=int(route_type),
-                route_fixed_type=route_fixed_type,
-                start_point_id=int(start_point_id),
-                finish_point_id=int(finish_point_id),
-                route_days=route_days)
-
-            db.session.add(new_route)
-            db.session.commit()
-
-        else:
-            pass
-
-    elif route_type == "2":
-        new_route = Route(
-            user_id=g.user.id,
-            car_id=int(car_id),
-            route_name=route_name,
-            route_type=int(route_type))
-
-        db.session.add(new_route)
-        db.session.commit()
-    else:
-        new_route = Route(
-            user_id=g.user.id,
-            car_id=int(car_id),
-            route_name=route_name,
-            route_type=int(route_type))
-
-        db.session.add(new_route)
-        db.session.commit()
-
-    return make_response(jsonify(construct_response(0, 'OK')), 200)
-
 # ################### ERROR HANDLERS ####################
+
+
 @app.errorhandler(405)
 def error405(error):
     url = str(request.base_url)

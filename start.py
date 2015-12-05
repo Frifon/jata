@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from os import system
 import argparse
 from sys import platform as _platform
