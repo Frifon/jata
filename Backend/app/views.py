@@ -455,7 +455,7 @@ def add_route():
             db.session.commit()
 
         else:
-            
+            pass
 
     elif route_type == "2":
         new_route = Route(
