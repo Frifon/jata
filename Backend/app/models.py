@@ -277,4 +277,7 @@ class Route(db.Model):
 
     comment = db.Column(db.String(300), index=True)
 
-    district = db.Column(db.String(30), index=True)
+    district = db.Column(db.Integer, index=True)
+
+    borders = db.Column(db.Integer, index=True)
+    km = db.Column(db.Integer, index=True)

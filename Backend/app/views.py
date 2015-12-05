@@ -886,7 +886,7 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                 car_id=int(car_id),
                 route_name=route_name,
                 route_type=int(route_type),
-                district=district,
+                district=int(district),
                 route_days=route_days,
                 route_monday=int(bool(route_monday)),
                 route_monday_start=route_monday_start,
@@ -935,7 +935,7 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
                 car_id=int(car_id),
                 route_name=route_name,
                 route_type=int(route_type),
-                district=district,
+                district=int(district),
                 route_days=route_days,
                 route_time_start=route_time_start,
                 route_time_end=route_time_end,
@@ -944,11 +944,41 @@ def add_route():                # REFACTOR REFACTOR DELETE EXTERMINATE REFACTOR
             db.session.add(new_route)
             db.session.commit()
     else:
+        borders = request.form.get('ts_route_3_var')
+        if not borders:
+            return make_response(
+                jsonify(missing_param('borders')), 400)
+
+        route_time_start = request.form.get('ts_route_3_start')
+        if not route_time_start:
+            return make_response(
+                jsonify(missing_param('route_time_start')), 400)
+
+        route_time_end = request.form.get('ts_route_3_end')
+        if not route_time_end:
+            return make_response(
+                jsonify(missing_param('route_time_end')), 400)
+
+        km = request.form.get('ts_route_3_length')
+        if not km:
+            return make_response(
+                jsonify(missing_param('km')), 400)
+
+        comment = request.form.get('ts_route_3_comment')
+        if not comment:
+            return make_response(
+                jsonify(missing_param('comment')), 400)
+
         new_route = Route(
             user_id=g.user.id,
             car_id=int(car_id),
             route_name=route_name,
-            route_type=int(route_type))
+            route_type=int(route_type),
+            borders=int(borders),
+            route_time_start=route_time_start,
+            route_time_end=route_time_end,
+            comment=comment,
+            km=int(km))
 
         db.session.add(new_route)
         db.session.commit()
