@@ -1,13 +1,39 @@
 from app import db
+from enum import IntEnum
 from flask import g
 from hashlib import md5
 from random import randint
 from datetime import datetime
 from sqlalchemy.orm import relationship, backref
 
-ROLE_CAR = 1
-ROLE_ADD = 2
-ROLE_ADMIN = 4
+
+class Role(IntEnum):
+    car = 1
+    add = 2
+    admin = 4
+
+
+class DefaultUser():
+    class DefaultUserException(Exception):
+        def __init__(self, value):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
+
+    def __getattr__(self, name):
+        raise self.DefaultUserException(name + ' attribute does not exist')
+
+    def __setattr__(self, name):
+        raise self.DefaultUserException('manipulating the DefaultUser instance is forbidden')
+
+    @staticmethod
+    def is_admin(self):
+        return False
+
+    @staticmethod
+    def __repr__(self):
+        return 'None:None'
 
 
 class User(db.Model):
@@ -17,7 +43,7 @@ class User(db.Model):
     password = db.Column(db.String(30), index=True)
     tel_number = db.Column(db.String(30), index=True)
     city = db.Column(db.String(60), index=True)
-    role = db.Column(db.SmallInteger, default=ROLE_CAR, index=True)
+    role = db.Column(db.SmallInteger, default=Role['car'], index=True)
 
     name = db.Column(db.String(60), index=True)
     surname = db.Column(db.String(60), index=True)
@@ -28,7 +54,7 @@ class User(db.Model):
     verified = db.Column(db.Boolean, index=True)
 
     def is_admin(self):
-        return self.email == 'admin'
+        return self.role & Role['admin']
 
     def __repr__(self):
         return '{0}:{1}'.format(self.id, self.email)
@@ -38,34 +64,32 @@ class Message(db.Model):
     __table_args__ = {'sqlite_autoincrement': True}
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    user_email = db.Column(
-        db.String(120), db.ForeignKey(User.email), index=True)
-    dest_email = db.Column(
-        db.String(120), db.ForeignKey(User.email), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), index=True)
+    dest_id = db.Column(db.Integer, db.ForeignKey(User.id), index=True)
     message = db.Column(db.String(3000), index=True)
     timestamp = db.Column(db.Float, index=True)
 
     user = relationship(
         'User',
         backref=backref('send_by_me_messages', order_by=timestamp),
-        primaryjoin='Message.user_email == User.email')
+        primaryjoin='Message.user_id == User.id')
 
     dest = relationship(
         'User',
         backref=backref('send_to_me_messages', order_by=timestamp),
-        primaryjoin='Message.dest_email == User.email')
+        primaryjoin='Message.dest_id == User.id')
 
     def serialize(self):
         return {
-            'from': self.user_email,
-            'to': self.dest_email,
+            'from': self.user_id,
+            'to': self.dest_id,
             'timestamp': self.timestamp,
             'message': self.message
         }
 
     def __repr__(self):
         return u'{0} ==> {1} : {2} ({3} : {4})'.format(
-            self.user, self.dest, self.message, self.id, self.timestamp)
+            self.user_id, self.dest_id, self.message, self.id, self.timestamp)
 
 
 class Session(db.Model):
@@ -85,15 +109,15 @@ class Session(db.Model):
 
 
 class MessageHistory(db.Model):
-    user_email = db.Column(
-        db.String(120),
-        db.ForeignKey(User.email),
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey(User.id),
         primary_key=True,
         index=True)
 
-    dest_email = db.Column(
-        db.String(120),
-        db.ForeignKey(User.email),
+    dest_id = db.Column(
+        db.Integer,
+        db.ForeignKey(User.id),
         primary_key=True,
         index=True)
 
@@ -101,22 +125,22 @@ class MessageHistory(db.Model):
 
     user = relationship(
         'User',
-        backref=backref('send_by_me_history', order_by=dest_email),
-        primaryjoin='MessageHistory.user_email == User.email')
+        backref=backref('send_by_me_history', order_by=dest_id),
+        primaryjoin='MessageHistory.user_id == User.id')
 
     dest = relationship(
         'User',
-        backref=backref('send_to_me_history', order_by=user_email),
-        primaryjoin='MessageHistory.dest_email == User.email')
+        backref=backref('send_to_me_history', order_by=user_id),
+        primaryjoin='MessageHistory.dest_id == User.id')
 
     def serialize(self):
         return {
-            'email': self.user_email,
+            'id': self.user_id,
             'timestamp': self.timestamp
         }
 
     def __repr__(self):
-        return '{0} ==> {1} : {2}'.format(self.user, self.dest, self.timestamp)
+        return '{0} ==> {1} : {2}'.format(self.user_id, self.dest_id, self.timestamp)
 
 
 class Representative(db.Model):

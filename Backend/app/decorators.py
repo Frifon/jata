@@ -4,11 +4,12 @@ from functools import wraps
 from sqlalchemy.orm.exc import NoResultFound
 
 from app import app
-from app.models import Session, User
+from app.models import Session, User, DefaultUser
 
 
 # ##################### CONSTANTS #######################
-default_user = User(id=12345678987654321)   # DEPRECATED
+# default_user = User(id=12345678987654321)   # DEPRECATED
+default_user = DefaultUser()
 # ################# ################# ###################
 
 

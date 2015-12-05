@@ -22,16 +22,16 @@ def addMessage():
             {'code': 0, 'message': 'Missing parameters (to or message)'}), 400)
     try:
         mes_hist = MessageHistory.query.filter(
-            MessageHistory.user_email == g.user.email,
-            MessageHistory.dest_email == receiver).one()
+            MessageHistory.user_id == g.user.id,
+            MessageHistory.dest_id == receiver).one()
     except NoResultFound:
         db.session.add(MessageHistory(
-            user_email=g.user.email, dest_email=receiver, timestamp=0))
+            user_id=g.user.id, dest_id=receiver, timestamp=0))
     timestamp = datetime.datetime.utcnow().timestamp()
 
     new_message = Message(
-        user_email=g.user.email,
-        dest_email=receiver,
+        user_id=g.user.id,
+        dest_id=receiver,
         message=message,
         timestamp=timestamp)
 
@@ -46,15 +46,15 @@ def getMessages():
     timestamp = request.args['timestamp']
     author = request.args['user']
     if not author:
-        author = "qkjbdlkjndflkjsbdlfk"
+        author = -1                         # <=====     !!! WTF? !!!
     if not timestamp:
         return make_response(jsonify(
             {'code': 0, 'message': 'Missing parameters (timestamp)'}), 400)
     messages = Message.query.filter(or_(
-                                    and_(Message.user_email == g.user.email,
-                                         Message.dest_email == author),
-                                    and_(Message.dest_email == g.user.email,
-                                         Message.user_email == author)
+                                    and_(Message.user_id == g.user.id,
+                                         Message.dest_id == author),
+                                    and_(Message.dest_id == g.user.id,
+                                         Message.user_id == author)
                                     ),
                                     Message.timestamp >= timestamp).order_by(
         Message.timestamp).all()
@@ -79,8 +79,8 @@ def manageSeenMessages():
             400)
     try:
         mes_hist = MessageHistory.query.filter(
-            MessageHistory.dest_email == g.user.email,
-            MessageHistory.user_email == user).one()
+            MessageHistory.dest_id == g.user.id,
+            MessageHistory.user_id == user).one()
         mes_hist.timestamp = timestamp
         db.session.commit()
     except NoResultFound:
@@ -94,11 +94,11 @@ def getSeenTimestamps():
     ans = []
     for mh in g.user.send_to_me_history:
         new = len(Message.query.filter(
-            Message.dest_email == mh.dest_email,
-            Message.user_email == mh.user_email,
+            Message.dest_id == mh.dest_id,
+            Message.user_id == mh.user_id,
             Message.timestamp > mh.timestamp).all())
         if new != 0:
-            ans.append({'new': new, 'from': mh.user_email})
+            ans.append({'new': new, 'from': mh.user})
     return make_response(jsonify({
         'code': 0,
         'message': 'OK',
