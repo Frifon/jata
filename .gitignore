@@ -58,3 +58,4 @@ target/
 
 Backend/app.db
 Backend/*error
+Backend/app/static/messages_uploads

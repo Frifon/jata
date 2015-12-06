@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+	<script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU&onload=onLoad"></script>
 
 
 	
@@ -151,17 +151,17 @@
 																		</span>
 																		<!-- Умный поиск -->
 																		<!-- При клке по карте сразу отображается адрес, либо надо ввести более 3-х символов, чтобы отобразились варианты -->
-																		<input name="ts_route_start" id="ts_route_start" class="form-control input-with-x" placeholder="Начало маршрута" list="ts_route_start_var" data-xp="search_from_start: false"></input>
+																		<input name="ts_route_start" id="ts_route_start" class="form-control input-with-x" placeholder="Начало маршрута"</input>
 																		<!-- / Умный поиск -->
 																	</div>
 																	<!-- Найденные варианты через умный поиск -->
 																	<!-- Выпадающее меню, появляющееся при вводе в умный поиск более 3-х символов, т.е. подгружаем результаты в option-ы при вводе более 3-симв (напрмер, "Энгельса 15")-->
-																	<select name="ts_route_start_var" id="ts_route_start_var" class="select-dropdown">
+																	<!-- <select name="ts_route_start_var" id="ts_route_start_var" class="select-dropdown">
 																		<option value="1">Санкт-Петербург, улица Энгельса 15</option>
 																		<option value="2">Москва, проспект Энгельса 15</option>
 																		<option value="3">Чебоксары, бульвар Энгельса 15</option>
 																		<option value="4">Иркутск, площадь Энгельса 15</option>
-																	</select>
+																	</select> -->
 																	<!-- / Найденные варианты через умный поиск -->
 																</div>
 																<!-- / Ввод начальной точки маршрута -->	
@@ -175,17 +175,17 @@
 																		</span>
 																		<!-- Умный поиск -->
 																		<!-- При клке по карте сразу отображается адрес, либо надо ввести более 3-х символов, чтобы отобразились варианты -->
-																		<input name="ts_route_finish" id="ts_route_finish" class="form-control input-with-x" data-xp="enabled: '[name=ts_route_start]', search_from_start: false" list="ts_route_finish_var" placeholder="Конец маршрута"></input>
+																		<input name="ts_route_finish" id="ts_route_finish" class="form-control input-with-x" data-xp="enabled: '[name=ts_route_start]'" placeholder="Конец маршрута"></input>
 																		<!-- / Умный поиск -->
 																	</div>
 																	<!-- Найденные варианты через умный поиск -->
 																	<!-- Выпадающее меню, появляющееся при вводе в умный поиск более 3-х символов, т.е. подгружаем результаты в option-ы при вводе более 3-симв (напрмер, "Энгельса 15")-->
-																	<select name="ts_route_finish_var" id="ts_route_finish_var" class="select-dropdown">
+																	<!-- <select name="ts_route_finish_var" id="ts_route_finish_var" class="select-dropdown">
 																		<option value="1">Санкт-Петербург, улица Энгельса 15</option>
 																		<option value="2">Москва, проспект Энгельса 15</option>
 																		<option value="3">Чебоксары, бульвар Энгельса 15</option>
 																		<option value="4">Иркутск, площадь Энгельса 15</option>
-																	</select>
+																	</select> -->
 																	<!-- / Найденные варианты через умный поиск -->
 																</div>
 																<!-- Ввод конечной точки маршрута -->
@@ -462,7 +462,7 @@
 																		</span>
 																		<!-- Умный поиск -->
 																		<!-- При клке по карте сразу отображается адрес, либо надо ввести более 3-х символов, чтобы отобразились варианты -->
-																		<input name="ts_route_intermediate_point" id="ts_route_intermediate_point" class="form-control input-with-x" data-xp="enabled: '[name=ts_route_start]', search_from_start: false" list="ts_route_intermediate_var" placeholder="Промежуточная точка"></input>
+																		<input name="ts_route_intermediate_point" id="ts_route_intermediate_point" class="form-control input-with-x" data-xp="enabled: '[name=ts_route_start]'" placeholder="Промежуточная точка"></input>
 																		<!-- / Умный поиск -->
 																		<span class="input-group-btn">
 																			<span class="btn btn-default repeat_remove_button">&ndash;</span>
@@ -472,12 +472,12 @@
 																	</div>
 																	<!-- Найденные варианты через умный поиск -->
 																	<!-- Выпадающее меню, появляющееся при вводе в умный поиск более 3-х символов, т.е. подгружаем результаты в option-ы при вводе более 3-симв (напрмер, "Энгельса 15")-->
-																	<select name="ts_route_intermediate_var" id="ts_route_intermediate_var" class="select-dropdown">
+																	<!-- <select name="ts_route_intermediate_var" id="ts_route_intermediate_var" class="select-dropdown">
 																		<option value="1">Санкт-Петербург, улица Энгельса 15</option>
 																		<option value="2">Москва, проспект Энгельса 15</option>
 																		<option value="3">Чебоксары, бульвар Энгельса 15</option>
 																		<option value="4">Иркутск, площадь Энгельса 15</option>
-																	</select>
+																	</select> -->
 																	<!-- / Найденные варианты через умный поиск -->
 																</div>
 																<!-- Ввод промежуточной точки маршрута -->									
@@ -814,14 +814,14 @@
 																		<span class="input-group-addon">
 																			<i class="glyphicon glyphicon-home font-14"></i>
 																		</span>
-																		<input name="ts_route_district" id="ts_route_start" class="form-control input-with-x" placeholder="Район города" list="ts_route_district_var" data-xp="search_from_start: false"></input>
+																		<input name="ts_route_district" id="ts_route_district" class="form-control input-with-x" placeholder="Район города"></input>
 																	</div>
-																	<select name="ts_route_district_var" id="ts_route_district_var" class="select-dropdown">
+																	<!-- <select name="ts_route_district_var" id="ts_route_district_var" class="select-dropdown">
 																		<option value="1">Фрунзенский район</option>
 																		<option value="2">Калининский район</option>
 																		<option value="3">Московский район</option>
 																		<option value="4">Красногвардейскй район</option>
-																	</select>
+																	</select> -->
 																</div>
 															</div>
 															<!-- / Выбор района -->
@@ -1191,9 +1191,7 @@
 												<div class="col-xs-7">
 													<div id="map" class="map-movement"></div>
 												</div>
-											</div>
-											
-				<!--		<pre><?php print_r($_GET)?></pre>		 -->						
+											</div>					
 												
 											
 										</div>
@@ -1305,6 +1303,27 @@
 
 		    e.preventDefault();
 		});
+
+		function onLoad (ymaps) {
+		    var suggestView = new ymaps.SuggestView('ts_route_start');
+		    var suggestView2 = new ymaps.SuggestView('ts_route_finish');
+		    var suggestView3 = new ymaps.SuggestView('ts_route_district');
+		}
+		var max = -1;
+		var sugests = {};
+		setInterval(updateInterPt, 3000);
+		function updateInterPt() {
+			var i = 0;
+			while (document.getElementsByName('ts_route_intermediate_point[' + i.toString() + ']')[0]) {
+				if (i > max) {
+					max = i;
+					sugests[i] = new ymaps.SuggestView(document.getElementsByName('ts_route_intermediate_point[' + i.toString() + ']')[0].id);
+				}
+				i++;
+			}
+			max = i - 1;
+		}
+		
 	</script>	
 	
 	
