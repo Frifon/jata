@@ -65,7 +65,7 @@
 										</div>
 										
 										<div class="panel-footer padding-bottom-21">
-											<form id="chat-massage-submitform"  enctype="multipart/form-data"  method="post" action="">
+											<form name="chat-massage-submitform" id="chat-massage-submitform" enctype="multipart/form-data"  method="post" action="/api/chat/message">
 												<textarea name="chat-massage-writepanel" id="message" name="message" class="panel form-control col-xs-12 chat-massage-writepanel" placeholder="Введите сообщение..."></textarea>
 												<div class="container-fluid">
 													<div class="row-fluid">
@@ -328,7 +328,7 @@
                                                                 <div class=\"container-fluid\">\
                                                                     <div class=\"row-fluid\">\
                                                                         <div class=\"col-xs-4 centering-y padding-left-0 font-12\">" + timeConverter(messages[i].timestamp) + "</div> \
-                                                                        <div class=\"col-xs-8 text-right centering-y padding-right-0 font-14 b nick\">
+                                                                        <div class=\"col-xs-8 text-right centering-y padding-right-0 font-14 b nick\"> \
                                                                             <span class=\"offline\"></span>" + 
                                                                             {% if g.user.is_admin() %} messages[i].from_email {% else %} "{{g.user.email}}" {% endif %} + 
                                                                         "</div>\
@@ -339,7 +339,7 @@
                                                                     <div class=\"col-xs-12 text-massage font-14\">\
                                                                         " + messages[i].message + "\
                                                                     </div>" : "\
-                                                                    <img src=\"" + messages[i].message + "\" alt=\"\">") + "\
+                                                                    <img src=/static/" + messages[i].message + ">") + "\
                                                                 </div>\
                                                             </div>\
                                                         </div>";
@@ -360,7 +360,7 @@
                                                                     <div class=\"col-xs-12 text-massage font-14\">\
                                                                         " + messages[i].message + "\
                                                                     </div>" : "\
-                                                                    <img src=\"" + messages[i].message + "\" alt=\"\">") + "\
+                                                                    <img src=/static/" + messages[i].message + ">") + "\
                                                                 </div>\
                                                             </div>\
                                                         </div>";
@@ -398,22 +398,45 @@
             $("#chat-massage-submitform").submit(function(e) {
 
                 var url = "/api/chat/message";
+                var formData = new FormData($(this)[0]);
+                formData.append("to", to);
+                // formData["token"] = getCookie("token");
+                // formData["to"] = to;
+                // formData["message"] = $("#chat-massage-submitform").serializeArray()[0].value;
+                console.log(formData);
 
                 $.ajax({
-                       type: "POST",
-                       url: url,
-                       data: {"token" : getCookie("token"), "to" : to, "message" : $("#chat-massage-submitform").serializeArray()[0].value},
-                       success: function(data)
-                       {
-                            $('#chat-massage-submitform')[0].reset();
-                            ajax_call();   
-                       },
-                       error: function(data)
-                       {
-                            console.log("ERROR: " + JSON.parse(data.responseText).message);
-                            ajax_call();
-                       }
-                     });
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data)
+                    {
+                        $('#chat-massage-submitform')[0].reset();
+                        ajax_call();   
+                    },
+                    error: function(data)
+                    {
+                        console.log("ERROR: " + data.responseText);
+                        ajax_call();
+                    }
+
+                    // success: function(data)
+                    // {
+                    //     var xhttp = new XMLHttpRequest();
+                    //     xhttp.open("POST", url, false);
+                    //     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    //     xhttp.send(data);
+                    //     window.location="/chat";
+                    // },
+                    // error: function(data)
+                    // {
+                    //     alert("ERROR: " + JSON.parse(data.responseText).message);
+                    // }
+                  });
 
                 e.preventDefault(); // avoid to execute the actual submit of the form.
             });

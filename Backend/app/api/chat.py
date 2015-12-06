@@ -4,6 +4,7 @@ import os
 import datetime
 
 from flask import Blueprint, g, request, jsonify, make_response
+from app import app
 from werkzeug import secure_filename
 from sqlalchemy import or_, and_
 from sqlalchemy.orm.exc import NoResultFound
@@ -20,9 +21,15 @@ api_chat = Blueprint('api_chat', __name__)
 @api_login_required
 def addMessage():
     receiver = request.form.get('to')
-    message = request.form.get('message')
-    image = request.files['file']
+    message = request.form.get('chat-massage-writepanel')
+    image = None
+    try:
+        image = request.files['file']
+    except:
+        pass
 
+    print(receiver)
+    print(message)
     if not receiver or not message:
         return make_response(jsonify(
             {'code': 0, 'message': 'Missing parameters (to or message)'}), 400)
@@ -49,12 +56,13 @@ def addMessage():
         filename = secure_filename(image.filename)
         # Consider removing user ids from image path
         # It's useful but may harm the security
-        image.save(os.path.join(app.config['MESSAGES_UPLOAD_FOLDER'], g.user.id, receiver, filename))
+        # image.save(os.path.join(app.config['MESSAGES_UPLOAD_FOLDER'], str(g.user.id), receiver, filename))
+        image.save(os.path.join(app.config['MESSAGES_UPLOAD_FOLDER'], filename))
 
         new_image = Message(
             user_id=g.user.id,
             dest_id=receiver,
-            message='img/' + str(g.user.id) + '/' + str(receiver) + '/' + filename,
+            message='messages_uploads/' + filename,
             timestamp=timestamp,
             type=Message.Type.image)
         print('img')

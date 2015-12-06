@@ -77,7 +77,7 @@ class Message(db.Model):
             image: 'image'}
 
         @classmethod
-        def __init__(cls, n):
+        def str(cls, n):
             return cls.assoc[n]
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -105,7 +105,7 @@ class Message(db.Model):
             'to_email':self.dest.email,
             'timestamp': self.timestamp,
             'message': self.message,
-            'type': self.Type(self.type)
+            'type': self.Type.str(self.type)
         }
 
     def __repr__(self):
