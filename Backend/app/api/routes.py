@@ -52,12 +52,12 @@ def add_route():
 
         if route_fixed_type == 0:
 
-            start_point_id = request.form.get('ts_route_start_var')
+            start_point_id = request.form.get('ts_route_start')
             if not start_point_id:
                 return make_response(
                     jsonify(missing_param('start_point_id')), 400)
 
-            finish_point_id = request.form.get('ts_route_finish_var')
+            finish_point_id = request.form.get('ts_route_finish')
             if not finish_point_id:
                 return make_response(
                     jsonify(missing_param('finish_point_id')), 400)
@@ -139,8 +139,8 @@ def add_route():
                     route_name=route_name,
                     route_type=int(route_type),
                     route_fixed_type=route_fixed_type,
-                    start_point_id=int(start_point_id),
-                    finish_point_id=int(finish_point_id),
+                    start_point_id=str(start_point_id),
+                    finish_point_id=str(finish_point_id),
                     route_days=route_days,
                     route_monday=int(bool(route_monday)),
                     route_monday_start=route_monday_start,
@@ -165,8 +165,7 @@ def add_route():
                     route_sunday_end=route_sunday_end,
                     comment=comment)
 
-                print(str(new_route))
-
+                
                 db.session.add(new_route)
                 db.session.commit()
 
@@ -192,24 +191,23 @@ def add_route():
                     route_name=route_name,
                     route_type=int(route_type),
                     route_fixed_type=route_fixed_type,
-                    start_point_id=int(start_point_id),
-                    finish_point_id=int(finish_point_id),
+                    start_point_id=str(start_point_id),
+                    finish_point_id=str(finish_point_id),
                     route_days=route_days,
                     route_time_start=route_time_start,
                     route_time_end=route_time_end,
                     comment=comment)
 
-                print(str(new_route))
-
+                
                 db.session.add(new_route)
                 db.session.commit()
         else:
-            start_point_id = request.form.get('ts_route_start_var')
+            start_point_id = request.form.get('ts_route_start')
             if not start_point_id:
                 return make_response(
                     jsonify(missing_param('start_point_id')), 400)
 
-            finish_point_id = request.form.get('ts_route_finish_var')
+            finish_point_id = request.form.get('ts_route_finish')
             if not finish_point_id:
                 return make_response(
                     jsonify(missing_param('finish_point_id')), 400)
@@ -340,8 +338,8 @@ def add_route():
                     route_name=route_name,
                     route_type=int(route_type),
                     route_fixed_type=route_fixed_type,
-                    start_point_id=int(start_point_id),
-                    finish_point_id=int(finish_point_id),
+                    start_point_id=str(start_point_id),
+                    finish_point_id=str(finish_point_id),
                     route_days=route_days,
                     route_monday=int(bool(route_monday)),
                     route_monday_start=route_monday_start,
@@ -387,8 +385,7 @@ def add_route():
                     route_sunday_end_back=route_sunday_end_back,
                     comment=comment)
 
-                print(str(new_route))
-
+                
                 db.session.add(new_route)
                 db.session.commit()
 
@@ -429,8 +426,8 @@ def add_route():
                     route_name=route_name,
                     route_type=int(route_type),
                     route_fixed_type=route_fixed_type,
-                    start_point_id=int(start_point_id),
-                    finish_point_id=int(finish_point_id),
+                    start_point_id=str(start_point_id),
+                    finish_point_id=str(finish_point_id),
                     route_days=route_days,
                     route_time_start=route_time_start,
                     route_time_end=route_time_end,
@@ -438,8 +435,7 @@ def add_route():
                     route_time_end_back=route_time_end,
                     comment=comment)
 
-                print(str(new_route))
-
+                
                 db.session.add(new_route)
                 db.session.commit()
 
@@ -551,8 +547,7 @@ def add_route():
                 route_sunday_end=route_sunday_end,
                 comment=comment)
 
-            print(str(new_route))
-
+            
             db.session.add(new_route)
             db.session.commit()
 
@@ -583,8 +578,7 @@ def add_route():
                 route_time_end=route_time_end,
                 comment=comment)
 
-            print(str(new_route))
-
+            
             db.session.add(new_route)
             db.session.commit()
     else:
@@ -624,8 +618,7 @@ def add_route():
             comment=comment,
             km=int(km))
 
-        print(str(new_route))
-
+        
         db.session.add(new_route)
         db.session.commit()
 
