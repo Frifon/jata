@@ -65,11 +65,27 @@ class User(db.Model):
 class Message(db.Model):
     __table_args__ = {'sqlite_autoincrement': True}
 
+    # vient on 06.12.2015:
+    # I surely want to split text and files in different messages like it is in Telegram,
+    # but I've no time to do it now so here is just this small class as a reminder.
+    # Currently, all messages are stored with 'text' type (Message.Type.text). 
+    class Type():
+        text = 1
+        image = 2
+        assoc = {
+            text: 'text', 
+            image: 'image'}
+
+        @classmethod
+        def __init__(cls, n):
+            return cls.assoc[n]
+
     id = db.Column(db.Integer, primary_key=True, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id), index=True)
     dest_id = db.Column(db.Integer, db.ForeignKey(User.id), index=True)
     message = db.Column(db.String(3000), index=True)
     timestamp = db.Column(db.Float, index=True)
+    type = db.Column(db.SmallInteger, index=True)
 
     user = relationship(
         'User',
@@ -88,7 +104,8 @@ class Message(db.Model):
             'from_email': self.user.email,
             'to_email':self.dest.email,
             'timestamp': self.timestamp,
-            'message': self.message
+            'message': self.message,
+            'type': self.Type(self.type)
         }
 
     def __repr__(self):

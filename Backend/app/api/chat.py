@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
+import datetime
+
 from flask import Blueprint, g, request, jsonify, make_response
+from werkzeug import secure_filename
 from sqlalchemy import or_, and_
 from sqlalchemy.orm.exc import NoResultFound
-import datetime
 
 from app import db
 from app.models import Message, MessageHistory
@@ -18,6 +21,8 @@ api_chat = Blueprint('api_chat', __name__)
 def addMessage():
     receiver = request.form.get('to')
     message = request.form.get('message')
+    image = request.files['file']
+
     if not receiver or not message:
         return make_response(jsonify(
             {'code': 0, 'message': 'Missing parameters (to or message)'}), 400)
@@ -34,9 +39,27 @@ def addMessage():
         user_id=g.user.id,
         dest_id=receiver,
         message=message,
-        timestamp=timestamp)
+        timestamp=timestamp,
+        type=Message.Type.text)
+    print(message)
 
     db.session.add(new_message)
+
+    if image:
+        filename = secure_filename(image.filename)
+        # Consider removing user ids from image path
+        # It's useful but may harm the security
+        image.save(os.path.join(app.config['MESSAGES_UPLOAD_FOLDER'], g.user.id, receiver, filename))
+
+        new_image = Message(
+            user_id=g.user.id,
+            dest_id=receiver,
+            message='img/' + str(g.user.id) + '/' + str(receiver) + '/' + filename,
+            timestamp=timestamp,
+            type=Message.Type.image)
+        print('img')
+        db.session.add(new_image)
+
     db.session.commit()
     return make_response(jsonify({'code': 1, 'message': 'OK'}), 200)
 
