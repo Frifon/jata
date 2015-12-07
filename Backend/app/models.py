@@ -192,7 +192,8 @@ class Car(db.Model):
 # ######################## GPS ##########################
 
 class Point(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __table_args__ = {'sqlite_autoincrement': True}
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     user_id = db.Column(db.Integer, index=True)
     latitude = db.Column(db.Float, index=True)
     longtitude = db.Column(db.Float, index=True)
@@ -223,7 +224,8 @@ class Point(db.Model):
 
 
 class Route(db.Model):
-    id = db.Column(db.Integer, primary_key=True, default=0)
+    __table_args__ = {'sqlite_autoincrement': True}
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     user_id = db.Column(db.Integer, index=True, default=0)
     car_id = db.Column(db.Integer, index=True, default=0)
     route_name = db.Column(db.String(30), index=True, default='')
@@ -296,7 +298,7 @@ class Route(db.Model):
 
     comment = db.Column(db.String(300), index=True, default='')
 
-    district = db.Column(db.Integer, index=True, default=0)
+    district = db.Column(db.String(120), index=True, default='')
 
     borders = db.Column(db.Integer, index=True, default=0)
     km = db.Column(db.Integer, index=True, default=0)
@@ -358,7 +360,7 @@ class Route(db.Model):
                 u"route_saturday_end_back: {}\n".format(str(self.route_saturday_end_back)) +
                 u"route_sunday_end_back: {}\n".format(str(self.route_sunday_end_back)) +
                 u"comment: {}\n".format(self.comment) +
-                u"district: {}\n".format(str(self.district)) +
+                u"district: {}\n".format(self.district) +
                 u"borders: {}\n".format(str(self.borders)) +
                 u"km: {}\n".format(str(self.km)))
 
@@ -419,6 +421,6 @@ class Route(db.Model):
                 u"route_saturday_end_back: {}\n".format(str(self.route_saturday_end_back)) +
                 u"route_sunday_end_back: {}\n".format(str(self.route_sunday_end_back)) +
                 u"comment: {}\n".format(self.comment) +
-                u"district: {}\n".format(str(self.district)) +
+                u"district: {}\n".format(self.district) +
                 u"borders: {}\n".format(str(self.borders)) +
                 u"km: {}\n".format(str(self.km)))
