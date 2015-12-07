@@ -5,9 +5,12 @@ import argparse
 from sys import platform as _platform
 
 project_dir = 'Backend'
+landing_dir = 'Landing'
 database_name = 'app.db'
 database_create_script = 'db_create.py'
 start_script = 'run.py'
+landing_start_script = 'run.py'
+landing_error_log = 'landing_error'
 error_log = 'error'
 start_admin = 'db_admin.py'
 error_log_admin = 'db_error'
@@ -39,10 +42,15 @@ if __name__ == "__main__":
         run("nohup python3 {0}/{1} 1>{0}/{2} 2>&1 &".format(
             project_dir, start_script, error_log))
 
+        run("nohup python3 {0}/{1} 1>{0}/{2} 2>&1 &".format(
+            landing_dir, landing_start_script, landing_error_log))
+
         run("nohup python2.7 {0}/{1} 1>{0}/{2} 2>&1 &".format(
             project_dir, start_admin, error_log_admin))
     else:
         run("start py -3 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(
             project_dir, start_script, error_log))
+        run("start py -3 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(
+            landing_dir, landing_start_script, landing_error_log))
         run("start py -2 {0}\\{1} 1>{0}\\{2} 2>&1 &".format(
             project_dir, start_admin, error_log_admin))
