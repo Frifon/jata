@@ -115,36 +115,7 @@
 					$(input_selector).trigger(event_main);
 				});
 
-			})(jQuery);
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				var myMap;
-
-				ymaps.ready(init);
-
-				function init () {
-					myMap = new ymaps.Map('map', {
-						center: [59.95, 30.2],
-						zoom: 10
-					}, {
-						searchControlProvider: 'yandex#search'
-					});
-
-					document.getElementById('destroyButton').onclick = function () {
-						myMap.destroy();
-					};
-
-				}
-				
-				
+			})(jQuery);	
 				
 				
 			
