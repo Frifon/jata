@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+</head>
+<body>
+	
+	
+	<div class="header-block  text-center">
+		<div class="block-center">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="col-xs-4 logo-block centering-y">
+						<a href="/"><img src="{{url_for('static', filename='img/logo.png')}}" class="logo-img"></a>
+					</div>
+					<div class="col-xs-8 centering-y">
+						<div class="head-contact-block text-right">
+							<div class="inline-block margin-right-14 adress">СПб, Московский проспект 97а (10:00 - 22:00)</div>
+							<div class="inline-block font-24 phone">8&nbsp;800&nbsp;375&nbsp;75&nbsp;75</div>
+						</div>
+						<div class="head-menu-block text-right">
+							<ul>
+								<li><a href="#">О JATA</a></li>
+								<li><a href="#">Как это работает?</a></li>
+								<li><a href="#">Рекламные места</a></li>
+								<li><a href="#">Блог</a></li>
+								<li><a href="#">Контакты</a></li>
+							</ul>
+						</div>
+						<div class="head-login-block text-right">
+							<form action="{{url_for('login')}}" id="login" method="post" name="login">
+								<input type="text" id="email" name="email" placeholder="Email:" class="input-sm" style="width: 100px;" >
+								<input type="password" id="password" name="password" placeholder="Password:" class="input-sm margin-right-35" style="width: 100px;">
+								<button class="btn btn-transparent margin-right-7" type="submit" name="submit" value="login">Вход</button>
+								<a href="#myModal" data-toggle="modal" class="btn btn-transparent">Регистрация</a>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<div class="head-slider-block">
+		<div class="fotorama" data-width="100%" data-height="450" data-fit="cover" data-transition="crossfade" data-loop="true" data-arrows="always" data-nav="false" >
+				<img src="{{url_for('static', filename='img/main-slide-1.png')}}" data-caption="JATA.RU универсальная платформа <br> для размещения рекламы, а так же <br> способ дополнительного заработка <br> с помощью своего транспорта.">
+				<img src="{{url_for('static', filename='img/main-slide-2.png')}}" data-caption="Огромная база автомобилей <br> и общественного транспорта. <br> Начните свою рекламную кампанию <br> без рекламных агентств!">
+				<img src="{{url_for('static', filename='img/main-slide-3.png')}}" data-caption="Зарабатывайте с помощью своего <br> транспортного средства с JATA.RU <br> просто передвигаясь по городу!">
+		</div>
+	</div>
+
+	
+	
+	
+	
+	<div class="user-role-block  text-center">
+		<div class="block-center">
+			<div class="row" style="margin-bottom: 100px;">
+				<div class="col-xs-6 text-center">
+					<div id="reklampdatel-btn" class="user-role-btn"><span>Я рекламодатель</span></div>
+				</div>
+				<div class="col-xs-6 text-center">
+					<div id="vladelec-btn" class="user-role-btn"><span>Я владелец <br>рекламного места</span></div>
+				</div>
+			</div>
+			
+			<div class="reklampdatel-img-block">
+				<h2 class="text-center color-red margin-bottom-35">Я рекламодатель</h2>
+				<table width="100%">
+						<tr>
+							<td class="col-xs-3 text-right valign-bottom"><img src="{{url_for('static', filename='img/red-line-top.png')}}"></td>
+							<td class="col-xs-3 text-center"><img src="{{url_for('static', filename='img/rekl-img-2.png')}}"></td>
+							<td class="col-xs-3 text-right valign-bottom"><img src="{{url_for('static', filename='img/red-line-top.png')}}" class="margin-bottom-14"></td>
+							<td class="col-xs-3 text-center valign-center"><img src="{{url_for('static', filename='img/rekl-img-4.png')}}"></td>
+						</tr>
+						<tr>
+							<td class="col-xs-3 text-center valign-center"><img src="{{url_for('static', filename='img/rekl-img-1.png')}}"></td>
+							<td class="col-xs-3 text-center valign-top">Пройдите верификацию в нашем офисе
+								<div class="text-right margin-top-14"><img src="{{url_for('static', filename='img/red-line-bottom.png')}}"></div></td>
+							<td class="col-xs-3 text-center"><img src="{{url_for('static', filename='img/rekl-img-3.png')}}"></td>
+							<td class="col-xs-3 text-center valign-top">Зарабатывайте деньги с <span class="color-red">JATA.ru</span></td>
+						</tr>
+						<tr>
+							<td class="col-xs-3 text-center valign-top">Зарегистрируйтесь, укажите всю информацию о себе и своей рекламной площадке</td>
+							<td class="col-xs-3"></td>
+							<td class="col-xs-3 text-center valign-top">Дождитесь пока с вамми свяжется потенциальный рекламодатель, либо самостоятельно участвуйте в тендерах</td>
+							<td class="col-xs-3"></td>
+						</tr>
+				</table>
+			</div>
+			
+			<div class="vladelec-img-block">
+				<h2 class="text-center color-blue margin-bottom-35">Я владелец рекламного места</h2>
+				<table width="100%">
+						<tr>
+							<td class="col-xs-3 text-right valign-bottom"><img src="{{url_for('static', filename='img/blue-line-top.png')}}"></td>
+							<td class="col-xs-3 text-center"><img src="{{url_for('static', filename='img/vlad-img-2.png')}}"></td>
+							<td class="col-xs-3 text-right valign-bottom"><img src="{{url_for('static', filename='img/blue-line-top.png')}}" class="margin-bottom-14"></td>
+							<td class="col-xs-3 text-center valign-center"><img src="{{url_for('static', filename='img/vlad-img-4.png')}}"></td>
+						</tr>
+						<tr>
+							<td class="col-xs-3 text-center valign-center"><img src="{{url_for('static', filename='img/vlad-img-1.png')}}"></td>
+							<td class="col-xs-3 text-center valign-top">Самостоятельно выбирайте рекламные площадки по необходимым вам параметрам
+								<div class="text-right margin-top-14"><img src="{{url_for('static', filename='img/blue-line-bottom.png')}}"></div></td>
+							<td class="col-xs-3 text-center"><img src="{{url_for('static', filename='img/vlad-img-3.png')}}"></td>
+							<td class="col-xs-3 text-center valign-top">Ваши деньги остаются в системе до конца рекламной кампании</td>
+						</tr>
+						<tr>
+							<td class="col-xs-3 text-center valign-top">Зарегистрируйтесь, укажите всю информацию о своей фирме и рекламной кампании</td>
+							<td class="col-xs-3"></td>
+							<td class="col-xs-3 text-center valign-top">Мониторьте оплаченные рекламные площадки в реальном времени</td>
+							<td class="col-xs-3"></td>
+						</tr>
+				</table>
+			</div>
+
+		</div>
+	</div>
+	
+	
+	
+	
+	<div class="foot-slider-block text-center">
+		<div class="block-center">
+			<div class="fotorama"  data-loop="true" data-arrows="always">
+				<img src="{{url_for('static', filename='img/foot-banner-1.png')}}">
+				<img src="{{url_for('static', filename='img/foot-banner-2.png')}}">
+				<img src="{{url_for('static', filename='img/foot-banner-3.png')}}">
+			</div>
+		</div>
+	</div>
+	
+	
+
+	
+	<div class="footer-block text-center">
+		<div class="block-center">
+			<div class="row">
+				<div class="col-xs-6 foot-menu">
+					<ul>
+						<li><a href="#">О компании</a></li>
+						<li><a href="#">Правила<!-- пользования --></a></li>
+						<li><a href="#">Вопрос/Ответ</a></li>
+						<li><a href="#">JATA.ru</a></li>
+						<li><a href="#">Защита данных</a></li>
+						<li><a href="#">Контакты</a></li>
+						<li><a href="#">О нас</a></li>
+						<li><a href="#">Пресса</a></li>
+						<li><a href="#">Команда</a></li>
+					</ul>
+				</div>
+				<div class="col-xs-6">
+					<div class="foot-contact padding-bottom-21 text-right color-fff">
+						<div class="foot-adrestel inline-block valign-top">
+							<div class="foot-tel font-24">8 800 375 75 75</div>
+							<div class="foot-adres">СПб, Московский проспект 97а (10:00-22:00)</div>
+						</div>
+						<div class="foot-soc inline-block valign-top padding-top-14">
+							<a href="#"><img src="{{url_for('static', filename='img/vk-icon.png')}}" height="38"></a>
+							<a href="#" class="margin-left-7"><img src="{{url_for('static', filename='img/fb-icon.png')}}" height="38"></a>
+						</div>
+					</div>
+					<div class="foot-copyr text-right" style="color: #d6eaed;">© jata.ru 2016. Все права защищены</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--
+		<div class="welcome">
+			<div class="welcome-c">
+				<form action="/login" method="post" name="login">
+					<div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value=""></div>
+						<span class="field">
+							<input type="text" id="login-email" name="login-email" placeholder="Email:" style="vertical-align:middle" class="input-sm"  data-xp="type: 'email', required: true">
+							<span class="show_on_blured_and_invalid">Введте корректный E-mail</span>
+						</span>
+						<span class="field field-password">
+							<input type="password" id="login-password" name="login-password" placeholder="Password:" class="input-sm">
+						</span>
+							
+							<button class="btn btn-primary" type="submit" name="submit" value="login" style="vertical-align:middle">Войти</button>
+						<a href="#myModal" data-toggle="modal">Регистрация</a>
+
+				</form>	
+			</div>
+		</div>
+   -->
+   
+   
+<div id="myModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Регистрация</h4>
+      </div>
+          
+      
+      <!-- Форма регистраци -->
+		        <form action="{{url_for('reg')}}" id="reg" method="post" name="register">
+		        	<div class="modal-body">
+						<div class="row register-form-left-block">
+							<div class="col-xs-6">
+								<label for="email">Введите E-mail *
+									<div class="input-group field">
+										<input type="text" id="email" name="email" placeholder="Email:" class="input-sm">
+									</div>
+									<span class="show_on_blured_and_invalid hide">Введите корректный E-mail</span>
+								</label>
+								
+								<label for="password">Введите пароль *
+									<div class="input-group field">
+										<input type="password" id="password" name="password" placeholder="Password:" class="input-sm">
+									</div>
+								</label>
+								<label for="confirm_password">Повторите пароль *
+									<div class="input-group field">
+										<input type="password" id="confirm_password" name="confirm_password" placeholder="Password:" class="input-sm">
+									</div>
+									<span class="show_on_blured_and_invalid hide">Пароли не совпадают</span>
+								</label>
+									
+								<label for="tel_number">Введите номер телефона *
+									<div class="input-group">
+										<span class="input-group-addon">+7</span>
+										<input type="text" id="tel_number" name="tel_number" class="input-sm tel-number" placeholder="(___) ___-__-__" class="input-sm" data-xp="type: 'phone'">
+									</div>
+									<span class="show_on_blured_and_invalid hide">Номер телефона не указан</span>
+								</label>
+								
+								<label for="city">Город проживания/передвижения *
+									<select id="city" name="city" class="form-control input-sm">
+										<option value>город</option>
+										<option value="spb">Санкт-Петербург</option>
+										<option value="msk">Москва</option>
+									</select>
+									<span class="show_on_blured_and_invalid hide">Выберите город *</span>
+								</label>
+							</div>
+							<div class="col-xs-6">
+								<div class="check-role">
+									<label>Тип участия *</label>
+									<div class="radio  margin-0">
+										<label class=" margin-0"><input name="userrole" id="vladelec" type="radio" value="vladelec">Я владелец рекламного места</label>
+									</div>
+									<div class="radio">
+										<label><input name="userrole" id="reklamodatel" type="radio" value="reklamodatel">Я рекламодатель</label>
+									</div>
+									<span class="show_on_blured_and_invalid hide">Укажите тип участия</span>
+								</div>
+								
+								<!-- Выборать Юр/Физ лицо -->
+								<div class="yurik-fizik-check">
+									<label>Выступаете в качетсве *</label>
+									<div class="radio margin-0">
+										<label class="margin-0"><input name="lico" type="radio" checked="checked" value="fiz_lico">Физического лица</label>
+									</div>
+									<div class="radio">
+										<label><input name="lico" type="radio" value="yur_lico">Юридического лица</label>
+									</div>
+									<span class="show_on_blured_and_invalid hide">Укажите, в качестве кого Вы будете принимать заказы</span>
+								</div>
+
+
+								<label for="rekl_mesto">Тип рекламного места</label>
+								<div class="input-group field">
+									<select class="form-control input-sm" name="rekl_mesto">
+										<option selected>Автомобиль/автобус</option>
+										<option disabled>Вариант 1</option>
+										<option disabled>Еще вариант</option>
+									</select>
+								</div>
+								
+								<!-- / Выборать Юр/Физ лицо -->
+							</div>
+							
+						</div>
+			      
+			      	</div>
+				    <div class="modal-footer">
+						<button class="btn btn-primary" value="reg" style="vertical-align:middle">Зарегистрироваться</button>
+				    </div> 
+				</form>
+	      		<!-- / Форма регистраци -->
+	      
+	      		<!-- Ввод кода подтверждения по СМС -->
+	      		<form action="" method="post">
+	      			<div class="modal-body">
+						<div class="row register-form-sms-block">
+							<div class="col-xs-12">
+								<label for="sms_code">Введите код подтвержденя из SMS *
+									<div class="input-group field">
+										<input type="text" id="sms_code" name="sms_code" placeholder="SMS-код" class="input-sm">
+									</div>
+									<span class="show_on_blured_and_invalid hide">СМС-код введен неверно</span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-transparent" value="" style="vertical-align:middle">
+							<i class="glyphicon glyphicon-repeat"></i>
+							Смс не пришло
+						</button>
+						<button class="btn btn-primary" value="" style="vertical-align:middle">Подтвердить</button>
+					</div>
+	      		</form>
+	      		<!-- / Ввод кода подтверждения по СМС -->
+      
+      
+      	<!-- Успешная регистраця/вход в аккаунт -->
+      	<div id="register-success">
+			<div class="modal-body">
+				Вы успешно зарегистрированы и можете <a href="/login">войти</a> в личный кабинет!
+			</div>
+		</div>
+      
+    </div>
+  </div>
+</div>
+		
+
+		
+		
+		
+		
+		
+	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/expromptum.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/fotorama.js')}}"></script>
+	<script src="{{url_for('static', filename='js/my.js')}}"></script>
+		
+		<script>
+			expromptum();
+			
+			jQuery(function($){
+				$(".tel_number").mask("(999) 999-99-99"); // Маска телефона
+				
+				
+				$(".vladelec-img-block").hide();
+				$('#vladelec-btn').click(function() {
+					$(".reklampdatel-img-block").hide();
+					$(".vladelec-img-block").show();
+					});
+				$('#reklampdatel-btn').click(function() {
+					$(".vladelec-img-block").hide();
+					$(".reklampdatel-img-block").show();
+					});
+				
+				
+
+			
+				
+				
+				
+				
+				
+				
+				
+				$(".yurik-fizik-check").hide();
+				$('#vladelec').click(function() {
+					$(".yurik-fizik-check").show();
+					});
+				$('#reklamodatel').click(function() {
+					$(".yurik-fizik-check").hide();
+					});
+				
+				
+				$('.date-select').pickmeup_twitter_bootstrap({
+    				format		: 'd-m-Y',
+					position	: 'top',
+					prev		: '',
+					next		: '',
+					separator	: ';',
+					locale		: {
+									days: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+									daysShort: ["Вск", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Суб"],
+									daysMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+									months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+									monthsShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+									}
+					});
+			});
+			
+			
+			xP(); 
+			function xp_init_uncompleted_fields(){ // Показ ссылок у кнопки "отправить" на поля, которые еще не заполнены
+				xP('.uncompleted_fields .fields').each(function(){
+					var fields = this,
+					$parent = fields.$container.parent(),
+					list = new xP.list(),
+					label_id = '$' + fields.uncompleted_type + '_label';
+
+					fields.root().change(function(){
+						var show = false;
+						list.each(function(){
+							this._[label_id].hide();
+						});
+						this._param(fields.uncompleted_type).each(function(){
+							if(!this.$label){
+								return;
+							}
+
+							if(list.index(this) < 0){
+								var field = this;
+								list.append(this);
+								this._[label_id] = $(
+										'<div class="pseudo_link underline">'
+										+ this.$label.text() + '</div>'
+										).appendTo(fields.$element).click(function(){
+											field.focus();
+											});
+							}
+							this._[label_id].show(); 
+							show = true;
+						});
+
+						if(show){
+							$parent.show();
+						}else{
+							$parent.hide();
+						}
+					});
+				});
+			};
+			xp_init_uncompleted_fields(); 
+			
+
+			
+			
+			$(function(){
+				$('#register-form-sms').hide();
+				$('#register-success').hide();
+				
+				
+				$('#register-form').submit(function(e){ 	// Отправка формы регистрации через Аякс
+					e.preventDefault();
+					var m_method=$(this).attr('method');
+					var m_action=$(this).attr('action');
+					var m_data=$(this).serialize();
+					
+					$.ajax({
+						type: m_method,
+						url: m_action,
+						data: m_data,
+					
+						success: function(result){
+						//	$('#register-form').hide();
+							$('#register-form-sms').show();
+							$('.uncompleted_fields').css('display', 'block').empty(); 
+							$('.uncompleted_fields').append(result); // Вывод результата валидации сервером рядом с кнопкой отправки.
+						},
+						error: function(result) {
+							$('.uncompleted_fields').html('Ошибка отправки').css('display', 'block');
+							alert(result);
+							}
+					});
+				});
+				
+				
+				
+				$('#register-form-sms').submit(function(e){
+					e.preventDefault();
+					var m_method=$(this).attr('method');
+					var m_action=$(this).attr('action');
+					var m_data=$(this).serialize();
+					
+					$.ajax({
+						type: m_method,
+						url: m_action,
+						data: m_data,
+					
+					success: function(result){
+						//	$('#register-form-sms').hide();
+							result = eval("(" + result + ")");
+							
+							$('.uncompleted_fields').css('display', 'block').empty();
+							$('.uncompleted_fields').append(result.sms);
+						
+							if (result.sms == true) {
+								$('#register-success').show();
+								}
+							},
+					error: function(result) {
+							$('#bad-sms-code').html('Ошибка отправки').css('display', 'block');
+							$('#register-form-sms').show();
+							alert(result);
+							}
+				
+					});
+				});
+				
+			});
+		</script>	
+	
+	
+	
+			
+	
+	
+</body>
+</html>
