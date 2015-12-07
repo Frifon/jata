@@ -70,8 +70,7 @@
 										<i class="glyphicon glyphicon-ok-circle padding-right-7"></i>Добро пожаловать в нашу систему!
 									</div>
 
-															
-								{% if g.user.role == 1 and not g.user.surname %}								
+								{% if g.user.role % 2 == 1 and not g.user.surname %}								
 									<!-- заполняем Данные для ФизЛИЦА -->
 									<form  action="{{url_for('update_profile', role=1)}}" method="post" id="update_profile_1"  name="update_profile_1">
 										<div class="panel panel-default">
@@ -165,7 +164,7 @@
 									<!-- / заполняем Данные для ФизЛИЦА -->
 									
 									
-								{% elif g.user.role == 2 and not g.user.surname %}	
+								{% elif g.user.role % 2 == 0 and not g.user.surname %}	
 									<!-- заполняем Данные для ЮрЛИЦА -->
 									<form action="{{url_for('update_profile', role=2)}}" method="post" id="update_profile_2", name="update_profile_2">
 										<div class="panel panel-default">
@@ -273,7 +272,7 @@
 								
 								
 								
-								{% if g.user.role == 1 and g.user.surname%}
+								{% if g.user.role % 2 == 1 and g.user.surname%}
 								<!-- отображение заполненного профиля -->
 								<!-- 
 									{% if g.user.surname != None %}
@@ -417,7 +416,7 @@
 								
 								
 						
-								{% elif g.user.role == 2 and g.user.surname%}
+								{% elif g.user.role % 2 == 0 and g.user.surname%}
 									
 									<!-- отображаем Данные для ЮрЛИЦА -->
 									<!-- отображаем Данные для ЮрЛИЦА -->
@@ -940,14 +939,12 @@
 		
 		<script>
 
-			// SHIT MUTHERFUKER!!!11!!11!
-
 			/* Запускаем окно с подсказками (закрыть можно на последнем слайде) */
-			// $("#modal_how_it_work").modal({
-			// 	show: true,
-  	// 			keyboard: false,
-			// 	backdrop: 'static'
-			// 	});
+			$("#modal_how_it_work").modal({
+				show: true,
+  				keyboard: false,
+				backdrop: 'static'
+				});
 
 			/* Запускаем окно с вводом СМС-кода, когда закрывается окно ввода нового номера (тоже и при смене пароля надо) */
 			$('#modal_change_phonenumber_form').on('hidden.bs.modal', function (e) {
