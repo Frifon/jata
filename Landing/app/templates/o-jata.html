@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/front-style.css')}}">
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+</head>
+<body>
+	
+	
+	<div class="header-block  text-center">
+		<div class="block-center">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="col-xs-4 logo-block centering-y">
+						<a href="/"><img src="{{url_for('static', filename='img/logo.png')}}" class="logo-img"></a>
+					</div>
+					<div class="col-xs-8 centering-y">
+						<div class="head-contact-block text-right">
+							<div class="inline-block margin-right-14 adress">СПб, Московский проспект 97а (10:00 - 22:00)</div>
+							<div class="inline-block font-24 phone">8&nbsp;800&nbsp;375&nbsp;75&nbsp;75</div>
+						</div>
+						<div class="head-menu-block text-right">
+							<ul>
+								<li><a href="#">О JATA</a></li>
+								<li><a href="#">Как это работает?</a></li>
+								<li><a href="#">Рекламные места</a></li>
+								<li><a href="#">Блог</a></li>
+								<li><a href="#">Контакты</a></li>
+							</ul>
+						</div>
+						<div class="head-login-block text-right">
+							<form action="{{url_for('login')}}" id="login" method="post" name="login">
+								<input type="text" id="email" name="email" placeholder="Email:" class="input-sm" style="width: 100px;">
+								<input type="password" id="password" name="password" placeholder="Password:" class="input-sm margin-right-35" style="width: 100px;">
+								<button class="btn btn-transparent margin-right-7" type="submit" name="submit" value="login">Вход</button>
+								<a href="#register-modal" data-toggle="modal" class="btn btn-transparent">Регистрация</a>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<div class="about-jata text-center">
+		<div class="block-center">
+			<div class="row" style="margin-bottom: 100px;">
+				<div class="col-xs-6 text-right">
+					<div class="about-jata-text inline-block text-justify">
+						<p>JATA.RU - уникальный проект, площадка - позволяющая напрямую взаимодействовать между владельцами рекламного места (личный автомобиль, автобус, рекламный щит и многое другое) и рекламодателем. Таким образом Вы можете зарабатывать на своем рекламном месте, либо, если Вы рекламодатель, найти по минимальным ценам необходимое рекламное место, минуя рекламные агентства.</p>
+						<p>На данный момент в системе jata.ru зарегистрировано уже более 1000 автомобилей и автобусов в Санкт-Петербурге. Каждый владелец транспортного средства описывает подробный маршрут своего перемещения, к которому привязываются различные объекты (торговые центры, школы, детске сады, бизнес центры). Таким образом рекламодатель получает огромный простор для осуществления своей таргетированной рекламной кампании.</p>
+						<p>Мы хотим, чтобы наш уровень сервиса оставался на высшем уровне, поэтому все пользователи сайта jata.ru проходят обязательную верификацию у нашего специалиста и подписывают договор с компанией Jata</p>
+						<p class="color-red">Зарегистрируйся и начни пользоваться Jata.ru прямо сейчас!</p>
+						
+					</div>
+				</div>
+				<div class="col-xs-6 text-center">
+					<img src="{{url_for('static', filename='img/about-jata.png')}}">
+				</div>
+			</div>
+			
+			
+
+		</div>
+	</div>
+	
+	
+	
+
+	
+	<div class="footer-block text-center">
+		<div class="block-center">
+			<div class="row">
+				<div class="col-xs-6 foot-menu">
+					<ul>
+						<li><a href="#">О компании</a></li>
+						<li><a href="#">Правила<!-- пользования --></a></li>
+						<li><a href="#">Вопрос/Ответ</a></li>
+						<li><a href="#">JATA.ru</a></li>
+						<li><a href="#">Защита данных</a></li>
+						<li><a href="#">Контакты</a></li>
+						<li><a href="#">О нас</a></li>
+						<li><a href="#">Пресса</a></li>
+						<li><a href="#">Команда</a></li>
+					</ul>
+				</div>
+				<div class="col-xs-6">
+					<div class="foot-contact padding-bottom-21 text-right color-fff">
+						<div class="foot-adrestel inline-block valign-top">
+							<div class="foot-tel font-24">8 800 375 75 75</div>
+							<div class="foot-adres">СПб, Московский проспект 97а (10:00-22:00)</div>
+						</div>
+						<div class="foot-soc inline-block valign-top padding-top-14">
+							<a href="#"><img src="img/vk-icon.png" height="38"></a>
+							<a href="#" class="margin-left-7"><img src="img/fb-icon.png" height="38"></a>
+						</div>
+					</div>
+					<div class="foot-copyr text-right" style="color: #d6eaed;">© jata.ru 2016. Все права защищены</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+   
+   
+<!-- Всплывающее окно c формой регистрации --> 
+<div id="register-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Форма регистраци -->
+	        <ul class="nav nav-tabs tabs-user-role">
+				<li class="active"><a data-toggle="tab" href="#register-reklamodatel-tab" class="active tabs-reklamodatel-role text-center b"><span class="block margin-top-7">Я рекламодатель</span></a></li>
+			  	<li><a data-toggle="tab" href="#register-vladelec-tab" class="tabs-vladelec-role text-center b">Я владелец<br>транспортного средства</a></li>
+			</ul>
+	        
+	        <div class="tab-content">
+				<div id="register-reklamodatel-tab" class="tab-pane fade in active">
+					<!-- Форма регистраци рекламодателя -->
+ 					<form action="{{url_for('reg')}}" id="reg" method="post" name="register">
+						<div class="modal-body">
+							
+							<div class="container-fluid">
+								<div class="row-fluid">
+									<div class="centering-y">E-mail</div>
+									<div class="centering-y">
+										<input type="text" name="email" class="input-lg" placeholder="E-mail" data-xp="type: 'email'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Данный E-mail не зарегистрирован в системе</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Телефон</div>
+									<div class="centering-y padding-top-14">
+										<input type="text" name="tel_number" class="input-lg tel-number" placeholder="+7 (___) ___-__-__" data-xp="type: 'phone'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Номер телефона не указан</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Город</div>
+									<div class="centering-y select-box padding-top-14">
+										<input name="city" id="city" class="input-lg" placeholder="например Санкт-Петербург" list="city_var" data-xp="search_from_start: false"></input>
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid">К сожалению, на данный момент мы не работаем в данном городе </div>
+										<select name="city_var" id="city_var" class="select-dropdown">
+											<option value="1">Санкт-Петербург</option>
+											<option value="2">Москва</option>
+											<option value="3">Чебоксары</option>
+											<option value="4">Иркутск</option>
+										</select>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Пароль</div>
+									<div class="centering-y padding-top-14">
+										<input type="password" name="password" class="input-lg">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Введите пароль</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y" style="height: 100px;"></div>
+									<div class="centering-y" style="height: 100px;"></div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14"></div>
+									<div class="centering-y padding-top-14">
+										<img src="{{url_for('static', filename='img/fake-captcha.png')}}">
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y"></div>
+									<div class="centering-y padding-top-21">
+										<button class="btn btn-blue btn-lg margin-left-35" style="vertical-align:middle">Зарегистрироваться</button>
+									</div>
+								</div>
+																
+							</div>
+							
+						</div>
+						
+					</form>
+	      			<!-- / Форма регистраци рекламодателя -->
+				</div>
+				
+				<div id="register-vladelec-tab" class="tab-pane fade in">
+					<!-- Форма регистраци владельца -->
+ 					<form action="{{url_for('reg')}}" id="vladelec_reg" method="post" name="vladelec_register">
+						<div class="modal-body">
+							
+							<div class="container-fluid">
+								<div class="row-fluid">
+									<div class="centering-y">E-mail</div>
+									<div class="centering-y">
+										<input type="text" name="vladelec_email" class="input-lg" placeholder="E-mail" data-xp="type: 'email'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Данный E-mail не зарегистрирован в системе</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Телефон</div>
+									<div class="centering-y padding-top-14">
+										<input type="text" name="vladelec_tel_number" class="input-lg tel-number" placeholder="+7 (___) ___-__-__" data-xp="type: 'phone'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Номер телефона не указан</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Город</div>
+									<div class="centering-y select-box padding-top-14">
+										<input name="vladelec_city" id="vladelec_city" class="input-lg" placeholder="например Санкт-Петербург" list="vladelec_city_var" data-xp="search_from_start: false"></input>
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">К сожалению, на данный момент мы не работаем в данном городе </div>
+										<select name="vladelec_city_var" id="vladelec_city_var" class="select-dropdown">
+											<option value="1">Санкт-Петербург</option>
+											<option value="2">Москва</option>
+											<option value="3">Чебоксары</option>
+											<option value="4">Иркутск</option>
+										</select>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Пароль</div>
+									<div class="centering-y padding-top-14">
+										<input type="password" name="vladelec_password" class="input-lg">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Введите пароль</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y" style="height: 100px;"></div>
+									<div class="centering-y" style="height: 100px;">
+										<div class="text-left">
+											<input name="vladelec_lico" id="vladelec_fiz_lico" type="radio" checked="checked" value="vladelec_fiz_lico">
+											<label for="vladelec_fiz_lico" class="margin-top-7" class="font-16">Физическое лицо</label>
+										</div>
+										<div class="text-left">
+											<input name="vladelec_lico" id="vladelec_yur_lico" type="radio" value="vladelec_yur_lico">
+											<label for="vladelec_yur_lico" class="margin-top-7" class="font-16">Юридическое лицо</label>
+										</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14"></div>
+									<div class="centering-y padding-top-14">
+										<img src="{{url_for('static', filename='img/fake-captcha.png')}}">
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y"></div>
+									<div class="centering-y padding-top-21">
+										<button class="btn btn-red btn-lg margin-left margin-left-35" value="vladelec_reg" style="vertical-align:middle">Зарегистрироваться</button>
+									</div>
+								</div>								
+							</div>
+							
+						</div>
+					</form>
+					<!-- / Форма регистраци владельца -->
+				</div>
+			</div>
+	        
+	        
+	        
+	        
+	        
+	   <!-- Выборать тип рекламного места 
+									<label for="rekl_mesto">Тип рекламного места</label>
+									<div class="input-group field">
+										<select class="form-control input-sm" name="rekl_mesto">
+											<option selected>Автомобиль/автобус</option>
+											<option disabled>Вариант 1</option>
+											<option disabled>Еще вариант</option>
+										</select>
+									</div>     
+	        -->
+		        
+  
+
+      
+    </div>
+  </div>
+</div>
+		
+
+		
+
+ 
+<!-- Всплывающее окно c вводом SMS-кода -->
+<div id="modal_smscode_form" class="modal fade">
+ 	<div class="modal-dialog">
+    	<div class="modal-content modal-md">
+			<div class="modal-body">
+				<div class="text-center font-24 margin-top-14 margin-bottom-14">
+					Для подтверждения вам выслан одноразовый SMS-код
+				</div>
+				<div class="text-center font-24 color-red margin-bottom-14">
+					Введите код
+				</div>
+				<div class="text-center">
+					<form action=""  name='smscode' class="text-left inline-block">
+						<div class="margin-bottom-14">
+							<input name="new_smscode" type="text" class="input-lg text-center">
+							<span class="status-input"></span>
+							<span class="show_on_blured_and_invalid hide">СМС-код введен неверно</span>
+						</div>
+						<div class="text-center margin-bottom-14">
+							<button type="submit" name="send_new_sms" class="btn-a re margin-bottom-7" onClick="document.smscode.action='/api/sms/send'; document.smscode.submit(); return true;" disabled="disabled">SMS не пришло (20 сек)</button><br>
+							<button type="submit" name="send_new_sms" class="btn-a margin-bottom-14" onClick="document.smscode.action='/api/sms/send'; document.smscode.submit(); return true;">Пропустить</button>
+						</div>
+						<div class="text-center margin-bottom-14">
+							<button type="submit" class="btn btn-transparent btn-lg smscode-submit" style="width: 45%;">ОК</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	 </div>
+</div>
+
+		
+		
+		
+	<script src="js/bootstrap.js" type="text/javascript"></script>
+	<script src="js/expromptum.js" type="text/javascript"></script>
+	<script src="js/fotorama.js"></script>
+	<script src="js/jquery.pickmeup.js" type="text/javascript"></script>
+	<script src="js/jquery.pickmeup.twitter-bootstrap.js" type="text/javascript"></script>
+		
+		<script>
+			expromptum();
+			
+			jQuery(function($){
+				$(".tel_number").mask("(999) 999-99-99"); // Маска телефона
+				
+				
+				$(".vladelec-img-block").hide();
+				$('#vladelec-btn').click(function() {
+					$(".reklampdatel-img-block").hide();
+					$(".vladelec-img-block").show();
+					});
+				$('#reklampdatel-btn').click(function() {
+					$(".vladelec-img-block").hide();
+					$(".reklampdatel-img-block").show();
+					});
+				
+				
+
+			
+				
+				
+				
+				
+				
+				
+				
+				$(".yurik-fizik-check").hide();
+				$('#vladelec').click(function() {
+					$(".yurik-fizik-check").show();
+					});
+				$('#reklamodatel').click(function() {
+					$(".yurik-fizik-check").hide();
+					});
+				
+				
+				$('.date-select').pickmeup_twitter_bootstrap({
+    				format		: 'd-m-Y',
+					position	: 'top',
+					prev		: '',
+					next		: '',
+					separator	: ';',
+					locale		: {
+									days: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+									daysShort: ["Вск", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Суб"],
+									daysMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+									months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+									monthsShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+									}
+					});
+			});
+			
+			
+			xP(); 
+			function xp_init_uncompleted_fields(){ // Показ ссылок у кнопки "отправить" на поля, которые еще не заполнены
+				xP('.uncompleted_fields .fields').each(function(){
+					var fields = this,
+					$parent = fields.$container.parent(),
+					list = new xP.list(),
+					label_id = '$' + fields.uncompleted_type + '_label';
+
+					fields.root().change(function(){
+						var show = false;
+						list.each(function(){
+							this._[label_id].hide();
+						});
+						this._param(fields.uncompleted_type).each(function(){
+							if(!this.$label){
+								return;
+							}
+
+							if(list.index(this) < 0){
+								var field = this;
+								list.append(this);
+								this._[label_id] = $(
+										'<div class="pseudo_link underline">'
+										+ this.$label.text() + '</div>'
+										).appendTo(fields.$element).click(function(){
+											field.focus();
+											});
+							}
+							this._[label_id].show(); 
+							show = true;
+						});
+
+						if(show){
+							$parent.show();
+						}else{
+							$parent.hide();
+						}
+					});
+				});
+			};
+			xp_init_uncompleted_fields(); 
+			
+
+			
+			
+			$(function(){
+				$('#register-form-sms').hide();
+				$('#register-success').hide();
+				
+				
+				$('#register-form').submit(function(e){ 	// Отправка формы регистрации через Аякс
+					e.preventDefault();
+					var m_method=$(this).attr('method');
+					var m_action=$(this).attr('action');
+					var m_data=$(this).serialize();
+					
+					$.ajax({
+						type: m_method,
+						url: m_action,
+						data: m_data,
+					
+						success: function(result){
+						//	$('#register-form').hide();
+							$('#register-form-sms').show();
+							$('.uncompleted_fields').css('display', 'block').empty(); 
+							$('.uncompleted_fields').append(result); // Вывод результата валидации сервером рядом с кнопкой отправки.
+						},
+						error: function(result) {
+							$('.uncompleted_fields').html('Ошибка отправки').css('display', 'block');
+							alert(result);
+							}
+					});
+				});
+				
+				
+				
+				$('#register-form-sms').submit(function(e){
+					e.preventDefault();
+					var m_method=$(this).attr('method');
+					var m_action=$(this).attr('action');
+					var m_data=$(this).serialize();
+					
+					$.ajax({
+						type: m_method,
+						url: m_action,
+						data: m_data,
+					
+					success: function(result){
+						//	$('#register-form-sms').hide();
+							result = eval("(" + result + ")");
+							
+							$('.uncompleted_fields').css('display', 'block').empty();
+							$('.uncompleted_fields').append(result.sms);
+						
+							if (result.sms == true) {
+								$('#register-success').show();
+								}
+							},
+					error: function(result) {
+							$('#bad-sms-code').html('Ошибка отправки').css('display', 'block');
+							$('#register-form-sms').show();
+							alert(result);
+							}
+				
+					});
+				});
+				
+			});
+		</script>	
+	
+	
+	
+			
+	
+	
+</body>
+</html>

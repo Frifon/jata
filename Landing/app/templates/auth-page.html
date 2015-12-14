@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/front-style.css')}}">
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+</head>
+<body>
+	
+	
+	<div class="header-block  text-center">
+		<div class="block-center">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="col-xs-4 logo-block centering-y">
+						<a href="/"><img src="{{url_for('static', filename='img/logo.png')}}" class="logo-img"></a>
+					</div>
+					<div class="col-xs-8 centering-y">
+						<div class="head-contact-block text-right">
+							<div class="inline-block margin-right-14 adress">СПб, Московский проспект 97а (10:00 - 22:00)</div>
+							<div class="inline-block font-24 phone">8&nbsp;800&nbsp;375&nbsp;75&nbsp;75</div>
+						</div>
+						<div class="head-menu-block text-right">
+							<ul>
+								<li><a href="#">О JATA</a></li>
+								<li><a href="#">Как это работает?</a></li>
+								<li><a href="#">Рекламные места</a></li>
+								<li><a href="#">Блог</a></li>
+								<li><a href="#">Контакты</a></li>
+							</ul>
+						</div>
+						<div class="head-login-block text-right">
+							<form action="{{url_for('login')}}" id="login" method="post" name="login">
+								<input type="text" id="email" name="email" placeholder="Email:" class="input-sm" style="width: 100px;">
+								<input type="password" id="password" name="password" placeholder="Password:" class="input-sm margin-right-35" style="width: 100px;">
+								<button class="btn btn-transparent margin-right-7" type="submit" name="submit" value="login">Вход</button>
+								<a href="#register-modal" data-toggle="modal" class="btn btn-transparent">Регистрация</a>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="content-block text-center">
+		<div class="block-center">
+			<div class="row" style="margin-bottom: 100px;">
+				<div class="col-xs-12 text-center">
+					<form action="{{url_for('login')}}" class="text-left inline-block">
+						<div class="margin-bottom-14">
+							<input name="email" type="text" class="input-lg  text-center" placeholder="E-mail">
+							<span class="status-input"></span>
+							<div class="show_on_blured_and_invalid">Данный E-mail не зарегистрирован в системе</div>
+						</div>
+						<div class="margin-bottom-21">
+							<input name="password" type="password" class="input-lg non-view text-center" placeholder="&bull;&bull;&bull;&bull;&bull;">
+							<span class="status-input"></span>
+							<span class="show_on_blured_and_invalid hide">Неверный пароль</span>
+						</div>
+						<div class="margin-bottom-35 text-center">
+							<input id="remember-me" name="remember_me" type="checkbox">
+							<label for="remember-me" class="margin-top-7" class="font-16">Запомнить меня</label>
+						</div>
+						<div class="margin-bottom-35 text-center">
+							<button type="submit" class="btn btn-red btn-lg" style="width: 75%;">Войти</button>
+						</div>
+						<div class="text-center">
+							<a href="#restore-password-modal" data-toggle="modal" class="font-18 color-blue">Восстановить забытый пароль</a>
+						</div>
+						<div class="margin-bottom-14 text-center">
+							<a href="#register-modal" data-toggle="modal" class="font-18 color-blue">Регистрация</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+
+	<div class="footer-block text-center">
+		<div class="block-center">
+			<div class="row">
+				<div class="col-xs-6 foot-menu">
+					<ul>
+						<li><a href="#">О компании</a></li>
+						<li><a href="#">Правила<!-- пользования --></a></li>
+						<li><a href="#">Вопрос/Ответ</a></li>
+						<li><a href="#">JATA.ru</a></li>
+						<li><a href="#">Защита данных</a></li>
+						<li><a href="#">Контакты</a></li>
+						<li><a href="#">О нас</a></li>
+						<li><a href="#">Пресса</a></li>
+						<li><a href="#">Команда</a></li>
+					</ul>
+				</div>
+				<div class="col-xs-6">
+					<div class="foot-contact padding-bottom-21 text-right color-fff">
+						<div class="foot-adrestel inline-block valign-top">
+							<div class="foot-tel font-24">8 800 375 75 75</div>
+							<div class="foot-adres">СПб, Московский проспект 97а (10:00-22:00)</div>
+						</div>
+						<div class="foot-soc inline-block valign-top padding-top-14">
+							<a href="#"><img src="img/vk-icon.png" height="38"></a>
+							<a href="#" class="margin-left-7"><img src="img/fb-icon.png" height="38"></a>
+						</div>
+					</div>
+					<div class="foot-copyr text-right" style="color: #d6eaed;">© jata.ru 2016. Все права защищены</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+<!-- Окно с капчей при превышении числа запросов к сереверу с одного IP -->
+ <div id="captcha-modal" class="modal fade">
+ 	<div class="modal-dialog">
+    	<div class="modal-content modal-md">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Вы 5 раз неверно ввели пароль</h4>
+			</div>
+			<div class="modal-body">
+				<div class="text-center">
+					<img src="{{url_for('static', filename='img/fake-captcha.png')}}">
+				</div>
+			</div>
+		</div>
+	 </div>
+</div>	
+  
+   
+   
+   
+<!-- Окно восстановления пароля --> 
+<div id="restore-password-modal" class="modal fade">
+ 	<div class="modal-dialog">
+    	<div class="modal-content modal-md">
+			<div class="modal-body">
+				<div class="text-center font-24 color-red margin-bottom-35">
+					Восстановить забытый пароль
+				</div>
+				<div class="text-center">
+					<form action="" class="text-left inline-block">
+						<div class="margin-bottom-35">
+							<input type="text" class="input-lg  text-center" placeholder="E-mail" data-xp="type: 'email'">
+							<span class="status-input"></span>
+						</div>
+						<div class="text-center margin-bottom-14">
+							<button type="submit" class="btn btn-red btn-lg" style="width: 75%;">Отправить</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	 </div>
+</div>	 
+ 
+ 
+
+<!-- окно восстановления пароля: отправлено успешно -->    
+<div id="restore-password-success-modal" class="modal fade">
+ 	<div class="modal-dialog">
+    	<div class="modal-content modal-md">
+			<div class="modal-body">
+				<div class="text-center font-24 margin-top-14 margin-bottom-14">
+					Новый пароль отправлен на ваш E-mail
+				</div>
+				<div class="text-center">
+					<button type="button" class="btn btn-red btn-lg" data-dismiss="modal" aria-hidden="true" style="width: 25%;">ОК</button>
+				</div>
+			</div>
+		</div>
+	 </div>
+</div>	  
+   
+   
+   
+   
+   
+<!-- Всплывающее окно c формой регистрации --> 
+<div id="register-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Форма регистраци -->
+	        <ul class="nav nav-tabs tabs-user-role">
+				<li class="active"><a data-toggle="tab" href="#register-reklamodatel-tab" class="active tabs-reklamodatel-role text-center b"><span class="block margin-top-7">Я рекламодатель</span></a></li>
+			  	<li><a data-toggle="tab" href="#register-vladelec-tab" class="tabs-vladelec-role text-center b">Я владелец<br>транспортного средства</a></li>
+			</ul>
+	        
+	        <div class="tab-content">
+				<div id="register-reklamodatel-tab" class="tab-pane fade in active">
+					<!-- Форма регистраци рекламодателя -->
+ 					<form action="{{url_for('reg')}}" id="reg" method="post" name="register">
+						<div class="modal-body">
+							
+							<div class="container-fluid">
+								<div class="row-fluid">
+									<div class="centering-y">E-mail</div>
+									<div class="centering-y">
+										<input type="text" name="email" class="input-lg" placeholder="E-mail" data-xp="type: 'email'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Данный E-mail не зарегистрирован в системе</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Телефон</div>
+									<div class="centering-y padding-top-14">
+										<input type="text" name="tel_number" class="input-lg tel-number" placeholder="+7 (___) ___-__-__" data-xp="type: 'phone'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Номер телефона не указан</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Город</div>
+									<div class="centering-y select-box padding-top-14">
+										<input name="city" id="city" class="input-lg" placeholder="например Санкт-Петербург" list="city_var" data-xp="search_from_start: false"></input>
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid">К сожалению, на данный момент мы не работаем в данном городе </div>
+										<select name="city_var" id="city_var" class="select-dropdown">
+											<option value="1">Санкт-Петербург</option>
+											<option value="2">Москва</option>
+											<option value="3">Чебоксары</option>
+											<option value="4">Иркутск</option>
+										</select>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Пароль</div>
+									<div class="centering-y padding-top-14">
+										<input type="password" name="password" class="input-lg">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Введите пароль</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y" style="height: 100px;"></div>
+									<div class="centering-y" style="height: 100px;"></div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14"></div>
+									<div class="centering-y padding-top-14">
+										<img src="{{url_for('static', filename='img/fake-captcha.png')}}">
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y"></div>
+									<div class="centering-y padding-top-21">
+										<button class="btn btn-blue btn-lg margin-left-35" style="vertical-align:middle">Зарегистрироваться</button>
+									</div>
+								</div>
+																
+							</div>
+							
+						</div>
+						
+					</form>
+	      			<!-- / Форма регистраци рекламодателя -->
+				</div>
+				
+				<div id="register-vladelec-tab" class="tab-pane fade in">
+					<!-- Форма регистраци владельца -->
+ 					<form action="{{url_for('reg')}}" id="vladelec_reg" method="post" name="vladelec_register">
+						<div class="modal-body">
+							
+							<div class="container-fluid">
+								<div class="row-fluid">
+									<div class="centering-y">E-mail</div>
+									<div class="centering-y">
+										<input type="text" name="vladelec_email" class="input-lg" placeholder="E-mail" data-xp="type: 'email'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Данный E-mail не зарегистрирован в системе</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Телефон</div>
+									<div class="centering-y padding-top-14">
+										<input type="text" name="vladelec_tel_number" class="input-lg tel-number" placeholder="+7 (___) ___-__-__" data-xp="type: 'phone'">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Номер телефона не указан</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Город</div>
+									<div class="centering-y select-box padding-top-14">
+										<input name="vladelec_city" id="vladelec_city" class="input-lg" placeholder="например Санкт-Петербург" list="vladelec_city_var" data-xp="search_from_start: false"></input>
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">К сожалению, на данный момент мы не работаем в данном городе </div>
+										<select name="vladelec_city_var" id="vladelec_city_var" class="select-dropdown">
+											<option value="1">Санкт-Петербург</option>
+											<option value="2">Москва</option>
+											<option value="3">Чебоксары</option>
+											<option value="4">Иркутск</option>
+										</select>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14">Пароль</div>
+									<div class="centering-y padding-top-14">
+										<input type="password" name="vladelec_password" class="input-lg">
+										<span class="status-input"></span>
+										<div class="show_on_blured_and_invalid hide">Введите пароль</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y" style="height: 100px;"></div>
+									<div class="centering-y" style="height: 100px;">
+										<div class="text-left">
+											<input name="vladelec_lico" id="vladelec_fiz_lico" type="radio" checked="checked" value="vladelec_fiz_lico">
+											<label for="vladelec_fiz_lico" class="margin-top-7" class="font-16">Физическое лицо</label>
+										</div>
+										<div class="text-left">
+											<input name="vladelec_lico" id="vladelec_yur_lico" type="radio" value="vladelec_yur_lico">
+											<label for="vladelec_yur_lico" class="margin-top-7" class="font-16">Юридическое лицо</label>
+										</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y padding-top-14"></div>
+									<div class="centering-y padding-top-14">
+										<img src="{{url_for('static', filename='img/fake-captcha.png')}}">
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="centering-y"></div>
+									<div class="centering-y padding-top-21">
+										<button class="btn btn-red btn-lg margin-left margin-left-35" value="vladelec_reg" style="vertical-align:middle">Зарегистрироваться</button>
+									</div>
+								</div>								
+							</div>
+							
+						</div>
+					</form>
+					<!-- / Форма регистраци владельца -->
+				</div>
+			</div>
+	        
+	        
+	        
+	        
+	        
+	   <!-- Выборать тип рекламного места 
+									<label for="rekl_mesto">Тип рекламного места</label>
+									<div class="input-group field">
+										<select class="form-control input-sm" name="rekl_mesto">
+											<option selected>Автомобиль/автобус</option>
+											<option disabled>Вариант 1</option>
+											<option disabled>Еще вариант</option>
+										</select>
+									</div>     
+	        -->
+		        
+  
+
+      
+    </div>
+  </div>
+</div>
+		
+
+		
+
+ 
+<!-- Всплывающее окно c вводом SMS-кода -->
+<div id="modal_smscode_form" class="modal fade">
+ 	<div class="modal-dialog">
+    	<div class="modal-content modal-md">
+			<div class="modal-body">
+				<div class="text-center font-24 margin-top-14 margin-bottom-14">
+					Для подтверждения вам выслан одноразовый SMS-код
+				</div>
+				<div class="text-center font-24 color-red margin-bottom-14">
+					Введите код
+				</div>
+				<div class="text-center">
+					<form action=""  name='smscode' class="text-left inline-block">
+						<div class="margin-bottom-14">
+							<input name="new_smscode" type="text" class="input-lg text-center">
+							<span class="status-input"></span>
+							<span class="show_on_blured_and_invalid hide">СМС-код введен неверно</span>
+						</div>
+						<div class="text-center margin-bottom-14">
+							<button type="submit" name="send_new_sms" class="btn-a re margin-bottom-7" onClick="document.smscode.action='/api/sms/send'; document.smscode.submit(); return true;" disabled="disabled">SMS не пришло (20 сек)</button><br>
+							<button type="submit" name="send_new_sms" class="btn-a margin-bottom-14" onClick="document.smscode.action='/api/sms/send'; document.smscode.submit(); return true;">Пропустить</button>
+						</div>
+						<div class="text-center margin-bottom-14">
+							<button type="submit" class="btn btn-transparent btn-lg smscode-submit" style="width: 45%;">ОК</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	 </div>
+</div>
+
+
+  
+    
+    
+    
+		
+		
+		
+	<script src="{{url_for('static', filename='js/bootstrap.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/expromptum.js')}}" type="text/javascript"></script>
+	<script src="{{url_for('static', filename='js/fotorama.js')}}"></script>
+	<script src="{{url_for('static', filename='js/my.js')}}"></script>
+
+		<script>
+			expromptum();
+			
+			jQuery(function($){
+				$(".tel-number").mask("+7 (999) 999-99-99"); // Маска телефона
+				xP();
+				
+			//	$("#captcha-modal").modal();
+				$("#register-modal").modal();
+				
+				
+				// После отправки запроса восстановления пароля - открыть окно с подтверждением
+				$('#restore-password-modal').on('hidden.bs.modal', function (e) {
+					$("#restore-password-success-modal").modal({
+						show: true
+						});
+				});
+				
+				// После формы регистрации - открыть окно с вводом СМС-кода 
+				$('#register-modal').on('hidden.bs.modal', function (e) {
+					$("#modal_smscode_form").modal({
+						show: true
+						});
+				});
+				
+		
+				
+			/*		var widthSelect = $('.select-box > input').width();
+					$(".select-box > select").width(widthSelect);
+*/
+					setInterval(function(){
+						var curVal = $(".select-box > input").val();
+						var prevVal  = $(".select-box > input").data("prevVal") || null;
+
+						if (prevVal !== curVal) {
+							if ($('.select-box > select').css('display') == 'block') {
+								$('.select-box > input').addClass("sticky-bottom");
+								$('.select-box > .show_on_blured_and_invalid').hide();
+								}
+							else {
+								$('.select-box > input').removeClass("sticky-bottom");
+								}
+						}
+					}, 100);
+
+				
+			
+				
+				$(".vladelec-img-block").hide();
+				$('#vladelec-btn').click(function() {
+					$(".reklampdatel-img-block").hide();
+					$(".vladelec-img-block").show();
+					});
+				$('#reklampdatel-btn').click(function() {
+					$(".vladelec-img-block").hide();
+					$(".reklampdatel-img-block").show();
+					});
+			
+			});
+			
+		</script>	
+	
+	
+	
+			
+	
+	
+</body>
+</html>
