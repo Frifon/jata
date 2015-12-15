@@ -1271,6 +1271,7 @@
 	<script src="{{url_for('static', filename='js/fotorama.js')}}"></script>
 	<script src="{{url_for('static', filename='js/jquery.colorPicker.js')}}"></script>
 	<script src="{{url_for('static', filename='js/my.js')}}"></script>
+	<script src="{{url_for('static', filename='js/route.js')}}"></script>
 	
 	
 	
@@ -1305,8 +1306,6 @@
 		});
 
 		function onLoad (ymaps) {
-		    var suggestView = new ymaps.SuggestView('ts_route_start');
-		    var suggestView2 = new ymaps.SuggestView('ts_route_finish');
 		    var suggestView3 = new ymaps.SuggestView('ts_route_district');
 		}
 		var max = -1;

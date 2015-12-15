@@ -16,11 +16,18 @@ export default class Router {
         let ctx = this;
         let coords = [];
 
-        if(!this.points) this.points.push(this.pointA, this.pointB);
+        debugger;
+
+        if(!this.points) {
+            this.points = new ymaps.GeoObjectCollection({
+                children: [this.pointA, this.pointB]
+            });
+        }
 
         this.points.each(function (elem, i) {
             coords[i] = elem.geometry.getCoordinates();
         });
+
 
         ymaps.route(coords)
             .then(
