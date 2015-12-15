@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    entry: "./route.js",
+    entry: "./Route/route.js",
     output: {
         path: "../Backend/app/static/js",
         filename: "route.js"
