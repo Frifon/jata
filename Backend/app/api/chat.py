@@ -28,7 +28,7 @@ def addMessage():
     except:
         pass
 
-    if not receiver or not message:
+    if not receiver or not message and not image:
         return make_response(jsonify(
             {'code': 0, 'message': 'Missing parameters (to or message)'}), 400)
     try:
