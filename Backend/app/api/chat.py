@@ -40,14 +40,15 @@ def addMessage():
             user_id=g.user.id, dest_id=receiver, timestamp=0))
     timestamp = datetime.datetime.utcnow().timestamp()
 
-    new_message = Message(
-        user_id=g.user.id,
-        dest_id=receiver,
-        message=message,
-        timestamp=timestamp,
-        type=Message.Type.text)
-    
-    db.session.add(new_message)
+    if message:
+        new_message = Message(
+            user_id=g.user.id,
+            dest_id=receiver,
+            message=message,
+            timestamp=timestamp,
+            type=Message.Type.text)
+        
+        db.session.add(new_message)
 
     if image:
         filename = secure_filename(image.filename)
