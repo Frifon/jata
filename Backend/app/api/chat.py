@@ -28,9 +28,7 @@ def addMessage():
     except:
         pass
 
-    print(receiver)
-    print(message)
-    if not receiver or not message:
+    if not receiver or not message and not image:
         return make_response(jsonify(
             {'code': 0, 'message': 'Missing parameters (to or message)'}), 400)
     try:
@@ -42,15 +40,15 @@ def addMessage():
             user_id=g.user.id, dest_id=receiver, timestamp=0))
     timestamp = datetime.datetime.utcnow().timestamp()
 
-    new_message = Message(
-        user_id=g.user.id,
-        dest_id=receiver,
-        message=message,
-        timestamp=timestamp,
-        type=Message.Type.text)
-    print(message)
-
-    db.session.add(new_message)
+    if message:
+        new_message = Message(
+            user_id=g.user.id,
+            dest_id=receiver,
+            message=message,
+            timestamp=timestamp,
+            type=Message.Type.text)
+        
+        db.session.add(new_message)
 
     if image:
         filename = secure_filename(image.filename)
@@ -65,7 +63,6 @@ def addMessage():
             message='messages_uploads/' + filename,
             timestamp=timestamp,
             type=Message.Type.image)
-        print('img')
         db.session.add(new_image)
 
     db.session.commit()
