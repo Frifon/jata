@@ -50,6 +50,13 @@ export default class Router {
 
         this._collection.add(this.route);
 
+        this.points = this.route.getWayPoints();
+        this.points.options.set('preset', 'islands#redStretchyIcon');
+        this.points.options.set('draggable', 'true');
+        this.points.each( function(elem) {
+            elem.events.add('dragend', (e) => ctx.onChange(e));
+        });
+
         if(!this._isButtonListening) {
             editButton.addEventListener('click', () => {
                 if (this._startEditing = !this._startEditing) {
@@ -63,12 +70,7 @@ export default class Router {
             this._isButtonListening = true;
         }
 
-        this.points = this.route.getWayPoints();
-        this.points.options.set('preset', 'islands#redStretchyIcon');
-        this.points.options.set('draggable', 'true');
-        this.points.each( function(elem) {
-            elem.events.add('dragend', (e) => ctx.onChange(e));
-        });
+
 
     }
 
