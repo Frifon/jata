@@ -17,7 +17,13 @@ export default class Router {
         let ctx = this;
         let coords = [];
 
-        debugger;
+        if(this.points && this.interPoints.length) {
+            this.interPoints.forEach(function(item) {
+               ctx.points.set(ctx.points.getLength()-1, item);
+            });
+        }
+
+//        console.log(this.points.getLength());
 
         if(!this.points) {
             let points = [this.pointA, this.pointB];
@@ -26,6 +32,8 @@ export default class Router {
                 children: points
             });
         }
+
+
 
         this.points.each(function (elem, i) {
             coords[i] = elem.geometry.getCoordinates();
