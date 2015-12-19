@@ -17,20 +17,24 @@ export default class Router {
         let ctx = this;
         let coords = [];
 
-        if(this.points && this.interPoints.length) {
-            this.interPoints.forEach(function(item) {
-               ctx.points.set(ctx.points.getLength()-1, item);
-            });
-        }
+        debugger;
 
-//        console.log(this.points.getLength());
+        //if(this.points && this.interPoints.length) {
+        //    let last_point = ctx.points.get(ctx.points.getLength() - 1);
+        //    this.interPoints.forEach(function(item) {
+        //       ctx.points.set(ctx.points.getLength() - 1, item);
+        //    });
+        //    ctx.points.set(ctx.points.getLength(), last_point);
+        //}
 
-        if(!this.points) {
+
+        if(!this.points || this.interPoints.length) {
             let points = [this.pointA, this.pointB];
             points.splice.apply(points, [1, 0].concat(this.interPoints));
             this.points = new ymaps.GeoObjectCollection({
                 children: points
             });
+            this.interPoints = [];
         }
 
 

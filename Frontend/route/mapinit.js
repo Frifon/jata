@@ -46,8 +46,6 @@ export default function init() {
         let last_added = target.get(target.getLength() - 1);
         if(!last_added.geometry) return;
 
-        debugger;
-
         if(router) {
             router.interPoints = interPoints.filter(function(item) {
                 return item.placemark;

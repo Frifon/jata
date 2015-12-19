@@ -1190,7 +1190,7 @@
 												</div>
 												<div class="col-xs-7">
 													<div id="map" class="map-movement"></div>
-													<input type="button" value="Включить редактор маршрута" id="editor" name="start"/>
+													<!--<input type="button" value="Включить редактор маршрута" id="editor" name="start"/>-->
 												</div>
 											</div>					
 												
@@ -1306,24 +1306,9 @@
 		    e.preventDefault();
 		});
 
-		function onLoad (ymaps) {
-		    var suggestView3 = new ymaps.SuggestView('ts_route_district');
-		}
-		var max = -1;
-		var sugests = {};
-		setInterval(updateInterPt, 3000);
-		function updateInterPt() {
-			var i = 0;
-			while (document.getElementsByName('ts_route_intermediate_point[' + i.toString() + ']')[0]) {
-				if (i > max) {
-					max = i;
-					sugests[i] = new ymaps.SuggestView(document.getElementsByName('ts_route_intermediate_point[' + i.toString() + ']')[0].id);
-				}
-				i++;
-			}
-			max = i - 1;
-		}
-		
+
+
+
 		
 	</script>	
 	
