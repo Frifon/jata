@@ -6,6 +6,7 @@ export default class Router {
         this.map = options.map;
         this.pointA = options.pointA;
         this.pointB = options.pointB;
+        this.interPoints = options.interPoints;
         this._collection = this.map.geoObjects;
         this._startEditing = false;
         this._isButtonListening = false;
@@ -19,8 +20,10 @@ export default class Router {
         debugger;
 
         if(!this.points) {
+            let points = [this.pointA, this.pointB];
+            points.splice.apply(points, [1, 0].concat(this.interPoints));
             this.points = new ymaps.GeoObjectCollection({
-                children: [this.pointA, this.pointB]
+                children: points
             });
         }
 
@@ -75,9 +78,6 @@ export default class Router {
     }
 
     onChange(e) {
-        //let thisPoint = e.get('target');
-        //let coords = thisPoint.geometry.getCoordinates();
-        //thisPoint.geometry.setCoordinates(coords);
         this.render();
     }
 

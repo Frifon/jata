@@ -1,4 +1,6 @@
 			expromptum();
+
+			//TODO: вычистить весь этот хлам
 			
 			jQuery(function($){
 				$("#tel-number").mask("(999) 999-99-99"); // Маска телефона
