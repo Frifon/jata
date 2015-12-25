@@ -30,7 +30,7 @@ window.expromptum = window.xP = (function(undefined){
 			// DOM element.
 			|| params && (
 				params.nodeType
-				// DOM collection.
+				// DOM _collection.
 				|| params[0] && params[0].nodeType
 			)
 		){

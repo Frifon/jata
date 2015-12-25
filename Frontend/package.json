@@ -1,0 +1,19 @@
+{
+  "name": "jata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./route/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.3.17",
+    "babel-loader": "^6.2.0",
+    "webpack": "^1.12.9"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.3.13"
+  }
+}

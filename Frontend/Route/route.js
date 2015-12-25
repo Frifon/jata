@@ -6,6 +6,7 @@ export default class Router {
         this.map = options.map;
         this.pointA = options.pointA;
         this.pointB = options.pointB;
+        this.interPoints = options.interPoints;
         this._collection = this.map.geoObjects;
         this._startEditing = false;
         this._isButtonListening = false;
@@ -16,11 +17,32 @@ export default class Router {
         let ctx = this;
         let coords = [];
 
-        if(!this.points) this.points.push(this.pointA, this.pointB);
+        debugger;
+
+        //if(this.points && this.interPoints.length) {
+        //    let last_point = ctx.points.get(ctx.points.getLength() - 1);
+        //    this.interPoints.forEach(function(item) {
+        //       ctx.points.set(ctx.points.getLength() - 1, item);
+        //    });
+        //    ctx.points.set(ctx.points.getLength(), last_point);
+        //}
+
+
+        if(!this.points || this.interPoints.length) {
+            let points = [this.pointA, this.pointB];
+            points.splice.apply(points, [1, 0].concat(this.interPoints));
+            this.points = new ymaps.GeoObjectCollection({
+                children: points
+            });
+            this.interPoints = [];
+        }
+
+
 
         this.points.each(function (elem, i) {
             coords[i] = elem.geometry.getCoordinates();
         });
+
 
         ymaps.route(coords)
             .then(
@@ -43,6 +65,13 @@ export default class Router {
 
         this._collection.add(this.route);
 
+        this.points = this.route.getWayPoints();
+        this.points.options.set('preset', 'islands#redStretchyIcon');
+        this.points.options.set('draggable', 'true');
+        this.points.each( function(elem) {
+            elem.events.add('dragend', (e) => ctx.onChange(e));
+        });
+
         if(!this._isButtonListening) {
             editButton.addEventListener('click', () => {
                 if (this._startEditing = !this._startEditing) {
@@ -56,19 +85,11 @@ export default class Router {
             this._isButtonListening = true;
         }
 
-        this.points = this.route.getWayPoints();
-        this.points.options.set('preset', 'islands#redStretchyIcon');
-        this.points.options.set('draggable', 'true');
-        this.points.each( function(elem) {
-            elem.events.add('dragend', (e) => ctx.onChange(e));
-        });
+
 
     }
 
     onChange(e) {
-        //let thisPoint = e.get('target');
-        //let coords = thisPoint.geometry.getCoordinates();
-        //thisPoint.geometry.setCoordinates(coords);
         this.render();
     }
 
