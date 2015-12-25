@@ -1,5 +1,3 @@
-# jata
-jata.ru service
+This project was developped by a group of students. It isn't the homework.
 
-ssh root@188.166.21.147
-ssh root@dev.jata.ru
+We work on a method of communication between ordinary drivers and advertisers.
